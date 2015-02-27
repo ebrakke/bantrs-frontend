@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
@@ -108,12 +108,14 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= config.dist %>/styles/main.css': '<%= config.app %>/styles/less/styles.less'
+                    '<%= config.dist %>/styles/main.css':
+                        '<%= config.app %>/styles/less/styles.less'
                 }
             },
             build: {
                 files: {
-                    '<%= config.build %>/styles/main.css': '<%= config.app %>/styles/less/styles.less'
+                    '<%= config.build %>/styles/main.css':
+                        '<%= config.app %>/styles/less/styles.less'
                 }
             }
         },
@@ -121,7 +123,12 @@ module.exports = function (grunt) {
         // Add vendor prefixed styles
         autoprefixer: {
             options: {
-                browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1']
+                browsers: [
+                    '> 1%',
+                    'last 2 versions',
+                    'Firefox ESR',
+                    'Opera 12.1'
+                ]
             },
             dist: {
                 files: [{
@@ -231,7 +238,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build', function (target) {
+    grunt.registerTask('build', function(target) {
         if (target !== 'watch') {
             grunt.task.run([
                 'clean:build',
