@@ -7,23 +7,19 @@ module.exports = function(grunt) {
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
 
-    // Configurable paths
-    var config = {
-        app: 'src',
-        dist: 'dist',
-        build: 'build'
-    };
+    var pkg = require('./package.json');
+    var dirs = pkg.config.directories;
 
     // Define the configuration for all the tasks
     grunt.initConfig({
         // Project settings
-        config: config,
+        dirs: pkg.config.directories,
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             js: {
-                files: ['<%= config.app %>/js/**/*.js'],
-                tasks: ['jshint', 'jscs', 'newer:copy:build'],
+                files: ['<%= dirs.app %>/js/**/*.js'],
+                tasks: ['jshint', 'jscs', 'newer:copy:dev'],
                 options: {
                     livereload: true
                 }
@@ -32,22 +28,22 @@ module.exports = function(grunt) {
                 files: ['Gruntfile.js']
             },
             less: {
-                files: ['<%= config.app %>/styles/**/*.{less,css}'],
-                tasks: ['less:build', 'autoprefixer:build']
+                files: ['<%= dirs.app %>/styles/**/*.{less,css}'],
+                tasks: ['less:dev', 'autoprefixer:dev']
             },
             html: {
-                files: ['<%= config.app %>/**/*.html'],
-                tasks: ['newer:copy:build']
+                files: ['<%= dirs.app %>/**/*.html'],
+                tasks: ['newer:copy:dev']
             },
             livereload: {
                 options: {
                     livereload: '<%= connect.options.livereload %>'
                 },
                 files: [
-                    '<%= config.build %>/**/*.html',
-                    '<%= config.build %>/styles/**/*.css',
-                    '<%= config.build %>/js/**/*.js',
-                    '<%= config.build %>/img/**/*'
+                    '<%= dirs.dev %>/**/*.html',
+                    '<%= dirs.dev %>/styles/**/*.css',
+                    '<%= dirs.dev %>/js/**/*.js',
+                    '<%= dirs.dev %>/img/**/*'
                 ]
             }
         },
@@ -58,13 +54,13 @@ module.exports = function(grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        '<%= config.build %>',
-                        '<%= config.dist %>/*',
-                        '!<%= config.dist %>/.git*'
+                        '<%= dirs.dev %>',
+                        '<%= dirs.dist %>/*',
+                        '!<%= dirs.dist %>/.git*'
                     ]
                 }]
             },
-            build: '<%= config.build %>'
+            dev: '<%= dirs.dev %>'
         },
 
         // Make sure code styles are up to par and there are no obvious mistakes
@@ -75,8 +71,8 @@ module.exports = function(grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= config.app %>/js/**/*.js',
-                '!<%= config.app %>/js/vendor/*'
+                '<%= dirs.app %>/js/**/*.js',
+                '!<%= dirs.app %>/js/vendor/*'
             ]
         },
 
@@ -86,16 +82,16 @@ module.exports = function(grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= config.app %>/js/**/*.js',
-                '!<%= config.app %>/js/vendor/*'
+                '<%= dirs.app %>/js/**/*.js',
+                '!<%= dirs.app %>/js/vendor/*'
             ]
         },
 
         uglify: {
             dist: {
                 files: {
-                    '<%= config.dist %>/scripts/scripts.js': [
-                        '<%= config.dist %>/scripts/scripts.js'
+                    '<%= dirs.dist %>/scripts/scripts.js': [
+                        '<%= dirs.dist %>/scripts/scripts.js'
                     ]
                 }
             }
@@ -108,14 +104,14 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    '<%= config.dist %>/styles/main.css':
-                        '<%= config.app %>/styles/less/styles.less'
+                    '<%= dirs.dist %>/styles/main.css':
+                        '<%= dirs.app %>/styles/less/styles.less'
                 }
             },
-            build: {
+            dev: {
                 files: {
-                    '<%= config.build %>/styles/main.css':
-                        '<%= config.app %>/styles/less/styles.less'
+                    '<%= dirs.dev %>/styles/main.css':
+                        '<%= dirs.app %>/styles/less/styles.less'
                 }
             }
         },
@@ -133,17 +129,17 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= config.dist %>/styles/',
+                    cwd: '<%= dirs.dist %>/styles/',
                     src: '**/*.css',
-                    dest: '<%= config.dist %>/styles/'
+                    dest: '<%= dirs.dist %>/styles/'
                 }]
             },
-            build: {
+            dev: {
                 files: [{
                     expand: true,
-                    cwd: '<%= config.build %>/styles/',
+                    cwd: '<%= dirs.dev %>/styles/',
                     src: '**/*.css',
-                    dest: '<%= config.build %>/styles/'
+                    dest: '<%= dirs.dev %>/styles/'
                 }]
             }
         },
@@ -153,9 +149,9 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= config.dist %>/styles/',
+                    cwd: '<%= dirs.dist %>/styles/',
                     src: '**/*.css',
-                    dest: '<%= config.dist %>/styles/'
+                    dest: '<%= dirs.dist %>/styles/'
                 }]
             }
         },
@@ -164,9 +160,9 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= config.app %>/images',
+                    cwd: '<%= dirs.app %>/images',
                     src: '**/*.{gif,jpeg,jpg,png}',
-                    dest: '<%= config.dist %>/images'
+                    dest: '<%= dirs.dist %>/images'
                 }]
             }
         },
@@ -177,8 +173,8 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= config.app %>',
-                    dest: '<%= config.dist %>',
+                    cwd: '<%= dirs.app %>',
+                    dest: '<%= dirs.dist %>',
                     src: [
                         '*.{ico,png,txt}',
                         '**/*.html',
@@ -187,12 +183,12 @@ module.exports = function(grunt) {
                     ]
                 }]
             },
-            build: {
+            dev: {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= config.app %>',
-                    dest: '<%= config.build %>',
+                    cwd: '<%= dirs.app %>',
+                    dest: '<%= dirs.dev %>',
                     src: [
                         '*.{ico,png,txt}',
                         '**/*.html',
@@ -206,9 +202,9 @@ module.exports = function(grunt) {
 
         // Run some tasks in parallel to speed up build process
         concurrent: {
-            build: [
-                'less:build',
-                'copy:build'
+            dev: [
+                'less:dev',
+                'copy:dev'
             ],
             dist: [
                 'less:dist',
@@ -226,11 +222,11 @@ module.exports = function(grunt) {
                 // Change this to '0.0.0.0' to access the server from outside
                 hostname: 'localhost'
             },
-            build: {
+            dev: {
                 options: {
                     middleware: function(connect) {
                         return [
-                            connect.static(config.build)
+                            connect.static(dirs.dev)
                         ];
                     }
                 }
@@ -238,17 +234,17 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('build', function(target) {
+    grunt.registerTask('dev', function(target) {
         if (target !== 'watch') {
             grunt.task.run([
-                'clean:build',
-                'concurrent:build',
+                'clean:dev',
+                'concurrent:dev',
                 'autoprefixer'
             ]);
         }
 
         grunt.task.run([
-            'connect:build',
+            'connect:dev',
             'watch'
         ]);
     });
