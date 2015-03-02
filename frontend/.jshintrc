@@ -1,5 +1,4 @@
 {
-
     "bitwise": true,
     "camelcase": true,
     "curly": true,
@@ -21,5 +20,4 @@
 
     "browser": true,
     "node": true
-
 }
