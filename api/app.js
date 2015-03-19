@@ -12,8 +12,8 @@ var app = express();
 
 // view engine setup
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('views', path.join(__dirname, '../frontend/src/views'));
+// app.set('view engine', 'ejs');
 
 // app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));
@@ -22,7 +22,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/../frontend')));
+
+/*
+ * Routes Declarations
+ */
 
 app.use('/', routes);
 app.use('/users', users);
