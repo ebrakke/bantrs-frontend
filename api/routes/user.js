@@ -86,8 +86,32 @@ user.get('/:id/rooms', function(req, res) {
 
   res.json({
   	rooms: [
-  		{ 0: 'room object' },
-  		{ 1: 'room object2' }
+  		{
+  			rid: 'hashed rid',
+  			title: 'Snowpocalypse',
+  			author: 'BantrsAddict',
+  			date: new Date(2015, 2, 1, 12, 0, 0),
+  			lat: 9876,
+  			lng: 1234,
+  			radius: 20,
+  			members: 2,
+  			newComments: 2,
+  			contentType: 1,
+  			member: true
+  		},
+  		{
+  			rid: 'hashed rid',
+  			title: 'Bu Graduation',
+  			author: 'BantrsAddict',
+  			date: new Date(2015, 2, 1, 12, 0, 0),
+  			lat: 9876,
+  			lng: 1234,
+  			radius: 50,
+  			members: 2,
+  			newComments: 2,
+  			contentType: 1,
+  			member: true
+  		},
   	]
   });
 });
