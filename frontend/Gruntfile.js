@@ -72,7 +72,7 @@ module.exports = function(grunt) {
             all: [
                 'Gruntfile.js',
                 '<%= dirs.app %>/js/**/*.js',
-                '!<%= dirs.app %>/js/vendor/*'
+                '!<%= dirs.app %>/js/vendor/**/*'
             ]
         },
 
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
             all: [
                 'Gruntfile.js',
                 '<%= dirs.app %>/js/**/*.js',
-                '!<%= dirs.app %>/js/vendor/*'
+                '!<%= dirs.app %>/js/vendor/**/*'
             ]
         },
 
