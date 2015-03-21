@@ -14,7 +14,7 @@ user.post('/', function(req, res) {
 	var userData = req.body;
 
   res.json({
-  	uid: 'hashed uid',
+  	uid: '1',
   	authToken: 'thisIsAToken',
   	username: 'BantrsAddict'
   });
@@ -33,7 +33,7 @@ user.post('/:id', function(req, res) {
   var userData = req.body;
 
   res.json({
-  	uid: 'hashed uid',
+  	uid: '1',
   	authToken: 'thisIsAToken',
   	username: 'BantrsAddict'
   });
@@ -51,7 +51,7 @@ user.get('/:id', function(req, res) {
   var authToken = req.body.authToken;
 
   res.json({
-  	uid: 'hashed uid',
+  	uid: '1',
   	email: 'bantrs@test.it',
   	username: 'BantrsAddict'
   });
@@ -87,9 +87,12 @@ user.get('/:id/rooms', function(req, res) {
   res.json({
   	rooms: [
   		{
-  			rid: 'hashed rid',
+  			rid: '1',
   			title: 'Snowpocalypse',
-  			author: 'BantrsAddict',
+  			author: {
+			  	uid: '1',
+			  	username: 'BantrsAddict'
+			  },
   			date: new Date(2015, 2, 1, 12, 0, 0),
 			topic: {
 				content: 'http://www.reddit.com/r/Showerthoughts/comments/2zt1ga/luke_skywalker_was_an_angry_young_male_from_the/',
@@ -103,13 +106,16 @@ user.get('/:id/rooms', function(req, res) {
   			member: true
   		},
   		{
-  			rid: 'hashed rid',
+  			rid: '2',
   			title: 'Bu Graduation',
-  			author: 'BantrsAddict',
 			topic: {
 				content: 'http://imgur.com/neVk7fi',
 				type: 1
 			},
+  			author: {
+			  	uid: '1',
+			  	username: 'BantrsAddict'
+			  },
   			date: new Date(2015, 2, 1, 12, 0, 0),
   			lat: 9876,
   			lng: 1234,

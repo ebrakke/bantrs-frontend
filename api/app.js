@@ -1,13 +1,17 @@
 var express = require('express');
 var path = require('path');
-// var favicon = require('serve-favicon');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+/*
+ * Routes Declaration
+ */
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var room = require('./routes/room');
+var comment = require('./routes/comment');
 
 var app = express();
 
@@ -25,13 +29,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/../frontend')));
 
-/*
- * Routes Declarations
- */
-
+// routes to use
 app.use('/', routes);
 app.use('/user', user);
 app.use('/room', room);
+app.use('/comment', comment);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
