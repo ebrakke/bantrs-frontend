@@ -4,7 +4,7 @@ var user = express.Router();
 /*
  * Create User
  * TODO:
- * create user 
+ * create user
  * store in DB
  * return user
  */
@@ -52,7 +52,7 @@ user.get('/:id', function(req, res) {
 
   res.json({
   	uid: 'hashed uid',
-  	// email: 'bantrs@test.it',  
+  	email: 'bantrs@test.it',
   	username: 'BantrsAddict'
   });
 });
@@ -82,7 +82,7 @@ user.delete('/:id', function(req, res) {
 
 user.get('/:id/rooms', function(req, res) {
 	var id = req.params.id;
-  var authToken = req.body.authToken;
+    var authToken = req.body.authToken;
 
   res.json({
   	rooms: [
@@ -91,25 +91,31 @@ user.get('/:id/rooms', function(req, res) {
   			title: 'Snowpocalypse',
   			author: 'BantrsAddict',
   			date: new Date(2015, 2, 1, 12, 0, 0),
-  			lat: 9876,
-  			lng: 1234,
+			topic: {
+				content: 'http://www.reddit.com/r/Showerthoughts/comments/2zt1ga/luke_skywalker_was_an_angry_young_male_from_the/',
+				type: 1
+			},
+  			lat: 98.76,
+  			lng: 12.34,
   			radius: 20,
   			members: 2,
   			newComments: 2,
-  			contentType: 1,
   			member: true
   		},
   		{
   			rid: 'hashed rid',
   			title: 'Bu Graduation',
   			author: 'BantrsAddict',
+			topic: {
+				content: 'http://imgur.com/neVk7fi',
+				type: 1
+			},
   			date: new Date(2015, 2, 1, 12, 0, 0),
   			lat: 9876,
   			lng: 1234,
   			radius: 50,
   			members: 2,
   			newComments: 2,
-  			contentType: 1,
   			member: true
   		},
   	]

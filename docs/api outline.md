@@ -74,7 +74,12 @@
 		return:/
 			http code
 
-			
+	get:/discover
+		lat: float
+		lng: float
+		limit: int
+		return:
+			rooms: [Room room]
 	get:/:id
 		authtoken: string
 			or
@@ -140,4 +145,3 @@
 			response data
 		}
 	}
-
