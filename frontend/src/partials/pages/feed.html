@@ -13,10 +13,10 @@
         --><a class="siteHeader__item block-1-5" href="create.html"><i class="fa fa-cog"></i></a>
     </header>
     <section class="feed">
-        <a href="topic.html" ng-repeat="room in rooms">
-            <div class="feed__item link-item">
-                <div class="background">
-                    <img src="http://lorempixel.com/750/450/?v=1" />
+        <a href="#/room" ng-repeat="room in rooms">
+            <div class="feed__item {{room.topic.type}}-item">
+                <div class="background" ng-if="room.topic.type == 'media'">
+                    <img ng-src="{{room.topic.content}}" />
                 </div>
                 <div class="info">
                     <h1 class="title">{{room.title}}</h1>
