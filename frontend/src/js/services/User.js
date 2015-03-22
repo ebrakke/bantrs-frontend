@@ -17,11 +17,11 @@ app.factory('User', function($rootScope, $http) {
 
     User.get = function(id) {
         return $http.get(api + '/' + id).then(function(response) {
-            return new User(response.data);
+            return new User(response.data.data);
         });
     };
 
-    User.prototype.rooms = function() {
+    User.prototype.getRooms = function() {
         var user = this;
         var url = api + '/' + user.username +  '/rooms';
 

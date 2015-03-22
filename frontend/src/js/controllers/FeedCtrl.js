@@ -6,11 +6,11 @@ app.controller('FeedCtrl', function($rootScope, $scope, User) {
 
     $scope.user.then(function(u) {
         $scope.user = u;
+        console.log('[user]', $scope.user);
 
-        $scope.user.rooms().then(function(r) {
-            $scope.rooms = r.data.rooms;
-
-            console.log($scope.rooms);
+        $scope.user.getRooms().then(function(r) {
+            $scope.rooms = r.data;
+            console.log('[rooms]', $scope.rooms);
         });
     });
 });
