@@ -1,1 +1,1 @@
-var app = angular.module('bantrs', ['ngRoute', 'angularMoment']);
+var app = angular.module('bantrs', ['ngRoute', 'ngSanitize', 'angularMoment']);

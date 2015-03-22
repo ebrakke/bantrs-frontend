@@ -9,5 +9,8 @@ app.config(function($routeProvider) {
 	}).when('/discover', {
         templateUrl: 'partials/pages/discover.html',
 		controller: 'FeedCtrl'
+	}).when('/room', {
+        templateUrl: 'partials/pages/room.html',
+		controller: 'RoomCtrl'
 	});
 });
