@@ -20,7 +20,8 @@
         </header>
         <p class="message__body" ng-bind-html="comment.comment | linky:'_blank'"></p>
     </div>
-    <div class="newMessage">
-        <textarea rows="1" placeholder="New message"></textarea>
-    </div>
+    <form class="newMessage grid" ng-submit="postComment(newComment)">
+        <textarea class="block-3-4" rows="1" msd-elastic ng-model="newComment" placeholder="New message"></textarea><!--
+        --><button class="block-1-4 button"><i class="fa fa-comment"></i></button>
+    </form>
 </section>
