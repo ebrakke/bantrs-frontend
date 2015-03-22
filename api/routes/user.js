@@ -14,13 +14,38 @@ user.post('/', function(req, res) {
 	var userData = req.body;
 
 	var data = {
-		uid: '1',
-		authToken: 'thisIsAToken',
-		username: 'BantrsAddict'
-	};
+        "uid": "0603152c09e0d7e37ad35bf8105df067",
+        "username": "tyler",
+        "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
+    };
 
 	res.json(utils.envelope(data, null));
 });
+
+/*
+* Authenticate User
+* TODO:
+* Actually do authentication with DB
+*/
+user.post('/auth', function(req, res) {
+	var username = req.params.username;
+	var password = req.params.password;
+
+	//Do authentication stuff here
+
+	//On success
+	var data = {
+        "user": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com"
+        },
+        "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
+    };
+
+	res.json(utils.envelope(data, null));
+});
+
 
 /*
 * Update User
@@ -29,16 +54,35 @@ user.post('/', function(req, res) {
 * return user
 */
 
-user.post('/:id', function(req, res) {
-	var id = req.params.id;
+user.post('/me', function(req, res) {
+	//validate the user
 	var authToken = req.body.authToken;
-	var userData = req.body;
+	var username = req.params.username;
+
+	var newUsername = req.params.newUsername;
+	var newPassword = req.params.newPassword;
+	var newEmail = req.params.newEmail;
 
 	var data = {
-		uid: '1',
-		authToken: 'thisIsAToken',
-		username: 'BantrsAddict'
-	};
+        "user": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com"
+        },
+        "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
+    };
+	
+	res.json(utils.envelope(data, null));
+});
+
+user.get('/auth/validate', function(req, res) {
+	var username = req.params.username;
+	var authToken = req.body.authToken;
+
+	//Validate the user
+
+	//On success
+	var data = true;
 
 	res.json(utils.envelope(data, null));
 });
@@ -55,10 +99,11 @@ user.get('/:id', function(req, res) {
 	var authToken = req.body.authToken;
 
 	var data = {
-		uid: '1',
-		email: 'bantrs@test.it',
-		username: 'BantrsAddict'
-	};
+        "uid": "0603152c09e0d7e37ad35bf8105df067",
+        "username": "tyler",
+        "email": "tylerwaltze@gmail.com",
+        "rooms": ["955d0efbfe995480798028ee9637f130", "3858f62230ac3c915f300c664312c63f"]
+    };
 
 	res.json(utils.envelope(data, null));
 });
@@ -88,48 +133,30 @@ user.get('/:id/rooms', function(req, res) {
 	var id = req.params.id;
 	var authToken = req.body.authToken;
 
-	var data = {
-		rooms: [
-			{
-				rid: '1',
-				title: 'Snowpocalypse',
-				author: {
-					uid: '1',
-					username: 'BantrsAddict'
-				},
-				date: new Date(2015, 2, 1, 12, 0, 0),
-				topic: {
-					content: 'http://www.reddit.com/r/Showerthoughts/comments/2zt1ga/luke_skywalker_was_an_angry_young_male_from_the/',
-					type: 1
-				},
-				lat: 98.76,
-				lng: 12.34,
-				radius: 20,
-				members: 2,
-				newComments: 2,
-				member: true
-			},
-			{
-				rid: '2',
-				title: 'Bu Graduation',
-				topic: {
-					content: 'http://imgur.com/neVk7fi',
-					type: 1
-				},
-				author: {
-					uid: '1',
-					username: 'BantrsAddict'
-				},
-				date: new Date(2015, 2, 1, 12, 0, 0),
-				lat: 9876,
-				lng: 1234,
-				radius: 50,
-				members: 2,
-				newComments: 2,
-				member: true
-			},
-		]
-	};
+	var data = [
+        {
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+            "location": {
+                "lat": 42.6915,
+                "lng": -83.3876,
+                "radius": 500
+            },
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "tyler",
+                "email": "tylerwaltze@gmail.com",
+            },
+            "topic": {
+                "type": "url",
+                "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
+            },
+            "members": 36,
+            "newComments": 4,
+            "member": true,
+            "createdAt": "2015-03-21 09:30:26.123+07:00"
+        }
+    ];
 
 	res.json(utils.envelope(data, null));
 });

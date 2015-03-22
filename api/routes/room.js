@@ -17,19 +17,26 @@ room.get('/:id', function(req, res) {
 
     // Populate this data from the DB
     var data = {
-        rid: '1',
-        title: 'Snowpocalypse',
-        author: 'BantrsAddict',
-        date: new Date(2015, 2, 1, 12, 0, 0),
-        topic: {
-            content: 'http://www.reddit.com/r/Showerthoughts/comments/2zt1ga/luke_skywalker_was_an_angry_young_male_from_the/',
-            type: 1
+        "rid": "955d0efbfe995480798028ee9637f130",
+        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+        "location": {
+            "lat": 42.6915,
+            "lng": -83.3876,
+            "radius": 500
         },
-        lat: 98.76,
-        lng: 12.34,
-        radius: 20,
-        members: 2,
-        newComments: 2
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
+        },
+        "topic": {
+            "type": "url",
+            "data": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
+        },
+        "members": 36,
+        "newComments": 4,
+        "member": true,
+        "createdAt": "2015-03-21 09:30:26.123+07:00"
     };
 
     // Add metadata to the response
@@ -47,14 +54,9 @@ room.get('/:id/members', function(req,res) {
 
     var data = [
         {
-            uid: '1',
-            email: 'bantrs@test.it',
-            username: 'BantrsAddict'
-        },
-        {
-            uid: 'hashed uid 2',
-            email: 'email@example.com',
-            username: 'thisUserNameIsMadeUp'
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         }
     ];
 
@@ -75,15 +77,15 @@ room.get('/:id/comments', function(req,res) {
 
     var data = [
         {
-            cid: '5',
-            rid: '1',
-            author: {
-                uid: 'hashed uid1',
-                email: 'bantrs@test.it',
-                username: 'BantrsAddict'
+            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "tyler",
+                "email": "tylerwaltze@gmail.com",
             },
-            date: new Date(2015, 1, 1, 1, 0, 0),
-            comment: 'This is an example comment'
+            "createdAt": "2015-03-21 09:30:26.123+07:00",
+            "comment": "Hopefully Meerkat will do better than Josh's other recent investment"
         }
     ];
 
@@ -101,16 +103,26 @@ room.get('/discover', function(req,res) {
 
     var data = [
         {
-            rid: '1',
-            title: 'Snowpocalypse',
-            author: 'BantrsAddict',
-            date: new Date(2015, 2, 1, 12, 0, 0),
-            lat: 98.76,
-            lng: 12.34,
-            radius: 20,
-            members: 2,
-            newComments: 2,
-            contentType: 1
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+            "location": {
+                "lat": 42.6915,
+                "lng": -83.3876,
+                "radius": 500
+            },
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "tyler",
+                "email": "tylerwaltze@gmail.com",
+            },
+            "topic": {
+                "type": "url",
+                "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
+            },
+            "members": 36,
+            "newComments": 4,
+            "member": true,
+            "createdAt": "2015-03-21 09:30:26.123+07:00"
         }
     ];
 
@@ -130,26 +142,26 @@ room.post('/', function(req, res) {
     var radius = req.params.radius;
 
     var data = {
-        rid: '89',
-        title: 'This is the title of a new room',
-        location: {
-            lat: 42.3948,
-            lng: -83.485,
-            radius: 500
+        "rid": "955d0efbfe995480798028ee9637f130",
+        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+        "location": {
+            "lat": 42.6915,
+            "lng": -83.3876,
+            "radius": 500
         },
-        author: {
-            uid: 'hashed user id',
-            user: 'this is a user id',
-            email: 'test@example.com'
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         },
-        topic: {
-            type: 'url',
-            content: 'http://example.com',
+        "topic": {
+            "type": "url",
+            "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
         },
-        members: 0,
-        newComments: 0,
-        member: true,
-        createdAt: '2015-03-21 09:30:26.123+07:00'
+        "members": 36,
+        "newComments": 4,
+        "member": true,
+        "createdAt": "2015-03-21 09:30:26.123+07:00"
     };
 
     res.json(utils.envelope(data, null));
@@ -167,27 +179,27 @@ room.post('/:id', function(req, res) {
     var topic = req.params.topic;
     var radius = req.params.radius;
 
-    var data = {
-        rid: '1',
-        title: 'Updated title of room',
-        location: {
-            lat: 42.3948,
-            lng: -83.485,
-            radius: 30
+    var data =  {
+        "rid": "955d0efbfe995480798028ee9637f130",
+        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+        "location": {
+            "lat": 42.6915,
+            "lng": -83.3876,
+            "radius": 500
         },
-        author: {
-            uid: 'hashed user id',
-            user: 'this is a user id',
-            email: 'test@example.com'
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         },
-        topic: {
-            type: 'url',
-            content: 'http://example.com',
+        "topic": {
+            "type": "url",
+            "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
         },
-        members: 0,
-        newComments: 0,
-        member: true,
-        createdAt: '2015-03-21 09:30:26.123+07:00'
+        "members": 36,
+        "newComments": 4,
+        "member": true,
+        "createdAt": "2015-03-21 09:30:26.123+07:00"
     };
 
     res.json(utils.envelope(data, null));
@@ -205,26 +217,26 @@ room.post('/:id/join', function(req, res) {
     var lng = req.params.lng;
 
     var data = {
-        rid: 'hashed id of joined room',
-        title: 'Title of room you just joined',
-        location: {
-            lat: 42.3948,
-            lng: -83.485,
-            radius: 30
+        "rid": "955d0efbfe995480798028ee9637f130",
+        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+        "location": {
+            "lat": 42.6915,
+            "lng": -83.3876,
+            "radius": 500
         },
-        author: {
-            uid: 'hashed user id',
-            user: 'this is a user id',
-            email: 'test@example.com'
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         },
-        topic: {
-            type: 'url',
-            content: 'http://example.com',
+        "topic": {
+            "type": "url",
+            "data": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
         },
-        members: 0,
-        newComments: 0,
-        member: true,
-        createdAt: '2015-03-21 09:30:26.123+07:00'
+        "members": 36,
+        "newComments": 4,
+        "member": true,
+        "createdAt": "2015-03-21 09:30:26.123+07:00"
     };
 
     res.json(utils.envelope(data, null));

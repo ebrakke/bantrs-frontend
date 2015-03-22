@@ -15,31 +15,25 @@ comment.post('/', function(req, res) {
     var rid = req.body.rid;
     var content = req.body.content;
 
-
+    // If user is authenticated
     var data = {
-        cid: '1',
-        room: {
-            rid: '1',
-            title: 'Snowpocalypse',
-            author: {
-                uid: '1',
-                username: 'BantrsAddict'
+        "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+        "room": {
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+            "location": {
+                "lat": 37.336382,
+                "lng": -121.888049,
+                "radius": 500
             },
-            date: new Date(2015, 2, 1, 12, 0, 0),
-            lat: 9876,
-            lng: 1234,
-            radius: 20,
-            members: 2,
-            newComments: 2,
-            contentType: 1,
-            member: true
         },
-        author: {
-            uid: '1',
-            username: 'BantrsAddict'
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         },
-        date: new Date(2015, 2, 15, 12, 0, 0),
-        comment: "I've been stuck in a parking lot snowbank for 3 months.."
+        "createdAt": "2015-03-21 09:30:26.123+07:00",
+        "comment": "Hopefully Meerkat will do better than Josh's other recent investment"
     };
 
     res.json(utils.envelope(data, null));
@@ -53,32 +47,27 @@ comment.post('/', function(req, res) {
 */
 
 comment.get('/:id', function(req, res) {
-    var authToken = req.body.authToken;
 
+    // Find comment in DB
+
+    //If found
     var data = {
-        cid: '1',
-        room: {
-            rid: '1',
-            title: 'Snowpocalypse',
-            author: {
-                uid: '1',
-                username: 'BantrsAddict'
+        "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+        "room": {
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+            "location": {
+                "lat": 37.336382,
+                "lng": -121.888049
             },
-            date: new Date(2015, 2, 1, 12, 0, 0),
-            lat: 9876,
-            lng: 1234,
-            radius: 20,
-            members: 2,
-            newComments: 2,
-            contentType: 1,
-            member: true
         },
-        author: {
-            uid: '1',
-            username: 'BantrsAddict'
+        "author": {
+            "uid": "0603152c09e0d7e37ad35bf8105df067",
+            "username": "tyler",
+            "email": "tylerwaltze@gmail.com",
         },
-        date: new Date(2015, 2, 15, 12, 0, 0),
-        comment: "I've been stuck in a parking lot snowbank for 3 months.."
+        "createdAt": "2015-03-21 09:30:26.123+07:00",
+        "comment": "Hopefully Meerkat will do better than Josh's other recent investment"
     };
 
     res.json(utils.envelope(data, null));
