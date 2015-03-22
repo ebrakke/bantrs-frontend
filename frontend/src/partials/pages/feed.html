@@ -1,5 +1,5 @@
 <header class="siteHeader grid--middle">
-    <a class="siteHeader__item block-1-5" href=""><i class="fa fa-bars"></i></a><!--
+    <a class="siteHeader__item block-1-5" href=""><i class="fa fa-user"></i></a><!--
     --><div class="block-3-5">
         <div class="toggle">
             <input id="toggle-active" name="feed" class="toggle__checkbox" type="radio" checked="checked">
@@ -9,7 +9,7 @@
             <label for="toggle-archived" class="option">archived</label>
         </div>
     </div><!--
-    --><a class="siteHeader__item block-1-5" href="create.html"><i class="fa fa-comments-o"></i></a>
+    --><a class="siteHeader__item block-1-5" href="create.html"><i class="fa fa-cog"></i></a>
 </header>
 <section class="feed">
     <a href="topic.html" ng-repeat="room in rooms">
@@ -24,3 +24,10 @@
         </div>
     </a>
 </section>
+<nav class="mainNavigation">
+    <ul class="grid--bottom">
+        <li class="block-1-3 mainNavigation__item discover"><a href=""><i class="fa fa-street-view"></i></a></li><!--
+        --><li class="block-1-3 mainNavigation__item read"><a href=""><i class="fa fa-comments-o"></i></a></li><!--
+        --><li class="block-1-3 mainNavigation__item create"><a href=""><i class="fa fa-pencil-square-o"></i></a></li>
+    </ul>
+</nav>

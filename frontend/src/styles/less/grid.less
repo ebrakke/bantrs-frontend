@@ -51,6 +51,14 @@
             vertical-align: middle;
         }
     }
+
+    &--bottom {
+        &:extend(.grid);
+
+        & > [class*="block-"] {
+            vertical-align: bottom;
+        }
+    }
 }
 
 [class*="block-"],
