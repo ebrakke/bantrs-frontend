@@ -8,7 +8,7 @@ app.config(function($routeProvider) {
 		controller: 'FeedCtrl'
 	}).when('/discover', {
         templateUrl: 'partials/pages/discover.html',
-		controller: 'FeedCtrl'
+		controller: 'DiscoverCtrl'
 	}).when('/room', {
         templateUrl: 'partials/pages/room.html',
 		controller: 'RoomCtrl'
