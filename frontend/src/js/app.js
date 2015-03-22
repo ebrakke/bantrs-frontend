@@ -1,1 +1,1 @@
-var app = angular.module('bantrs', ['ngRoute']);
+var app = angular.module('bantrs', ['ngRoute', 'angularMoment']);
