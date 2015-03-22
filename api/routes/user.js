@@ -71,7 +71,7 @@ user.post('/me', function(req, res) {
         },
         "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
     };
-	
+
 	res.json(utils.envelope(data, null));
 });
 
@@ -136,10 +136,10 @@ user.get('/:id/rooms', function(req, res) {
 	var data = [
         {
             "rid": "955d0efbfe995480798028ee9637f130",
-            "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
+            "title": "Meerkat Raises $12M At $40M Valuation",
             "location": {
-                "lat": 42.6915,
-                "lng": -83.3876,
+                "lat": 42.349137,
+                "lng": -71.095748,
                 "radius": 500
             },
             "author": {
@@ -155,6 +155,50 @@ user.get('/:id/rooms', function(req, res) {
             "newComments": 4,
             "member": true,
             "createdAt": "2015-03-21 09:30:26.123+07:00"
+        },
+		{
+            "rid": "f06b37ced98f420683ac8cf2ad661cde",
+            "title": "Churro Ice Cream Sandwich",
+            "location": {
+                "lat": 42.349454,
+                "lng": -71.099396,
+                "radius": 500
+            },
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "tyler",
+                "email": "tylerwaltze@gmail.com",
+            },
+            "topic": {
+                "type": "media",
+                "content": "http://i.imgur.com/mJCQ1Mw.jpg"
+            },
+            "members": 36,
+            "newComments": 4,
+            "member": true,
+            "createdAt": "2015-03-20 09:30:26.123+07:00"
+        },
+		{
+            "rid": "199ee3f689c470aabdbe659d33beea59",
+            "title": "Obama imposes stricter standards on fracking",
+            "location": {
+                "lat": 42.348597,
+                "lng": -71.102142,
+                "radius": 500
+            },
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "tyler",
+                "email": "tylerwaltze@gmail.com",
+            },
+            "topic": {
+                "type": "url",
+                "content": "http://www.theverge.com/2015/3/20/8266455/fracking-obama-regulations-hydraulic-drilling"
+            },
+            "members": 36,
+            "newComments": 4,
+            "member": true,
+            "createdAt": "2015-03-18 09:30:26.123+07:00"
         }
     ];
 
