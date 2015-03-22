@@ -84,8 +84,52 @@ room.get('/:id/comments', function(req,res) {
                 "username": "tyler",
                 "email": "tylerwaltze@gmail.com",
             },
-            "createdAt": "2015-03-21 09:30:26.123+07:00",
+            "createdAt": "2015-03-21 09:30:26.123-05:00",
             "comment": "Hopefully Meerkat will do better than Josh's other recent investment"
+        },
+        {
+            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "erik",
+                "email": "erik@gmail.com",
+            },
+            "createdAt": "2015-03-22 09:30:26.123-05:00",
+            "comment": "Looks like they also raised from Aleph? https://twitter.com/asknbid/status/579066396400693248"
+        },
+        {
+            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "logan",
+                "email": "logan@gmail.com",
+            },
+            "createdAt": "2015-03-22 09:45:26.123-05:00",
+            "comment": "that was their $3.4m round from last year it seems"
+        },
+        {
+            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "erik",
+                "email": "erik@gmail.com",
+            },
+            "createdAt": "2015-03-22 10:45:26.123-05:00",
+            "comment": "Just in time as the bubble is soon to pop. Where is the revenue coming from?"
+        },
+        {
+            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
+            "rid": "955d0efbfe995480798028ee9637f130",
+            "author": {
+                "uid": "0603152c09e0d7e37ad35bf8105df067",
+                "username": "john",
+                "email": "john@gmail.com",
+            },
+            "createdAt": "2015-03-22 11:30:26.123-05:00",
+            "comment": "Where does the revenue come from with thousands of live eyeballs? For serious?"
         }
     ];
 
