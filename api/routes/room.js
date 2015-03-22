@@ -139,7 +139,7 @@ room.get('/discover', function(req,res) {
             },
             "topic": {
                 "type": "media",
-                "content": "http://i.imgur.com/mJCQ1Mw.jpg"
+                "content": "https://c4.staticflickr.com/8/7146/6841661349_7840647f4b_b.jpg"
             },
             "members": 36,
             "newComments": 4,
