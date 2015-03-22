@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 
 router.get('/', function(req, res) {
-  res.render('index.html');
+  res.sendFile('index.html', { root: '../frontend/src' });
 });
 
 module.exports = router;
