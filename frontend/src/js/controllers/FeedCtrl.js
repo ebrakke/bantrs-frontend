@@ -8,7 +8,7 @@ app.controller('FeedCtrl', function($rootScope, $scope, User) {
         $scope.user = u;
 
         $scope.user.rooms().then(function(r) {
-            $scope.rooms = r.rooms;
+            $scope.rooms = r.data.rooms;
 
             console.log($scope.rooms);
         });

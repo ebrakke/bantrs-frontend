@@ -4,30 +4,18 @@
         --><div class="block-3-5">
             <div class="toggle">
                 <input id="toggle-active" name="feed" class="toggle__checkbox" type="radio" checked="checked">
-                <label for="toggle-active" class="option">active</label>
+                <label for="toggle-active" class="option">map</label>
 
                 <input id="toggle-archived" name="feed" class="toggle__checkbox" type="radio">
-                <label for="toggle-archived" class="option">archived</label>
+                <label for="toggle-archived" class="option">list</label>
             </div>
         </div><!--
         --><a class="siteHeader__item block-1-5" href="create.html"><i class="fa fa-cog"></i></a>
     </header>
-    <section class="feed">
-        <a href="topic.html" ng-repeat="room in rooms">
-            <div class="feed__item link-item">
-                <div class="background">
-                    <img src="http://lorempixel.com/750/450/?v=1" />
-                </div>
-                <div class="info">
-                    <h1 class="title">{{room.title}}</h1>
-                    <timestamp class="date" am-time-ago="room.date"></timestamp>
-                </div>
-            </div>
-        </a>
-    </section>
+    <map id="map" class="fill"></map>
 </div>
 <nav class="mainNavigation">
-    <ul class="grid--bottom">
+    <ul class="grid">
         <li class="block-1-3 mainNavigation__item"><a href="#/discover"><i class="fa fa-street-view"></i></a></li><!--
         --><li class="block-1-3 mainNavigation__item"><a href="#/feed"><i class="fa fa-comments-o"></i></a></li><!--
         --><li class="block-1-3 mainNavigation__item"><a href=""><i class="fa fa-pencil-square-o"></i></a></li>

@@ -3,6 +3,8 @@
     bottom: 0;
     left: 0;
     right: 0;
+    height: @mainNavigationHeight;
+    line-height: @mainNavigationHeight;
     font-size: 3rem;
     background: @blue;
     color: @blue-darkest;
@@ -18,21 +20,9 @@
         a {
             display: block;
         }
-
-        // &.discover {
-        //     background: @blue;
-        //     color: @blue-darkest;
-        // }
-        //
-        // &.read {
-        //     background: @orange;
-        //     color: @orange-darkest;
-        //     padding: 10px 0;
-        // }
-        //
-        // &.create {
-        //     background: @blue;
-        //     color: @blue-darkest;
-        // }
     }
+}
+
+.push-from-bottom {
+    padding-bottom: @mainNavigationHeight;
 }
