@@ -1,0 +1,52 @@
+.siteHeader {
+    background: @red;
+    color: @red-darkest;
+    text-align: center;
+    font-size: 2rem;
+    line-height: 1;
+    height: @siteHeaderHeight;
+    z-index: 10000;
+
+    &--fixed {
+        &:extend(.siteHeader);
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        & + .push-from-top {
+            padding-top: 50px;
+        }
+    }
+
+    &__item {
+        line-height: @siteHeaderHeight;
+    }
+
+    .toggle {
+        background: @red-dark;
+        display: inline-block;
+        padding: 1px;
+        margin: 5px;
+        line-height: 1;
+
+        &__checkbox {
+            position: absolute;
+            opacity: 0;
+
+            &:checked + .option {
+                background: @red;
+                color: #fff;
+            }
+        }
+
+        .option {
+            display: inline-block;
+            font-size: 1rem;
+            vertical-align: middle;
+            color: @red;
+            padding: 10px;
+        }
+    }
+}

@@ -12,14 +12,20 @@ textarea {
     color: @fontColor;
 }
 
-body {
+body,
+html {
     color: @fontColor;
     font-size: @fontSize;
-    line-height: 1.4;
+    line-height: 1.6;
+}
+
+input,
+textarea {
+    font-size: inherit;
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
 }
 
 h2 {
@@ -58,6 +64,10 @@ a {
     &:hover {
 
     }
+}
+
+.muted {
+    color: @grey-dark;
 }
 
 .text-align {

@@ -14,19 +14,19 @@
 .grid {
     max-width: 100%;
 
-    &-center {
+    &--center {
         &:extend(.grid);
 
         text-align: center;
     }
 
-    &-right {
+    &--right {
         &:extend(.grid);
 
         text-align: right;
     }
 
-    &-justify {
+    &--justify {
         &:extend(.grid);
 
         text-align: justify;
@@ -38,9 +38,17 @@
         }
     }
 
-    &-gutter {
+    &--gutter {
         & > [class*="block-"] {
             margin: 0 (@gutter / 2);
+        }
+    }
+
+    &--middle {
+        &:extend(.grid);
+
+        & > [class*="block-"] {
+            vertical-align: middle;
         }
     }
 }
