@@ -72,7 +72,12 @@ app.directive('map', function($window) {
             var myIcon = L.icon({
                 iconUrl: '/img/leaflet/marker-icon.png',
                 iconRetinaUrl: '/img/leaflet/marker-icon@2x.png',
-                shadowUrl: '/img/leaflet/marker-shadow.png'
+                // shadowUrl: '/img/leaflet/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [11, 40],
+                popupAnchor: [-3, -76],
+                shadowSize: [68, 95],
+                shadowAnchor: [22, 94]
             });
 
             if (scope.pinSource) {
