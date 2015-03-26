@@ -6,15 +6,14 @@
     height: @mainNavigationHeight;
     line-height: @mainNavigationHeight;
     font-size: 3rem;
-    background: @blue;
-    color: @blue-darkest;
+    background: @grey-darkest;
+    color: @grey-dark;
 
     &__item {
         text-align: center;
-        border-right: 1px solid @blue-darkest;
 
-        &:last-child {
-            border-right: none;
+        &.active {
+            color: #fff;
         }
 
         a {
