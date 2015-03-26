@@ -18,9 +18,16 @@
                 <div class="background" ng-if="room.topic.type == 'media'">
                     <img ng-src="{{room.topic.content}}" />
                 </div>
+                <map class="background" ng-if="room.topic.type == 'url'" lat="room.location.lat" lng="room.location.lng" locate="false" controls="false"></map>
                 <div class="info">
                     <h1 class="title">{{room.title}}</h1>
-                    <timestamp class="date" am-time-ago="room.createdAt"></timestamp>
+                    <div class="meta">
+                        <span class="notification">{{room.newComments}}</span>
+                        <ul class="creation">
+                            <li>{{room.author.username}}</li>
+                            <li am-time-ago="room.createdAt"></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </a>

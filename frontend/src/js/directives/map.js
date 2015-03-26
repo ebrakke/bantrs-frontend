@@ -5,8 +5,11 @@ app.directive('map', function($window) {
         restrict: 'E',
         replace: true,
         scope: {
-            'controls': '=?',
-            'pinSource': '=?'
+            locate: '=?',
+            controls: '=?',
+            lat: '=?',
+            lng: '=?',
+            pinSource: '=?'
         },
         template: '<section class="map"></section>',
         link: function(scope, element, attrs) {
@@ -14,8 +17,6 @@ app.directive('map', function($window) {
             if (typeof scope.controls === 'undefined') {
                 scope.controls = true;
             }
-
-            scope.locate = true;
 
             console.log('map.scope', scope);
 
@@ -25,13 +26,8 @@ app.directive('map', function($window) {
                 scope.lng = -122.415504;
             }
 
-            // Default to display controls
-            if (typeof scope.controls === 'undefined') {
-                scope.controls = true;
-            }
-
             // Create map
-            scope.map = L.map(attrs.id, {
+            scope.map = L.map(element[0], {
                 scrollWheelZoom: false,
                 center: [scope.lat, scope.lng],
                 zoom: 15,
@@ -56,18 +52,21 @@ app.directive('map', function($window) {
             }).addTo(scope.map);
 
             // Set center of map to user's location
-            scope.map.locate({
-                setView: true,
-                enableHighAccuracy: true,
-                maxZoom: 15
-            });
+            if (scope.locate) {
+                scope.map.locate({
+                    setView: true,
+                    enableHighAccuracy: true,
+                    maxZoom: 15
+                });
 
-            // Wait for location be found
-            scope.map.on('locationfound', function(e) {
-                // Update map's center
-                scope.lat = e.latlng.lat;
-                scope.lng = e.latlng.lng;
-            });
+                // Wait for location be found
+                scope.map.on('locationfound', function(e) {
+                    console.log('run this');
+                    // Update map's center
+                    scope.lat = e.latlng.lat;
+                    scope.lng = e.latlng.lng;
+                });
+            }
 
             var myIcon = L.icon({
                 iconUrl: '/img/leaflet/marker-icon.png',

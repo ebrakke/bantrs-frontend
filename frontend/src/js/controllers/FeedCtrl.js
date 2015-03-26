@@ -6,7 +6,6 @@ app.controller('FeedCtrl', function($rootScope, $scope, User) {
 
     $scope.user.then(function(u) {
         $scope.user = u;
-        console.log('[user]', $scope.user);
 
         $scope.user.getRooms().then(function(r) {
             $scope.rooms = r.data;
