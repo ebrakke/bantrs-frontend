@@ -14,6 +14,7 @@
     &__item {
         display: inline-block;
         position: relative;
+        vertical-align: top;
         width: @itemWidth;
         height: @itemHeight;
         margin: @itemMargin;
@@ -27,6 +28,7 @@
             bottom: 0;
             overflow: hidden;
             filter: blur(2px);
+            z-index: 100;
 
             img {
                 position: absolute;
@@ -37,11 +39,9 @@
         }
 
         .info {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+            position: relative;
+            height: 100%;
+            z-index: 500;
             color: #fff;
             padding: 20px;
             white-space: normal;
