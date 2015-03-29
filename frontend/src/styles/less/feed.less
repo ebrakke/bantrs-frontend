@@ -1,23 +1,24 @@
 .feed {
+    @itemHeight: 350px * 1.1;
+    @itemWidth: 200px * 1.1;
+    @itemMargin: 10px;
+
     white-space: nowrap;
     overflow: auto;
-    padding: 0 calc(~"50% - 110px");
+    padding: 0 calc(~"50% - " (@itemWidth / 2) + @itemMargin);
     -webkit-overflow-scrolling: touch;
     position: relative;
-    top: 40%;
-    margin-top: -175px;
+    top: 50%;
+    margin-top: -((@itemHeight / 2) + @itemMargin + (@siteHeaderHeight / 2));
 
     &__item {
         display: inline-block;
         position: relative;
-        width: 200px;
-        height: 350px;
-        margin: 10px;
+        vertical-align: top;
+        width: @itemWidth;
+        height: @itemHeight;
+        margin: @itemMargin;
         background: @grey;
-
-        &.read {
-            transform: scale(0.9);
-        }
 
         .background {
             position: absolute;
@@ -26,6 +27,8 @@
             right: 0;
             bottom: 0;
             overflow: hidden;
+            filter: blur(2px);
+            z-index: 100;
 
             img {
                 position: absolute;
@@ -36,15 +39,18 @@
         }
 
         .info {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+            position: relative;
+            height: 100%;
+            z-index: 500;
             color: #fff;
             padding: 20px;
             white-space: normal;
             font-weight: 300;
+            background-image: linear-gradient(
+                to top,
+                #000,
+                rgba(0, 0, 0, 0.1)
+            );
 
             .title {
                 line-height: 1.2;
@@ -52,31 +58,30 @@
                 text-overflow: ellipsis;
             }
 
-            .date {
-                display: block;
-                font-size: 1.5rem;
-                margin-bottom: 10px;
+            .meta {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 10px;
+                font-size: 1.3rem;
             }
 
-            .members {
-                font-size: 1.2rem;
-            }
-
-            .user {
+            .notification {
+                border: 5px solid @green;
+                height: 65px;
+                width: 65px;
+                line-height: 55px; // height - borderWidth * 2
+                border-radius: 50%;
+                font-size: 1.7rem;
+                text-align: center;
                 display: inline-block;
-                padding: 3px 10px;
-                margin: 0 5px 5px 0;
-                background: @blue;
             }
-        }
 
-        &.url-item {
-            background: @grey-dark;
-        }
-
-        &.media-item {
-            .info {
-                background: rgba(0, 0, 0, 0.3);
+            .creation {
+                display: inline-block;
+                margin-left: 10px;
+                vertical-align: middle;
             }
         }
     }

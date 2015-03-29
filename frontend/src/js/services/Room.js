@@ -21,6 +21,28 @@ app.factory('Room', function($rootScope, $http) {
         });
     };
 
+    Room.discover = function(lat, lng) {
+        var params = {
+            'lat': lat,
+            'lng': lng
+        };
+
+        return $http({
+            url: api + '/discover',
+            method: 'GET',
+            params: params
+        }).then(function(response) {
+            var data = response.data.data;
+
+            var rooms = [];
+            data.forEach(function(elem) {
+                rooms.push(new Room(elem));
+            });
+
+            return rooms;
+        });
+    };
+
     Room.prototype.getComments = function() {
         var room = this;
         var url = api + '/' + room.rid +  '/comments';

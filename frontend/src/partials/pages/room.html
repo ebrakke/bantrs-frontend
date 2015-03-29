@@ -1,6 +1,6 @@
 <header class="siteHeader--fixed">
     <ul class="grid--middle">
-        <li class="siteHeader__item block-1-5"><i class="fa fa-chevron-left"></i></li><!--
+        <li class="siteHeader__item block-1-5" back-button><i class="fa fa-chevron-left"></i></li><!--
         --><li class="siteHeader__item block-3-5" am-time-ago="room.createdAt"></li><!--
         --><li class="siteHeader__item block-1-5"><i class="fa fa-cog"></i></li>
     </ul>
@@ -10,7 +10,7 @@
         <img class="" src="http://lorempixel.com/400/250/" />
     </div>-->
     <div class="cover--link">
-        <h2 class="title"><a href="">{{room.title}}</a></h2>
+        <h2 class="title"><a ng-href="{{room.topic.data}}" target="_blank">{{room.title}}</a></h2>
         <img class="icon" src="https://s0.wp.com/wp-content/themes/vip/techcrunch-2013/assets/images/homescreen_TCIcon.png" /><span class="domain">techcrunch.com</span>
     </div>
     <div class="message" ng-repeat="comment in comments">

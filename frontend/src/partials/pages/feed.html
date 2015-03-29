@@ -18,9 +18,16 @@
                 <div class="background" ng-if="room.topic.type == 'media'">
                     <img ng-src="{{room.topic.content}}" />
                 </div>
+                <map class="background" ng-if="room.topic.type == 'url'" lat="room.location.lat" lng="room.location.lng" locate="false" controls="false"></map>
                 <div class="info">
                     <h1 class="title">{{room.title}}</h1>
-                    <timestamp class="date" am-time-ago="room.createdAt"></timestamp>
+                    <div class="meta">
+                        <span class="notification">{{room.newComments}}</span>
+                        <ul class="creation">
+                            <li>{{room.author.username}}</li>
+                            <li am-time-ago="room.createdAt"></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </a>
@@ -29,7 +36,7 @@
 <nav class="mainNavigation">
     <ul class="grid--bottom">
         <li class="block-1-3 mainNavigation__item"><a href="#/discover"><i class="fa fa-street-view"></i></a></li><!--
-        --><li class="block-1-3 mainNavigation__item"><a href="#/feed"><i class="fa fa-comments-o"></i></a></li><!--
-        --><li class="block-1-3 mainNavigation__item"><a href=""><i class="fa fa-pencil-square-o"></i></a></li>
+        --><li class="block-1-3 mainNavigation__item active"><a href="#/feed"><i class="fa fa-comments-o"></i></a></li><!--
+        --><li class="block-1-3 mainNavigation__item"><a href="#/create"><i class="fa fa-pencil-square-o"></i></a></li>
     </ul>
 </nav>
