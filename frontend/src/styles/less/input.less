@@ -1,0 +1,46 @@
+.input {
+    padding: .5em .7em;
+    display: block;
+    width: 100%;
+    outline: none;
+    border: 1px solid @grey;
+
+    &-toggle {
+        display: inline-block;
+        line-height: 1;
+        text-align: center;
+        padding: .4em .1em;
+
+        .toggle(@grey, @grey-dark);
+
+        &__item {
+            position: relative;
+        }
+
+        &__checkbox {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .option {
+            display: inline-block;
+            font-size: 1em;
+            vertical-align: middle;
+            text-align: center;
+            padding: .5em .7em;
+        }
+    }
+}
+
+.toggle(@base, @dark) {
+    background: @base;
+
+    &__checkbox:checked + .option {
+        background: @dark;
+        color: @base;
+    }
+
+    .option {
+        color: @dark;
+    }
+}

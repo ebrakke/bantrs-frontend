@@ -1,0 +1,33 @@
+.create {
+    height: 100%;
+
+    .type {
+        height: 50%;
+        border-bottom: 1px solid @grey;
+        font-size: 5rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.createRoom {
+    padding: 10px;
+    font-size: 1.5rem;
+
+    .input {
+        margin-bottom: 10px;
+    }
+
+    .input-toggle {
+        font-size: 1.4rem;
+        width: 100%;
+
+        .toggle(@red, @red-darkest);
+    }
+}
