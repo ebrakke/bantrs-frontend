@@ -200,6 +200,35 @@ module.exports = function(grunt) {
             }
         },
 
+        replace: {
+            dev: {
+                options: {
+                    patterns: [{
+                        json: grunt.file.readJSON('./config/dev.json')
+                    }]
+                },
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['<%= dirs.dev %>/js/config.js'],
+                    dest: '<%= dirs.dev %>/js/'
+                }]
+            },
+            dist: {
+                options: {
+                    patterns: [{
+                        json: grunt.file.readJSON('./config/dist.json')
+                    }]
+                },
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['<%= dirs.dist %>/js/config.js'],
+                    dest: '<%= dirs.dist %>/js/'
+                }]
+            }
+        },
+
         // Run some tasks in parallel to speed up build process
         concurrent: {
             dev: [
@@ -239,7 +268,8 @@ module.exports = function(grunt) {
             grunt.task.run([
                 'clean:dev',
                 'concurrent:dev',
-                'autoprefixer'
+                'autoprefixer',
+                'replace:dev'
             ]);
         }
 
@@ -253,6 +283,7 @@ module.exports = function(grunt) {
         'clean:dist',
         'concurrent:dist',
         'autoprefixer',
-        'cssmin'
+        'cssmin',
+        'replace:dist'
     ]);
 };
