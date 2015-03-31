@@ -1,7 +1,7 @@
 'use strict';
 
-app.factory('User', function($rootScope, $http) {
-    var api = $rootScope.config.api + '/user';
+app.factory('User', function(config, $http) {
+    var api = config.api + '/user';
 
     var User = function(data) {
         angular.extend(this, data);

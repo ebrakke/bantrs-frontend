@@ -1,7 +1,5 @@
 'use strict';
 
-app.run(function($rootScope) {
-    $rootScope.config = {
-        api: 'http://localhost:3000'
-    };
+app.constant('config', {
+    api: 'http://localhost:3000'
 });
