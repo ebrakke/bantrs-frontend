@@ -1,6 +1,7 @@
 var express = require('express');
-var user = express.Router();
 var utils = require('../utils');
+var user = express.Router();
+
 /*
 * Create User
 * TODO:
