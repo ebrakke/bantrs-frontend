@@ -63,6 +63,11 @@ User.getHash = function(username) {
     return query;
 }
 
-// Get the authToken of a user by the username
+// Get a User object by the banstrsauth
+User.getByAuthToken = function(bantrsauth){
+    // var query = db.query('SELECT id, username, email FROM users WHERE uid = (select uid where banterauth = ? FROM auth)', {replacements: [bantrsauth]})
+    var query = db.query('SELECT u.id, u.username, u.email FROM users u NATURAL JOIN auth WHERE u.bantrsauth = ?',{replacements:[banterauth]});
+    return query;
+})
 
 module.exports = User;
