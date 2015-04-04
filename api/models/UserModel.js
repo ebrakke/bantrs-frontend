@@ -44,9 +44,30 @@ User.getByUsername = function(username){
 }
 
 // Get a User object by the uid
-User.getById = function(uid, callback){
+User.getById = function(uid){
     var query = db.query('SELECT id, username, email FROM users WHERE uid = ?', {replacements: [uid]});
-
+    return query;
 }
 
+// Get a User object by the banstrsauth
+User.getByAuthToken = function(bantrsauth){
+    // var query = db.query('SELECT id, username, email FROM users WHERE uid = (select uid where banterauth = ? FROM auth)', {replacements: [bantrsauth]})
+    var query = db.query('SELECT u.id, u.username, u.email FROM users u NATURAL JOIN auth WHERE u.bantrsauth = ?',{replacements:[banterauth]});
+    return query;
+})
+
+
 module.exports = User;
+
+
+
+
+
+
+
+
+
+
+
+
+

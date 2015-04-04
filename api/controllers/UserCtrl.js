@@ -6,7 +6,7 @@ var UserModel = require('../models/UserModel');
 
 /* UserCtrl Constructor */
 
- var UserCtrl = function () {}
+var UserCtrl = function () {}
 
 
  /* Post (create) user - ok to pass pw as argument?
@@ -58,11 +58,17 @@ UserCtrl.update = function(username, newInfo) {
 /* Get a user by username*/
 UserCtrl.getByUsername = function(username, callback) {
     var query = UserModel.getByUsername(username);
-    query.then(function(results){
+    query.then(
+
+        function(results){
         var err;
         if (results[1].rowCount === 0){err = 'User not found'}
+
+            
         callback(err,results[0][0]);
-    });
+        }
+
+    );
 }
 
 /* Get a user by id */
