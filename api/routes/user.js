@@ -38,7 +38,10 @@ user.post('/auth', function(req, res) {
 	var password = req.params.password;
 
 	//Do authentication stuff here
+    
 
+
+    
 	//On success
 	var data = {
         "user": {

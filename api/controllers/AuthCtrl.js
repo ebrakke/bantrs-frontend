@@ -6,10 +6,6 @@ var UserModel = require('../models/UserModel');
 /* AuthCtrl Constructor */
 var AuthCtrl = function () {};
 
-
-
-
-
 AuthCtrl.validByUserPwd = function(username, password) {
 	var hash = UserModel.getHash(username);
 	if(bcrypt.compareSync(password, hash)){
