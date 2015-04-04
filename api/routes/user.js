@@ -1,26 +1,31 @@
 var express = require('express');
-var utils = require('../utils');
 var user = express.Router();
+var utils = require('../utils');
+var uc = require('../controllers/UserCtrl');
+var bcrypt = require('bcryptjs');
 
 /*
 * Create User
 * TODO:
-* create user
-* store in DB
-* return user
+* Get the actual data from the body
+* Password hasing!
 */
 
 user.post('/', function(req, res) {
-	// email, password, username
-	var userData = req.body;
+	var userData = req.body;  //username, password, email
 
-	var data = {
-        "uid": "0603152c09e0d7e37ad35bf8105df067",
-        "username": "tyler",
-        "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
-    };
-
-	res.json(utils.envelope(data, null));
+	userData = {
+		username: Math.random().toString(32).slice(2),
+		password: Math.random().toString(32).slice(2),
+		email: 'some@test.email'
+	}
+	uc.create(userData, function(err, user){
+		if (!err) {
+			res.json(utils.envelope(user, null));
+		} else {
+		res.json(utils.envelope(null, err));
+		}
+	});
 });
 
 /*
@@ -51,29 +56,24 @@ user.post('/auth', function(req, res) {
 /*
 * Update User
 * TODO:
-* update user in DB
-* return user
+* Authenticate, authenticate, authenticate
 */
 
 user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.body.authToken;
 	var username = req.params.username;
-
-	var newUsername = req.params.newUsername;
-	var newPassword = req.params.newPassword;
-	var newEmail = req.params.newEmail;
-
-	var data = {
-        "user": {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com"
-        },
-        "authToken": "c6661bce231c16208b2c8bd8e6e17d8c51ef392ad3a5d61bc80bd9f4ada30e54"
-    };
-
-	res.json(utils.envelope(data, null));
+	var newInfo = {}
+	newInfo.newUsername = req.params.newUsername;
+	newInfo.newPassword = req.params.newPassword;
+	newInfo.newEmail = req.params.newEmail;
+	uc.update(username, newInfo, function(err, user) {
+		if (!err) {
+			res.json(util.envelope(user, null));
+		} else {
+			res.json(util.envelope(null, err));
+		}
+	});
 });
 
 user.get('/auth/validate', function(req, res) {
@@ -91,22 +91,21 @@ user.get('/auth/validate', function(req, res) {
 /*
 * Get User
 * TODO:
-* get user from DB
-* return user
+* run validation
 */
 
 user.get('/:id', function(req, res) {
 	var id = req.params.id;
 	var authToken = req.body.authToken;
 
-	var data = {
-        "uid": "0603152c09e0d7e37ad35bf8105df067",
-        "username": "tyler",
-        "email": "tylerwaltze@gmail.com",
-        "rooms": ["955d0efbfe995480798028ee9637f130", "3858f62230ac3c915f300c664312c63f"]
-    };
-
-	res.json(utils.envelope(data, null));
+	uc.getByUsername(id, function (err, result) {
+		if (!err) {
+			res.json(utils.envelope(result,null));
+		}
+		else {
+			res.json(utils.envelope(null, err));
+		}
+	});
 });
 
 /*
@@ -134,76 +133,7 @@ user.get('/:id/rooms', function(req, res) {
 	var id = req.params.id;
 	var authToken = req.body.authToken;
 
-	var data = [
-        {
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "title": "Meerkat Raises $12M At $40M Valuation",
-            "location": {
-                "lat": 42.349137,
-                "lng": -71.095748,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "url",
-                "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-21 09:30:26.123+07:00"
-        },
-		{
-            "rid": "f06b37ced98f420683ac8cf2ad661cde",
-            "title": "Churro Ice Cream Sandwich",
-            "location": {
-                "lat": 42.349454,
-                "lng": -71.099396,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "media",
-                "content": "https://c4.staticflickr.com/8/7146/6841661349_7840647f4b_b.jpg"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-20 09:30:26.123+07:00"
-        },
-		{
-            "rid": "199ee3f689c470aabdbe659d33beea59",
-            "title": "Obama imposes stricter standards on fracking",
-            "location": {
-                "lat": 42.348597,
-                "lng": -71.102142,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "url",
-                "content": "http://www.theverge.com/2015/3/20/8266455/fracking-obama-regulations-hydraulic-drilling"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-18 09:30:26.123+07:00"
-        }
-    ];
-
-	res.json(utils.envelope(data, null));
+	res.json(utils.envelope(null));
 });
 
 module.exports = user;
