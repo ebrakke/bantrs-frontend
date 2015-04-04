@@ -1,10 +1,11 @@
 var db = require('../controllers/dbConnector');
 
-function User(username, password, email) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
+function User(userData) {
+    this.username = userData.username;
+    this.password = userData.password;
+    this.email = userData.email;
     this._uid;
+    this._auth;
 }
 
 // Access the uid because it's private
@@ -20,33 +21,48 @@ User.prototype.getRooms = function(username) {
 }
 
 // Update a user object
-User.prototype.update = function(){
+User.prototype.update = function() {
     response = db.query('UPDATE users set username=?, password=?, email=? WHERE uid=$?', {replacements: [this.username,this.password,this.email,this._uid]});
 }
 
 // Create a user, update the uid of the User object
-User.prototype.create = function(){
+User.prototype.create = function() {
     // Insert the new user into the db
-    var query = db.query('INSERT INTO users VALUES (md5(:username), :username, :password, :email)', {replacements: {'username':this.username,'password':this.password,'email':this.email}, type:'INSERT'});
+    var query = db.query('INSERT INTO users VALUES (md5(:username), :username, :password, :email)', {replacements: {'username':this.username,'password':this.password,'email':this.email, 'idValue': Date().now() + }, type:'INSERT'});
     return query;
 }
 
 // Delete a user from the DB
-User.prototype.delete = function(){
-    response = db.query('DELETE FROM users WHERE users.uid = $1', [this._uid]);
+User.prototype.delete = function() {
+    response = db.query('DELETE FROM users WHERE users.uid = ?', {replacements: [this._uid]});
 }
 
+User.prototype.getAuthToken = function(provider) {
+    var query = db.query('SELECT ? FROM auth WHERE uid = ?', {replacements: [provider, this.uid]});
+    return query;
+}
+
+
 // Get a User object by the username
-User.getByUsername = function(username){
+User.getByUsername = function(username) {
     // Send the query to the dbConnector
     var query = db.query("SELECT uid, username, email FROM users where username = ?", {replacements: [username]});
     return query;
 }
 
 // Get a User object by the uid
-User.getById = function(uid, callback){
-    var query = db.query('SELECT id, username, email FROM users WHERE uid = ?', {replacements: [uid]});
+User.getById = function(uid) {
+    var query = db.query('SELECT uid, username, email FROM users WHERE uid = ?', {replacements: [uid]});
+    return query
 
 }
+
+// Get the stored hashed password of a user
+User.getHash = function(username) {
+    var query = db.query('SELECT password FROM users WHERE username = ?', {replacements: [username]});
+    return query;
+}
+
+// Get the authToken of a user by the username
 
 module.exports = User;
