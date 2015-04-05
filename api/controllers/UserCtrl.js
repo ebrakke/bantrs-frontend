@@ -1,68 +1,91 @@
 'use strict';
-
 var UserModel = require('../models/UserModel');
-
+var AuthCtrl = require('./AuthCtrl');
+var bcrypt = require('bcryptjs');
+var crypto = require('crypto');
 /* UserCtrl Constructor */
-
 var UserCtrl = function () {}
 
 
- /* Post (create) user - ok to pass pw as argument?
- * Yes, we are going to be hashing on the backend
- * Put the user into the DB
- * Return the uid on success
+ /* Create a new user
+ * Input: userData = {username, password, email}
+ * Return: User object with username, uid, authToken
+ * TODO:
  */
 UserCtrl.create = function(userData, callback) {
-    /* Create a User model object with all of the fields
-     * Then ask for the query object to insert it into the table
-     */
+    userData.password = bcrypt.hashSync(userData.password, 8); // Hash the password and forget it
+
     var User = new UserModel(userData);
 	var response = User.create();
-
-    response.then(function(err, result){
+    delete User.password;
+    response.then(function(err, result) {
         var response = User.getId();
-        response.then(function(results){
-            User.id = results[0][0].uid;  // Extract the ID from the query
-            callback(null, User); // Send to the user without and error
+        response.then(function(results) {
+            User.uid = results[0][0].uid;  // Extract the ID from the response
+            User.auth = crypto.createHash('sha1').update(User.uid).update(Date.now().toString()).digest('hex');
+            var response = User.createAuthToken();
+            response.then(function(results) {
+                callback(null, User);
+            }, function(err) {
+                callback(err, null);
+            });
         }, function(err) {
             callback(err, null); // Send the error to the router
-        }).bind(User);
-
+        });
     }, function(err) {
         callback(err, null);  // Send the error message to the front end (most likely a user already exists error)
-    }).bind(User);
+    });
 }
 
 
 /* Update user
 	 @param {string[]} newInfo - new username, pw, email
 */
-UserCtrl.update = function(username, newInfo) {
-    var User = new UserModel()
+UserCtrl.update = function(username, authToken, newInfo, callback) {
+    var response = AuthCtrl.validByAuthToken(authToken);
+    response.then(function(result) {
+        var User = result[0][0];
+
+        User.username = newInfo.username ? newInfo.username : User.username;
+        User.password = newInfo.password ? newInfo.password : null;
+        User.email = newInfo.email ? newInfo.email : User.email;
+
+        newUser = new UserModel(User);
+        newUser.uid = User.uid;
+        var response = newUser.update();
+        delete newUser.password;
+
+        response.then(function(response){
+            callback(null, newUser);
+        }, function(err) {
+            callback(err, null);
+        });
+    }, function(err){
+        callback(err, null);
+    });
+}
 
 /* Get a user by username*/
 UserCtrl.getByUsername = function(username, callback) {
-    var query = UserModel.getByUsername(username);
-    query.then(
-
-        function(results){
-        var err;
-        if (results[1].rowCount === 0){err = 'User not found'}
-
-            
-        callback(err,results[0][0]);
-        }
-
-    );
+    var response = UserModel.getByUsername(username);
+    response.then(function(results) {
+            var err;
+            if (results[1].rowCount === 0){err = 'User not found'}
+            callback(err,results[0][0]);
+    }, function(err) {
+        callback(err, null);
+    });
 }
 
 /* Get a user by id */
 UserCtrl.getById = function(id, callback) {
-    var query = UserModel.getById(id);
-    query.then(function(results) {
+    var response = UserModel.getById(id);
+    response.then(function(results) {
         var err;
         if (results[1].rowCount === 0){err = 'User not found'}
         callback(err,results[0][0]);
+    }, function(err) {
+        callback(err, null);
     });
 }
 

@@ -1,19 +1,115 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'install' ]
-2 info using npm@1.3.10
-3 info using node@v0.10.25
-4 error install Couldn't read dependencies
-5 error Error: ENOENT, open '/home/ebrakke/Dropbox/cs411/package.json'
-6 error If you need help, you may report this log at:
-6 error     <http://github.com/isaacs/npm/issues>
-6 error or email it to:
-6 error     <npm-@googlegroups.com>
-7 error System Linux 3.16.0-31-generic
-8 error command "/usr/bin/nodejs" "/usr/bin/npm" "install"
-9 error cwd /home/ebrakke/Dropbox/cs411
-10 error node -v v0.10.25
-11 error npm -v 1.3.10
-12 error path /home/ebrakke/Dropbox/cs411/package.json
-13 error code ENOENT
-14 error errno 34
-15 verbose exit [ 34, true ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'bcrypt', '//save' ]
+2 info using npm@2.5.1
+3 info using node@v0.10.33
+4 silly cache add args [ 'bcrypt', null ]
+5 verbose cache add spec bcrypt
+6 silly cache add args [ '//save', null ]
+7 verbose cache add spec //save
+8 silly cache add parsed spec { raw: 'bcrypt',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'bcrypt',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: '*',
+8 silly cache add   type: 'range' }
+9 verbose addNamed bcrypt@*
+10 silly addNamed semver.valid null
+11 silly addNamed semver.validRange *
+12 silly addNameRange { name: 'bcrypt', range: '*', hasData: false }
+13 silly mapToRegistry name bcrypt
+14 silly mapToRegistry using default registry
+15 silly mapToRegistry registry https://registry.npmjs.org/
+16 silly mapToRegistry uri https://registry.npmjs.org/bcrypt
+17 verbose addNameRange registry:https://registry.npmjs.org/bcrypt not in flight; fetching
+18 silly cache add parsed spec { raw: '//save',
+18 silly cache add   scope: null,
+18 silly cache add   name: null,
+18 silly cache add   rawSpec: '//save',
+18 silly cache add   spec: '/save',
+18 silly cache add   type: 'local' }
+19 verbose request uri https://registry.npmjs.org/bcrypt
+20 verbose request no auth needed
+21 info attempt registry request try #1 at 15:02:06
+22 verbose request id a8677c0479fd7d97
+23 http request GET https://registry.npmjs.org/bcrypt
+24 error addLocal Could not install /save
+25 http 200 https://registry.npmjs.org/bcrypt
+26 silly get cb [ 200,
+26 silly get   { date: 'Sat, 04 Apr 2015 19:02:07 GMT',
+26 silly get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+26 silly get     etag: '"6HE4KMA2RRO6XV5V2QBC3QD2S"',
+26 silly get     'content-type': 'application/json',
+26 silly get     'cache-control': 'max-age=60',
+26 silly get     'content-length': '65215',
+26 silly get     'accept-ranges': 'bytes',
+26 silly get     via: '1.1 varnish',
+26 silly get     age: '0',
+26 silly get     'x-served-by': 'cache-iad2141-IAD',
+26 silly get     'x-cache': 'HIT',
+26 silly get     'x-cache-hits': '1',
+26 silly get     'x-timer': 'S1428174126.948800,VS0,VE352',
+26 silly get     vary: 'Accept',
+26 silly get     'keep-alive': 'timeout=10, max=50',
+26 silly get     connection: 'Keep-Alive' } ]
+27 verbose get saving bcrypt to /Users/jungwoonshin/.npm/registry.npmjs.org/bcrypt/.cache.json
+28 silly addNameRange number 2 { name: 'bcrypt', range: '*', hasData: true }
+29 silly addNameRange versions [ 'bcrypt',
+29 silly addNameRange   [ '0.1.2',
+29 silly addNameRange     '0.2.0',
+29 silly addNameRange     '0.2.1',
+29 silly addNameRange     '0.1.3',
+29 silly addNameRange     '0.2.2',
+29 silly addNameRange     '0.2.3',
+29 silly addNameRange     '0.2.4',
+29 silly addNameRange     '0.3.0',
+29 silly addNameRange     '0.3.1',
+29 silly addNameRange     '0.3.2',
+29 silly addNameRange     '0.4.0',
+29 silly addNameRange     '0.4.1',
+29 silly addNameRange     '0.5.0',
+29 silly addNameRange     '0.6.0',
+29 silly addNameRange     '0.7.0',
+29 silly addNameRange     '0.7.1',
+29 silly addNameRange     '0.7.2',
+29 silly addNameRange     '0.7.3',
+29 silly addNameRange     '0.7.4',
+29 silly addNameRange     '0.7.5',
+29 silly addNameRange     '0.7.6',
+29 silly addNameRange     '0.7.7',
+29 silly addNameRange     '0.7.8',
+29 silly addNameRange     '0.8.0',
+29 silly addNameRange     '0.8.1',
+29 silly addNameRange     '0.8.2' ] ]
+30 verbose addNamed bcrypt@0.8.2
+31 silly addNamed semver.valid 0.8.2
+32 silly addNamed semver.validRange 0.8.2
+33 silly mapToRegistry name bcrypt
+34 silly mapToRegistry using default registry
+35 silly mapToRegistry registry https://registry.npmjs.org/
+36 silly mapToRegistry uri https://registry.npmjs.org/bcrypt
+37 verbose addRemoteTarball https://registry.npmjs.org/bcrypt/-/bcrypt-0.8.2.tgz not in flight; adding
+38 verbose addRemoteTarball [ 'https://registry.npmjs.org/bcrypt/-/bcrypt-0.8.2.tgz',
+38 verbose addRemoteTarball   '4732f0ddd1e0fb066dcd8ad9472d3d300fd96824' ]
+39 info retry fetch attempt 1 at 15:02:07
+40 info attempt registry request try #1 at 15:02:07
+41 http fetch GET https://registry.npmjs.org/bcrypt/-/bcrypt-0.8.2.tgz
+42 http fetch 200 https://registry.npmjs.org/bcrypt/-/bcrypt-0.8.2.tgz
+43 silly fetchAndShaCheck shasum 4732f0ddd1e0fb066dcd8ad9472d3d300fd96824
+44 verbose addTmpTarball /var/folders/3j/2l0m5yhd7fs_fyj2rqmh5y_c0000gn/T/npm-1791-ee9d6966/registry.npmjs.org/bcrypt/-/bcrypt-0.8.2.tgz not in flight; adding
+45 verbose addTmpTarball already have metadata; skipping unpack for bcrypt@0.8.2
+46 silly cache afterAdd bcrypt@0.8.2
+47 verbose afterAdd /Users/jungwoonshin/.npm/bcrypt/0.8.2/package/package.json not in flight; writing
+48 verbose afterAdd /Users/jungwoonshin/.npm/bcrypt/0.8.2/package/package.json written
+49 verbose stack Error: ENOENT, open '/save'
+50 verbose cwd /Users/jungwoonshin/git/cs411
+51 error Darwin 14.1.0
+52 error argv "node" "/usr/local/bin/npm" "install" "bcrypt" "//save"
+53 error node v0.10.33
+54 error npm  v2.5.1
+55 error path /save
+56 error code ENOENT
+57 error errno 34
+58 error enoent ENOENT, open '/save'
+58 error enoent This is most likely not a problem with npm itself
+58 error enoent and is related to npm not being able to find a file.
+59 verbose exit [ 34, true ]
