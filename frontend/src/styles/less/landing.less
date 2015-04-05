@@ -1,0 +1,78 @@
+.landing {
+    .top {
+        height: 80%;
+        background: @accent;
+        text-align: center;
+        padding: 5% 10%;
+
+        .logo {
+            color: @blue-darkest;
+            max-height: 100px;
+            margin-bottom: 20px;
+
+            &--small {
+                max-height: 75px;
+            }
+        }
+
+        &__form {
+            input {
+                display: block;
+                width: 100%;
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .input {
+                background: none;
+                border: none;
+                border-bottom: 1px solid;
+            }
+
+            .input,
+            ::-webkit-input-placeholder {
+                border-color: lighten(@accent, 30%);
+                color: lighten(@accent, 30%);
+            }
+        }
+
+        &__error {
+            background: @red-lightest;
+            color: @red-darkest;
+            font-size: 1.2rem;
+            padding: 5px;
+            text-align: left;
+        }
+    }
+
+    .bottom {
+        height: 20%;
+        text-align: center;
+        padding: 5% 10%;
+
+        &__title {
+            margin-bottom: 5px;
+            color: @grey-dark;
+        }
+    }
+
+    &__action {
+        text-transform: uppercase;
+    }
+
+    .separator {
+        @dimensions: 40px;
+
+        position: absolute;
+        left: 50%;
+        height: @dimensions;
+        width: @dimensions;
+        line-height: @dimensions;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 1.2rem;
+        background-color: @accent-lightest;
+        color: @accent-dark;
+        transform: translate(-50%, -50%);
+    }
+}
