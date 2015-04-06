@@ -1,6 +1,6 @@
 'use strict';
 
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
         redirectTo: '/feed'
     }).when('/feed', {
@@ -20,7 +20,32 @@ app.config(function($routeProvider) {
         templateUrl: 'partials/pages/create--location.html',
     }).when('/login', {
         templateUrl: 'partials/pages/landing.html',
+        controller: 'LoginCtrl'
     }).when('/signup', {
         templateUrl: 'partials/pages/signup.html',
+        controller: 'SignupCtrl'
+    });
+
+    // Handle authentication requirements
+    $httpProvider.interceptors.push(function($q, $location, $localStorage) {
+        return {
+            'request': function(config) {
+                config.headers = config.headers || {};
+
+                // If auth token exists, send it with each request
+                if ($localStorage.token) {
+                    config.headers.Authorization = $localStorage.token;
+                }
+                return config;
+            },
+            'responseError': function(response) {
+                // If server responds with 401, user is not authorized.
+                // Send them to login page.
+                if (response.status === 401 || response.status === 403) {
+                    $location.path('/login');
+                }
+                return $q.reject(response);
+            }
+        };
     });
 });

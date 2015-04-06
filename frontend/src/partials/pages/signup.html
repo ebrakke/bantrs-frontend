@@ -1,14 +1,14 @@
 <div class="page landing">
     <div class="top">
-        <div class="vertical-center">
+        <div class="vertically-center">
             <img src="img/bantrs.png" class="logo logo--small" />
-            <form class="top__form">
-                <input type="text" placeholder="Username" class="input" />
-                <input type="text" placeholder="Email" class="input" />
-                <input type="password" placeholder="Password" class="input" />
+            <form class="top__form" ng-submit="register()">
+                <input type="text" placeholder="Username" class="input" ng-model="user.username" />
+                <input type="text" placeholder="Email" class="input" ng-model="user.email" />
+                <input type="password" placeholder="Password" class="input" ng-model="user.password" />
                 <input type="submit" value="Sign up" class="landing__action button button-color--green" />
             </form>
-            <p class="top__error">
+            <p class="top__error" ng-show="error">
                 Username already taken.
             </p>
         </div>
