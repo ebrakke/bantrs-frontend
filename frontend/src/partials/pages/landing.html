@@ -2,12 +2,12 @@
     <div class="top">
         <div class="vertically-center">
             <img src="img/bantrs.png" class="logo" />
-            <form class="top__form">
-                <input type="text" placeholder="Username" class="input" />
-                <input type="password" placeholder="Password" class="input" />
+            <form class="top__form" ng-submit="login(username, password)">
+                <input type="text" placeholder="Username" class="input" ng-model="username" />
+                <input type="password" placeholder="Password" class="input" ng-model="password" />
                 <input type="submit" value="Login" class="landing__action button button-color--green" />
             </form>
-            <p class="top__error">
+            <p class="top__error" ng-show="error">
                 Incorrect username/password.
             </p>
         </div>
