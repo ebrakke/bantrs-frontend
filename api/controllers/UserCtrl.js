@@ -22,7 +22,7 @@ UserCtrl.create = function(userData, callback) {
         var response = User.getId();
         response.then(function(results) {
             User.uid = results[0][0].uid;  // Extract the ID from the response
-            User.auth = crypto.createHash('sha1').update(User.uid).update(Math.random().toString(32).slice(2).digest('hex');
+            User.auth = crypto.createHash('sha1').update(User.uid).update(Math.random().toString(32).slice(2)).digest('hex');
             var response = User.createAuthToken();
             response.then(function(results) {
                 callback(null, User);
