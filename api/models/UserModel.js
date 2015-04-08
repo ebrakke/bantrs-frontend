@@ -15,17 +15,19 @@ User.prototype.getId = function() {
 }
 
 // Query the DB for the rooms that a user's rooms
-User.prototype.getRooms = function(username) {
-    var query = db.query('SELECT m.rid FROM users u, membership m WHERE m.uid = ?', {replacements: [this.uid]});
+User.prototype.getRooms = function() {
+    var query = db.query('SELECT rid FROM membership WHERE uid = ?', {replacements: [this.uid]});
     return query;
 }
 
 // Update a user object
 User.prototype.update = function() {
     if (this.password) {
-        response = db.query('UPDATE users set username=?, password=?, email=? WHERE uid=$?', {replacements: [this.username,this.password,this.email,this._uid], type:'UPDATE'});
+        var response = db.query('UPDATE users set username=?, password=?, email=? WHERE uid=?', {replacements: [this.username,this.password,this.email,this._uid], type:'UPDATE'});
+        return response;
     } else {
-        response = db.query('UPDATE users set username=?, email=? WHERE uid=?', {replacements: [this.username, this.email, this._uid], type:'UPDATE'});
+        var response = db.query('UPDATE users set username=?, email=? WHERE uid=?', {replacements: [this.username, this.email, this._uid], type:'UPDATE'});
+        return response;
     }
 }
 // Create a user, update the uid of the User object
@@ -51,12 +53,18 @@ User.prototype.createAuthToken = function() {
     return query;
 }
 
+// Get a list of active rooms the user is a part of
+User.prototype.getRooms = function() {
+    var query = db.query('SELECT rid FROM memberships WHERE uid = ? AND active = True', {replacements: [this.uid]});
+}
+
 // Get a User object by the username
 User.getByUsername = function(username) {
     // Send the query to the dbConnector
     var query = db.query("SELECT uid, username, email FROM users where username = ?", {replacements: [username]});
     return query;
 }
+
 
 // Get a User object by the uid
 User.getById = function(uid) {
@@ -74,7 +82,7 @@ User.getHash = function(username) {
 // Get a User object by the banstrsauth
 User.getByAuthToken = function(bantrsauth){
     // var query = db.query('SELECT id, username, email FROM users WHERE uid = (select uid where banterauth = ? FROM auth)', {replacements: [bantrsauth]})
-    var query = db.query('SELECT u.id, u.username, u.email FROM users u NATURAL JOIN auth a WHERE a.bantrsauth = ?',{replacements:[banterauth]});
+    var query = db.query('SELECT u.username, u.uid, u.email FROM users u NATURAL JOIN auth a WHERE a.bantrsauth = ?',{replacements:[bantrsauth]});
     return query;
 }
 

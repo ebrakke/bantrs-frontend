@@ -13,9 +13,10 @@ var bcrypt = require('bcryptjs');
 
 user.post('/', function(req, res) {
 	var userData = req.body;  //username, password, email
+	/* Test data */
 	userData = {
-		username: "tyler", //Math.random().toString(32).slice(2),
-		password: "password", //Math.random().toString(32).slice(2),
+		username: "erik",
+		password: "password",
 		email: 'some@test.email'
 	}
 	uc.create(userData, function(err, user){
@@ -33,9 +34,13 @@ user.post('/', function(req, res) {
 * Pull the params from the request
 */
 user.post('/auth', function(req, res) {
-	var username = req.params.username;
-	var password = req.params.password;
-	var response = auth.validByUserPwd("tyler","password", function(err, response){
+	var userData = {};
+	userData.username = req.body.username;
+	userData.password = req.body.password;
+	/* Test Data */
+	userData.username = 'erik';
+	userData.password = 'newPassword';
+	var response = auth.validByUserPwd(userData, function(err, response){
 		if (!err){
 			res.json(utils.envelope(response, null));
 		} else {
@@ -60,44 +65,54 @@ user.post('/me', function(req, res) {
 	newInfo.newPassword = req.params.newPassword;
 	newInfo.newEmail = req.params.newEmail;
 
+	/* Test Data */
+	username = 'erik';
+	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
+	newInfo.password = 'newPassword';
+	newInfo.email = 'someNew@test.email';
+
 	uc.update(username, authToken, newInfo, function(err, user) {
 		if (!err) {
-			res.json(util.envelope(user, null));
+			res.json(utils.envelope(user, null));
 		} else {
-			res.json(util.envelope(null, err));
+			res.json(utils.envelope(null, err));
 		}
 	});
 });
 
 user.get('/auth/validate', function(req, res) {
-	var username = req.params.username;
-	var authToken = req.body.authToken;
+	var username = req.query.username;
+	var authToken = req.query.authToken;
 
-	//Validate the user
+	/* Testing Data */
+	username = 'erik';
+	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
 
-	//On success
-	var data = true;
-
-	res.json(utils.envelope(data, null));
+	auth.validByAuthToken(username, authToken, function(err, user) {
+		if (!err){
+			res.json(utils.envelope(true, null))
+		} else {
+			res.json(utils.envelope(null, err));
+		}
+	});
 });
 
 /*
 * Get User
 * TODO:
-* run validation
 */
 
 user.get('/:id', function(req, res) {
 	var id = req.params.id;
 	var authToken = req.body.authToken;
 
-	uc.getByUsername(id, function (err, result) {
-		if (!err) {
-			res.json(utils.envelope(result,null));
-		}
-		else {
-			res.json(utils.envelope(null, err));
-		}
+	/* Test value */
+	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
+
+	auth.validByAuthToken(authToken, function(err, user) {
+
+		// Get the user and rooms
+	}
 	});
 });
 

@@ -5,9 +5,9 @@ function envelope(output, error){
     if (error) {
         var data = {
             meta: {
-                code: error
+                code: error.err
             },
-            data: {}
+            data: error.msg
         }
         return data;
     }
