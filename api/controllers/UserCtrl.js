@@ -54,7 +54,7 @@ UserCtrl.create = function(userData, callback) {
 UserCtrl.update = function(username, authToken, newInfo, callback) {
     var response = AuthCtrl.validByAuthToken(username, authToken, function(err, result) {
         var User = result;
-        console.log(newInfo);
+
         User.username = newInfo.username ? newInfo.username : User.username;
         User.password = newInfo.password ? bcrypt.hashSync(newInfo.password, 8) : null;
         User.email = newInfo.email ? newInfo.email : User.email;

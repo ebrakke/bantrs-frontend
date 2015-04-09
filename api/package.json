@@ -14,7 +14,8 @@
     "express": "~4.11.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "~2.0.5",
-    "morgan": "~1.5.2"
+    "morgan": "~1.5.2",
+    "pg": "~4.3.0"
   },
   "devDependencies": {}
 }

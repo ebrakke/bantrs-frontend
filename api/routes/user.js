@@ -13,6 +13,7 @@ var bcrypt = require('bcryptjs');
 
 user.post('/', function(req, res) {
 	var userData = req.body;  //username, password, email
+	console.log(userData);
 	/* Test data */
 	userData = {
 		username: "erik",
@@ -112,7 +113,6 @@ user.get('/:id', function(req, res) {
 	auth.validByAuthToken(authToken, function(err, user) {
 
 		// Get the user and rooms
-	}
 	});
 });
 
