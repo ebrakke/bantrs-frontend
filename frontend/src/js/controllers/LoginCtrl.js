@@ -1,11 +1,18 @@
 'use strict';
 
-app.controller('LoginCtrl', function($scope, Auth) {
+app.controller('LoginCtrl', function($scope, $location, Auth) {
     $scope.error = '';
+    $scope.loading = false;
 
     $scope.login = function(username, password) {
-        Auth.login(username, password);
+        $scope.loading = true;
 
-        $scope.error = 'Invalid username/password.';
+        Auth.login(username, password).success(function(response) {
+            $location.path('/feed');
+        }).error(function(response) {
+            $scope.error = 'Invalid username/password.';
+        }).then(function() {
+            $scope.loading = false;
+        });
     };
 });

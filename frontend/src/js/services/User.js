@@ -10,11 +10,11 @@ app.factory('User', function(config, $http) {
     User.prototype.create = function() {
         var user = this;
 
-        return $http.post(api, user).success(function(data, status) {
-            console.log('[create.success]', data);
-            return data;
-        }).error(function(data, status) {
-            console.log('[create.error]', data);
+        return $http.post(api, user).success(function(response, status) {
+            console.log('[create.success]', response);
+            return response;
+        }).error(function(response, status) {
+            console.log('[create.error]', response);
             return status;
         });
     };

@@ -5,9 +5,9 @@ app.controller('SignupCtrl', function($scope, User, Auth) {
     $scope.error = '';
 
     $scope.register = function() {
-        $scope.user.create().success(function(data) {
+        $scope.user.create().success(function(response) {
             $scope.error = 'Username already take.';
-        }).error(function(data) {
+        }).error(function(response) {
             $scope.error = 'Username already take.';
         });
     };
