@@ -1,3 +1,71 @@
 .page {
-    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+
+    &-feed,
+    &-create,
+    &-discover {
+        &.ng-enter {
+            z-index: 1000;
+            animation: scaleUp .3s both ease-in;
+        }
+
+        &.ng-leave {
+            z-index: 10000;
+            animation: slideOutBottom .3s both ease-in;
+        }
+    }
+}
+
+/* ANIMATIONS
+============================================================================= */
+
+/* leaving animations ----------------------------------------- */
+/* slide out to the left */
+@keyframes slideOutLeft {
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+/* slide out to the bottom */
+@keyframes slideOutBottom {
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* entering animations --------------------------------------- */
+/* scale up */
+@keyframes scaleUp {
+    from {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+}
+
+/* slide in from the right */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* slide in from the bottom */
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }

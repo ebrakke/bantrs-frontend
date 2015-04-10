@@ -1,6 +1,7 @@
 'use strict';
 
 app.controller('CreateCtrl', function($scope, $http, Room, $timeout) {
+    $scope.pageClass = 'page-create';
     $scope.room = new Room();
     $scope.url = '';
     $scope.title = '';
