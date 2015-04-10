@@ -2,12 +2,12 @@
     <ul class="grid--middle">
         <li class="siteHeader__item block-1-5" back-button><i class="fa fa-chevron-left"></i></li><!--
         --><li class="siteHeader__item block-3-5">Create</li><!--
-        --><li class="siteHeader__item block-1-5"><i class="fa fa-check"></i></li>
+        --><li class="siteHeader__item block-1-5" ng-click="create()"><i class="fa" ng-class="{'fa-check': !loading, 'fa-refresh fa-spin': loading}"></i></li>
     </ul>
 </header>
 <section class="push-from-top">
-    <form class="createRoom">
-        <input class="input" type="text" placeholder="Link" />
+    <form class="createRoom" ng-submit="create()">
+        <input class="input" type="text" placeholder="Link" ng-model="url" />
         <input class="input" type="text" placeholder="Title" />
         <h3 class="font-weight--light">Radius</h3>
         <div class="input-toggle grid">

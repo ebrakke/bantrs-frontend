@@ -15,7 +15,8 @@ app.config(function($routeProvider, $httpProvider) {
     }).when('/create', {
         templateUrl: 'partials/pages/create.html'
     }).when('/create/link', {
-        templateUrl: 'partials/pages/create--link.html'
+        templateUrl: 'partials/pages/create--link.html',
+        controller: 'CreateCtrl'
     }).when('/create/location', {
         templateUrl: 'partials/pages/create--location.html',
     }).when('/login', {

@@ -8,11 +8,12 @@
 
     &-toggle {
         display: inline-block;
+        padding: .3em;
         line-height: 1;
         text-align: center;
-        padding: .4em .1em;
+        width: 100%;
 
-        .toggle(@grey, @grey-dark);
+        .toggle(@grey, @grey-dark, #fff);
 
         &__item {
             position: relative;
@@ -29,16 +30,17 @@
             vertical-align: middle;
             text-align: center;
             padding: .5em .7em;
+            width: 100%;
         }
     }
 }
 
-.toggle(@base, @dark) {
+.toggle(@base, @dark, @text) {
     background: @base;
 
     &__checkbox:checked + .option {
         background: @dark;
-        color: @base;
+        color: @text;
     }
 
     .option {

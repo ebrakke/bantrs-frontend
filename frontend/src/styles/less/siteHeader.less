@@ -24,29 +24,10 @@
         line-height: @siteHeaderHeight;
     }
 
-    .toggle {
-        background: @accent-dark;
-        display: inline-block;
-        padding: 1px;
-        margin: 5px;
-        line-height: 1;
+    .input-toggle {
+        font-size: 1rem;
+        vertical-align: middle;
 
-        &__checkbox {
-            position: absolute;
-            opacity: 0;
-
-            &:checked + .option {
-                background: @accent;
-                color: #fff;
-            }
-        }
-
-        .option {
-            display: inline-block;
-            font-size: 1rem;
-            vertical-align: middle;
-            color: @accent;
-            padding: 10px;
-        }
+        .toggle(@accent-dark, @accent, #fff);
     }
 }

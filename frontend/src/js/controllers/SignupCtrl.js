@@ -3,12 +3,17 @@
 app.controller('SignupCtrl', function($scope, User, Auth) {
     $scope.user = new User();
     $scope.error = '';
+    $scope.loading = false;
 
     $scope.register = function() {
+        $scope.loading = true;
+
         $scope.user.create().success(function(response) {
-            $scope.error = 'Username already take.';
+
         }).error(function(response) {
-            $scope.error = 'Username already take.';
+            $scope.error = 'Username already taken.';
+        }).then(function() {
+            $scope.loading = false;
         });
     };
 });
