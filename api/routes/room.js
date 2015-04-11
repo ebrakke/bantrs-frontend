@@ -1,6 +1,7 @@
 var express = require('express');
 var room = express.Router();
 var utils = require('../utils');
+var rc = require('../controllers/RoomCtrl');
 
 /*
 * GET rooms for discover page
@@ -224,36 +225,12 @@ room.get('/:id/comments', function(req,res) {
 * Add the room to the DB
 */
 room.post('/', function(req, res) {
-    var title = req.params.title;
-    var topic = req.params.topic;
-    var lat = req.params.lat;
-    var lng = req.params.lng;
-    var radius = req.params.radius;
-
-    var data = {
-        "rid": "955d0efbfe995480798028ee9637f130",
-        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
-        "location": {
-            "lat": 42.6915,
-            "lng": -83.3876,
-            "radius": 500
-        },
-        "author": {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com",
-        },
-        "topic": {
-            "type": "url",
-            "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
-        },
-        "members": 36,
-        "newComments": 4,
-        "member": true,
-        "createdAt": "2015-03-21 09:30:26.123+07:00"
-    };
-
-    res.json(utils.envelope(data, null));
+    var roomInfo = req.body; /* Title, topic, type, lat, lng, radius */
+    var authToken = req.get('authorization');
+    //authToken = '66ff671e2b5147594d82a9bf036330bd37c1a5d2';
+    rc.create(roomInfo, authToken, function(err, room) {
+        res.json(utils.envelope(200,room,null));
+    });
 
 });
 
