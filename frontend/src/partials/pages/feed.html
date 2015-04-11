@@ -2,12 +2,15 @@
     <header class="siteHeader grid--middle">
         <a class="siteHeader__item block-1-5" href=""><i class="fa fa-user"></i></a><!--
         --><div class="block-3-5">
-            <div class="toggle">
-                <input id="toggle-active" name="feed" class="toggle__checkbox" type="radio" checked="checked">
-                <label for="toggle-active" class="option">active</label>
-
-                <input id="toggle-archived" name="feed" class="toggle__checkbox" type="radio">
-                <label for="toggle-archived" class="option">archived</label>
+            <div class="input-toggle grid">
+                <div class="input-toggle__item block-1-2">
+                    <input id="toggle-block" name="radius" class="input-toggle__checkbox" type="radio" checked="checked">
+                    <label for="toggle-block" class="option">active</label>
+                </div><!--
+                --><div class="input-toggle__item block-1-2">
+                    <input id="toggle-city" name="radius" class="input-toggle__checkbox" type="radio">
+                    <label for="toggle-city" class="option">archived</label>
+                </div>
             </div>
         </div><!--
         --><a class="siteHeader__item block-1-5" href="create.html"><i class="fa fa-cog"></i></a>

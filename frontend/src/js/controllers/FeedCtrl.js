@@ -1,6 +1,7 @@
 'use strict';
 
-app.controller('FeedCtrl', function($rootScope, $scope, User) {
+app.controller('FeedCtrl', function($scope, User) {
+    $scope.pageClass = 'page-feed';
     $scope.user = User.get('tyler');
     $scope.rooms = null;
 

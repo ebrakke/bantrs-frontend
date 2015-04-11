@@ -1,7 +1,7 @@
 'use strict';
 
 app.factory('Auth', function(config, $http, $localStorage) {
-    var api = config.api + '/user';
+    var api = config.api + '/user/auth';
     var currentUser = null;
 
     var Auth = {};
@@ -15,7 +15,19 @@ app.factory('Auth', function(config, $http, $localStorage) {
     };
 
     Auth.login = function(username, password) {
-        $localStorage.token = 'foo';
+        return $http.post(api, {
+            'username': username,
+            'password': password
+        }).success(function(response, status) {
+            var data = response.data;
+
+            $localStorage.token = data.authToken;
+            currentUser = data.user;
+
+            return response.meta.code;
+        }).error(function(response, status) {
+
+        });
     };
 
     Auth.logout = function() {

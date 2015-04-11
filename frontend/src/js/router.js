@@ -13,9 +13,11 @@ app.config(function($routeProvider, $httpProvider) {
         templateUrl: 'partials/pages/room.html',
         controller: 'RoomCtrl'
     }).when('/create', {
-        templateUrl: 'partials/pages/create.html'
+        templateUrl: 'partials/pages/create.html',
+        controller: 'CreateCtrl'
     }).when('/create/link', {
-        templateUrl: 'partials/pages/create--link.html'
+        templateUrl: 'partials/pages/create--link.html',
+        controller: 'CreateCtrl'
     }).when('/create/location', {
         templateUrl: 'partials/pages/create--location.html',
     }).when('/login', {

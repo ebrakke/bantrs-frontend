@@ -10,8 +10,12 @@ app.factory('Room', function(config, $http) {
     Room.prototype.create = function() {
         var room = this;
 
-        return $http.post(api, room).then(function(response) {
-            return response.data;
+        return $http.post(api, room).success(function(response, status) {
+            console.log('[create.success]', response);
+            return response;
+        }).error(function(response, status) {
+            console.log('[create.error]', response);
+            return status;
         });
     };
 
