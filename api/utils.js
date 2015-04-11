@@ -1,22 +1,24 @@
 /*
  * Wrapper for responses
  */
-function envelope(output, error){
-    if (error) {
+function envelope(code, data, err){
+    if (err) {
         var data = {
             meta: {
-                code: error.err
+                code: code,
+                err: err.msg
             },
-            data: error.msg
+            data: {}
         }
         return data;
     }
     else {
         data = {
             meta: {
-                code: 200
+                code: code,
+                err: {}
             },
-            data: output
+            data: data
         };
         return data;
     }

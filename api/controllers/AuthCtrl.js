@@ -2,7 +2,7 @@
 
 var bcrypt = require('bcryptjs');
 var UserModel = require('../models/UserModel');
-var config = require('../config');
+var e = require('./errors');
 
 /* AuthCtrl Constructor */
 var AuthCtrl = function () {};
@@ -28,22 +28,19 @@ AuthCtrl.validByUserPwd = function(userData, callback) {
 
 		/* Password did not match */
 		} else {
-			callback(config.error.invalidPassword, null);
+			callback(e.invalidPassword, null);
 		}
 	});
 }
 
-AuthCtrl.validByAuthToken = function(username, authtoken, callback){
+AuthCtrl.validByAuthToken = function(authtoken, callback){
 	var response = UserModel.getByAuthToken(authtoken);
 	response.then(function(result) {
 		var user = result[0][0];
 		if (!user) {
-			callback(config.error.invalidAuthToken, null);
-		}
-		else if (user.username === username) {
-			callback(null,user);
+			callback(e.invalidAuthToken, null);
 		} else {
-			callback(config.error.invalidAuthToken, null);
+			callback(null, user);
 		}
 	}, function(err) {
 		callback(err, null);

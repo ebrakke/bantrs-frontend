@@ -1,9 +1,10 @@
 'use strict';
+
 var UserModel = require('../models/UserModel');
 var AuthCtrl = require('./AuthCtrl');
 var bcrypt = require('bcryptjs');
 var crypto = require('crypto');
-var config = require('../config');
+var e = require('./errors');
 
 
 /* UserCtrl Constructor */
@@ -43,7 +44,7 @@ UserCtrl.create = function(userData, callback) {
             callback(err, null);
         });
     }, function(err) {
-        callback(config.error.usernameExists, null);
+        callback(e.usernameExists, null);
     });
 }
 

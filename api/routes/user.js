@@ -12,19 +12,13 @@ var bcrypt = require('bcryptjs');
 */
 
 user.post('/', function(req, res) {
-	var userData = req.body;  //username, password, email
-	console.log(userData);
-	/* Test data */
-	userData = {
-		username: "erik",
-		password: "password",
-		email: 'some@test.email'
-	}
+	/* FRONTEND NOTE: Must pass the data in as username, password, email */
+	var userData = req.body;
 	uc.create(userData, function(err, user){
 		if (!err) {
-			res.json(utils.envelope(user, null));
+			res.json(utils.envelope(200, user, null));
 		} else {
-		res.json(utils.envelope(null, err));
+		res.status(err.code).json(utils.envelope(err.code, null, err.msg));
 		}
 	});
 });
@@ -35,17 +29,13 @@ user.post('/', function(req, res) {
 * Pull the params from the request
 */
 user.post('/auth', function(req, res) {
-	var userData = {};
-	userData.username = req.body.username;
-	userData.password = req.body.password;
-	/* Test Data */
-	userData.username = 'erik';
-	userData.password = 'newPassword';
+	/* FRONTEND: pass arguments as username, password */
+	var userData = req.body;
 	var response = auth.validByUserPwd(userData, function(err, response){
 		if (!err){
-			res.json(utils.envelope(response, null));
+			res.status(200).json(utils.envelope(200, response, null));
 		} else {
-			res.json(utils.envelope(null, err));
+			res.status(err.code).json(utils.envelope(err.code, null, err.msg));
 		}
 	});
 });
@@ -60,17 +50,11 @@ user.post('/auth', function(req, res) {
 user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.body.authToken;
-	var username = req.params.username;
+	var username = req.body.username;
 	var newInfo = {}
-	newInfo.newUsername = req.params.newUsername;
-	newInfo.newPassword = req.params.newPassword;
-	newInfo.newEmail = req.params.newEmail;
-
-	/* Test Data */
-	username = 'erik';
-	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
-	newInfo.password = 'newPassword';
-	newInfo.email = 'someNew@test.email';
+	newInfo.newUsername = req.body.newUsername;
+	newInfo.newPassword = req.body.newPassword;
+	newInfo.newEmail = req.body.newEmail;
 
 	uc.update(username, authToken, newInfo, function(err, user) {
 		if (!err) {
@@ -84,10 +68,6 @@ user.post('/me', function(req, res) {
 user.get('/auth/validate', function(req, res) {
 	var username = req.query.username;
 	var authToken = req.query.authToken;
-
-	/* Testing Data */
-	username = 'erik';
-	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
 
 	auth.validByAuthToken(username, authToken, function(err, user) {
 		if (!err){
