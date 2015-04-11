@@ -8,15 +8,25 @@
 
     &-feed,
     &-create,
-    &-discover {
+    &-discover,
+    &-settings {
         &.ng-enter {
             z-index: 1000;
             animation: scaleUp .3s both ease-in;
+
+            &.reverse {
+                z-index: 15000;
+                animation: slideInUp .8s both ease-in;
+            }
         }
 
         &.ng-leave {
             z-index: 10000;
             animation: slideOutBottom .3s both ease-in;
+
+            &.reverse {
+                animation: scaleDown .2s both ease-in;
+            }
         }
     }
 }
@@ -44,6 +54,14 @@
 @keyframes scaleUp {
     from {
         opacity: 0.3;
+        transform: scale(0.8);
+    }
+}
+
+/* scale up */
+@keyframes scaleDown {
+    to {
+        opacity: 0;
         transform: scale(0.8);
     }
 }
