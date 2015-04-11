@@ -11,6 +11,9 @@ var AuthCtrl = function () {};
 AuthCtrl.validByUserPwd = function(userData, callback) {
 	var hash = UserModel.getHash(userData.username);  // Grab the password hash from the DB
 	hash.then(function(result) {
+		if (!result[0][0]) {
+			callback(e.invalidPassword, null);
+		} else {
 		var hash = result[0][0].password
 		/* Check that the password and the hash match */
 		if(bcrypt.compareSync(userData.password, hash)){
@@ -30,6 +33,7 @@ AuthCtrl.validByUserPwd = function(userData, callback) {
 		} else {
 			callback(e.invalidPassword, null);
 		}
+	}
 	});
 }
 

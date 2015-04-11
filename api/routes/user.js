@@ -18,7 +18,7 @@ user.post('/', function(req, res) {
 		if (!err) {
 			res.json(utils.envelope(200, user, null));
 		} else {
-		res.status(err.code).json(utils.envelope(err.code, null, err.msg));
+		res.status(err.code).json(utils.envelope(err.code, null, err));
 		}
 	});
 });
@@ -35,7 +35,7 @@ user.post('/auth', function(req, res) {
 		if (!err){
 			res.status(200).json(utils.envelope(200, response, null));
 		} else {
-			res.status(err.code).json(utils.envelope(err.code, null, err.msg));
+			res.status(err.code).json(utils.envelope(err.code, null, err));
 		}
 	});
 });
