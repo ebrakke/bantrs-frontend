@@ -26,6 +26,9 @@ app.config(function($routeProvider, $httpProvider) {
     }).when('/signup', {
         templateUrl: 'partials/pages/signup.html',
         controller: 'SignupCtrl'
+    }).when('/settings', {
+        templateUrl: 'partials/pages/settings.html',
+        controller: 'SettingsCtrl'
     });
 
     // Handle authentication requirements

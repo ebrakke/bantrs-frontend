@@ -1,9 +1,18 @@
 'use strict';
 
-app.directive('backButton', function() {
+app.directive('backButton', function($rootScope, $timeout) {
     return function(scope, element, attrs) {
         element.bind('click', function() {
-            history.back();
+            $rootScope.back = true;
+
+            // Hack: Give view time to update back
+            $timeout(function() {
+                history.back();
+
+                $timeout(function() {
+                    $rootScope.back = false;
+                }, 1500);
+            }, 1);
         });
 
         scope.$on('$destroy', function() {

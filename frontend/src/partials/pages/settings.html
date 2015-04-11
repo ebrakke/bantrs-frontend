@@ -1,0 +1,15 @@
+<header class="siteHeader--fixed">
+    <ul class="grid--middle">
+        <li class="siteHeader__item block-1-5" back-button><i class="fa fa-chevron-left"></i></li><!--
+        --><li class="siteHeader__item block-3-5">Settings</li><!--
+        --><li class="siteHeader__item block-1-5" ng-click="save()"><i class="fa" ng-class="{'fa-save': !loading, 'fa-refresh fa-spin': loading}"></i></li>
+    </ul>
+</header>
+<section class="push-from-top">
+    <form class="createRoom" ng-submit="save()">
+        <input class="input" type="text" placeholder="Username" />
+        <input class="input" type="text" placeholder="Email" />
+        <input class="input" type="text" placeholder="New Password" />
+    </form>
+    <input type="button" value="logout" class="button button-color--red button-size--fullWidth" />
+</section>

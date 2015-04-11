@@ -33,6 +33,7 @@
         <script src="js/controllers/DiscoverCtrl.js"></script>
         <script src="js/controllers/LoginCtrl.js"></script>
         <script src="js/controllers/SignupCtrl.js"></script>
+        <script src="js/controllers/SettingsCtrl.js"></script>
 
         <script src="js/services/User.js"></script>
         <script src="js/services/Room.js"></script>
@@ -42,7 +43,7 @@
         <script src="js/directives/backButton.js"></script>
     </head>
     <body>
-        <ng-view class="page {{pageClass}}"></ng-view>
+        <ng-view class="page {{pageClass}}" ng-class="{'reverse': back}"></ng-view>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
