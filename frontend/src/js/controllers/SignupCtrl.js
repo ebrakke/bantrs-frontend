@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('SignupCtrl', function($scope, User, Auth) {
+app.controller('SignupCtrl', function($scope, $location, User, Auth) {
     $scope.user = new User();
     $scope.error = '';
     $scope.loading = false;
@@ -8,11 +8,20 @@ app.controller('SignupCtrl', function($scope, User, Auth) {
     $scope.register = function() {
         $scope.loading = true;
 
-        $scope.user.create().success(function(response) {
+        $scope.user.create().then(function(response) {
+            var data = response.data;
 
-        }).error(function(response) {
-            $scope.error = 'Username already taken.';
-        }).then(function() {
+            Auth.setToken(data.data.auth);
+            Auth.setUser(data.data);
+
+            $location.path('/feed');
+        }, function(response) {
+            if (response.data) {
+                $scope.error = response.data.meta.err;
+            } else {
+                $scope.error = 'Unknown error.';
+            }
+        }).finally(function() {
             $scope.loading = false;
         });
     };

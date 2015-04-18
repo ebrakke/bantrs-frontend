@@ -14,8 +14,8 @@ app.factory('Auth', function(config, $http, $location, $localStorage) {
         currentUser = user;
     };
 
-    Auth.getUser = function() {
-        return currentUser;
+    Auth.setToken = function(token) {
+        $localStorage.token = token;
     };
 
     Auth.isLogged = function() {
@@ -29,12 +29,10 @@ app.factory('Auth', function(config, $http, $location, $localStorage) {
         }).success(function(response, status) {
             var data = response.data;
 
-            $localStorage.token = data.authToken;
-            currentUser = data.user;
+            Auth.setToken(data.authToken);
+            Auth.setUser(data.user);
 
             return response.meta.code;
-        }).error(function(response, status) {
-
         });
     };
 

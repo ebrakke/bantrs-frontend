@@ -11,7 +11,11 @@ app.controller('LoginCtrl', function($scope, $location, Auth) {
             console.log(response);
             $location.path('/feed');
         }, function(response) {
-            $scope.error = response.data.meta.message;
+            if (response.data) {
+                $scope.error = response.data.meta.err;
+            } else {
+                $scope.error = 'Unknown error.';
+            }
         }).finally(function() {
             $scope.loading = false;
         });
