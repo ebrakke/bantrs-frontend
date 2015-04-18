@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Auth', function(config, $http, $localStorage) {
+app.factory('Auth', function(config, $http, $location, $localStorage) {
     var api = config.api + '/user/auth';
     var currentUser = null;
 
@@ -40,6 +40,8 @@ app.factory('Auth', function(config, $http, $localStorage) {
 
     Auth.logout = function() {
         delete $localStorage.token;
+
+        $location.path('/login');
     };
 
     return Auth;
