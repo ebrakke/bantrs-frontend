@@ -6,12 +6,13 @@ app.controller('LoginCtrl', function($scope, $location, Auth) {
 
     $scope.login = function(username, password) {
         $scope.loading = true;
-
-        Auth.login(username, password).success(function(response) {
+        console.log(username, password);
+        Auth.login(username, password).then(function(response) {
+            console.log(response);
             $location.path('/feed');
-        }).error(function(response) {
-            $scope.error = 'Invalid username/password.';
-        }).then(function() {
+        }, function(response) {
+            $scope.error = response.data.meta.message;
+        }).finally(function() {
             $scope.loading = false;
         });
     };

@@ -14,6 +14,14 @@ app.factory('Auth', function(config, $http, $localStorage) {
         currentUser = user;
     };
 
+    Auth.getUser = function() {
+        return currentUser;
+    };
+
+    Auth.isLogged = function() {
+        return !!$localStorage.token;
+    };
+
     Auth.login = function(username, password) {
         return $http.post(api, {
             'username': username,

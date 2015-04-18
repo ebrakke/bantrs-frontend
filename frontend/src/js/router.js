@@ -2,7 +2,8 @@
 
 app.config(function($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
-        redirectTo: '/feed'
+        templateUrl: 'partials/pages/splash.html',
+        controller: 'RootCtrl'
     }).when('/feed', {
         templateUrl: 'partials/pages/feed.html',
         controller: 'FeedCtrl'
