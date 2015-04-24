@@ -15,7 +15,8 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "~2.0.5",
     "morgan": "~1.5.2",
-    "pg": "~4.3.0"
+    "pg": "~4.3.0",
+    "q": "~1.2.0"
   },
   "devDependencies": {}
 }

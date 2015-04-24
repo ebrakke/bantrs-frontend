@@ -1,17 +1,25 @@
-var Sequelize = require('sequelize');
+var pg = require('pg');
 var config = require('../config');
-var sequelize = new Sequelize(config.db.type + '://' + config.db.username + ':' + config.db.password + '@' + config.db.host + '/' + config.db.name, {dialect:'postgres'});
+var Q = require('q');
+var deferred = Q.defer();
+var client = new pg.Client(config.db.type + '://' + config.db.username + ':' + config.db.password + '@' + config.db.host + '/' + config.db.name);
 /*
 * This is basically a config file for the pg node package
 * TODO
-* Implement the connection to the database
 */
 
 function db() {}
 
 db.query = function(query,params){
-    var query = sequelize.query(query, params);
-    return query;
+    client.connect();
+    client.query(query, params, function(err, result) {
+        if(err) {
+            deferred.reject(err);
+        } else {
+            deferred.resolve(result);
+        }
+    });
+    return deferred.promise;
 }
 
 module.exports = db;
