@@ -4,19 +4,19 @@
         --><div class="block-3-5">
             <div class="input-toggle grid">
                 <div class="input-toggle__item block-1-2">
-                    <input id="toggle-block" name="radius" class="input-toggle__checkbox" type="radio" checked="checked">
-                    <label for="toggle-block" class="option">active</label>
+                    <input ng-model="archived" ng-value="false" id="toggle-active" name="archived" class="input-toggle__checkbox" type="radio" checked="checked">
+                    <label for="toggle-active" class="option">active</label>
                 </div><!--
                 --><div class="input-toggle__item block-1-2">
-                    <input id="toggle-city" name="radius" class="input-toggle__checkbox" type="radio">
-                    <label for="toggle-city" class="option">archived</label>
+                    <input ng-model="archived" ng-value="true" id="toggle-archived" name="archived" class="input-toggle__checkbox" type="radio">
+                    <label for="toggle-archived" class="option">archived</label>
                 </div>
             </div>
         </div><!--
         --><a class="siteHeader__item block-1-5" href="#/settings"><i class="fa fa-cog"></i></a>
     </header>
     <section class="feed">
-        <a href="#/room" ng-repeat="room in rooms">
+        <a href="#/room" ng-repeat="room in rooms | filter:showArchived">
             <div class="feed__item {{room.topic.type}}-item">
                 <div class="background" ng-if="room.topic.type == 'media'">
                     <img ng-src="{{room.topic.content}}" />

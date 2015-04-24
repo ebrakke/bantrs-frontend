@@ -13,4 +13,11 @@ app.controller('FeedCtrl', function($scope, User) {
             console.log('[rooms]', $scope.rooms);
         });
     });
+
+    // Filter feed based on whether a room is archived or not.
+    // Initially show active rooms.
+    $scope.archived = false;
+    $scope.showArchived = function(item) {
+        return item.archived === $scope.archived;
+    };
 });
