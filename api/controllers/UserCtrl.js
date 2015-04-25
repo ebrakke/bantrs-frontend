@@ -29,7 +29,7 @@ UserCtrl.create = function(userData, callback) {
     }
 
     // Hash the password and forget it
-    user.password = bcrypt.hashSync(user.password, 8); 
+    user.password = bcrypt.hashSync(user.password, 8);
     /* Send the request to create the user */
     user.create()
     .then(function() {
@@ -65,14 +65,51 @@ UserCtrl.update = function(user, newInfo) {
         return d.promise;
     }
 
-    user.password = user.password ? bcrypt.hashSync(user.password, 8) : null;
-    user.update(function() {
-        delete user.password;
-        d.resolve();
+    user.password = user.password ? bcrypt.hashSync(user.password, 8): null;
+    user.update()
+    .then(function() {
+        if(user.password) { // They changed there password, update the auth token
+            delete user.password;
+            user._auth = makeAuth(user._uid);
+            user.updateAuth()
+            .then(function() {
+                d.resolve();
+            })
+            .fail(function(err) {
+                d.reject(err);
+            });
+        } else {
+            delete user.password;
+            d.resolve();
+        }
     })
     .fail(function(err) {
         d.reject(err);
     });
+    return d.promise;
+}
+
+UserCtrl.getRoomObjects = function(username) {
+    var d = Q.defer();
+    UserModel.getByUsername(username)
+    .then(function(user) {
+        user.getRooms()
+        .then(function() {
+            user.getRoomObjects()
+            .then(function(roomObjs) {
+                d.resolve(roomObjs);
+            })
+            .fail(function(err) {
+                d.reject(err);
+            })
+        })
+        .fail(function(err) {
+            d.reject(err)
+        })
+    })
+    .fail(function(err) {
+        d.reject(err);
+    })
     return d.promise;
 }
 
@@ -111,6 +148,18 @@ UserCtrl.getById = function(id) {
     .fail(function(err) {
         d.reject(err);
     });
+    return d.promise;
+}
+
+UserCtrl.delete = function(user) {
+    var d = Q.defer();
+    user.delete()
+    .then(function() {
+        d.resolve();
+    })
+    .fail(function(err) {
+        d.reject(err);
+    })
     return d.promise;
 }
 

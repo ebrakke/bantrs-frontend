@@ -16,9 +16,9 @@ user.post('/', function(req, res) {
 	var userData = req.body;
 	uc.create(userData, function(err, user){
 		if (!err) {
-			res.json(utils.envelope(200, user, null));
+			res.json(utils.envelope(user, null));
 		} else {
-		res.status(err.code).json(utils.envelope(err.code, null, err));
+		res.status(err.code).json(utils.envelope(null, err));
 		}
 	});
 });
@@ -31,12 +31,12 @@ user.post('/', function(req, res) {
 user.post('/auth', function(req, res) {
 	/* FRONTEND: pass arguments as username, password */
 	var userData = req.body;
-	var response = auth.validByUserPwd(userData, function(err, response){
-		if (!err){
-			res.status(200).json(utils.envelope(200, response, null));
-		} else {
-			res.status(err.code).json(utils.envelope(err.code, null, err));
-		}
+	auth.validByUserPwd(userData)
+	.then(function(user) {
+		res.json(utils.envelope(null, err));
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(err, null));
 	});
 });
 
@@ -51,7 +51,7 @@ user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.body.authToken;
 	var newInfo = {}
-	
+
 	newInfo.newUsername = req.body.username;
 	newInfo.newPassword = req.body.password;
 	newInfo.newEmail = req.body.email;
@@ -71,18 +71,6 @@ user.post('/me', function(req, res) {
 	});
 });
 
-user.get('/auth/validate', function(req, res) {
-	var username = req.query.username;
-	var authToken = req.query.authToken;
-
-	auth.validByAuthToken(username, authToken, function(err, user) {
-		if (!err){
-			res.json(utils.envelope(true, null))
-		} else {
-			res.json(utils.envelope(null, err));
-		}
-	});
-});
 
 /*
 * Get User
@@ -93,13 +81,13 @@ user.get('/:id', function(req, res) {
 	var id = req.params.id;
 	var authToken = req.body.authToken;
 
-	/* Test value */
-	authToken = '703259e8b54c885683ea24079293f35e4413b4fd';
-
-	auth.validByAuthToken(authToken, function(err, user) {
-
-		// Get the user and rooms
-	});
+	auth.validByAuthToken(authToken)
+	.then(function(user) {
+		res.json(utils.envelope(user, null));
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err));
+	})
 });
 
 /*
@@ -109,11 +97,21 @@ user.get('/:id', function(req, res) {
 * return status code
 */
 
-user.delete('/:id', function(req, res) {
-	var id = req.params.id;
+user.delete('/me', function(req, res) {
 	var authToken = req.body.authToken;
-
-	res.json(utils.envelope({}, null));
+	auth.validByAuthToken(auth)
+	.then(function(user) {
+		uc.delete(user)
+		.then(function() {
+			res.json(utils.envelope({}, null))
+		})
+		.fail(function(err) {
+			res.json(utils.envelope(null, err));
+		});
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err));
+	});
 });
 
 /*
@@ -123,11 +121,15 @@ user.delete('/:id', function(req, res) {
 * return rooms
 */
 
-user.get('/:id/rooms', function(req, res) {
-	var id = req.params.id;
-	var authToken = req.body.authToken;
-
-	res.json(utils.envelope(null));
+user.get('/:username/rooms', function(req, res) {
+	var username = req.params.username;
+	uc.getRoomObjects(username)
+	.then(function(rooms) {
+		res.json(utils.envelope(rooms, null));
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err));
+	});
 });
 
 module.exports = user;
