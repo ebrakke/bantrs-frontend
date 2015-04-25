@@ -28,7 +28,6 @@ RoomCtrl.create = function(roomInfo ) {
     }
 
     /* Send create room request */
->>>>>>> 96498967ef69fc6411c57324b7a6c51958bfa54b
     room.create()
     .then(function() {
         d.resolve(room);
