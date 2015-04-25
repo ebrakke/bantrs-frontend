@@ -155,6 +155,18 @@ User.prototype.getRoomObjects = function() {
     return Q.all(queries);
 }
 
+User.prototype.joinRoom = function(rid) {
+    var dfd = Q.defer();
+    db.query('INSERT INTO membership VALUES ($1, $2)', [rid, this._uid])
+    .then(function(result) {
+        dfd.resolve();
+    })
+    .fail(function(err) {
+        dfd.reject(err);
+    });
+    return dfd.promise;
+}
+
 // Get a User object by the username
 User.getByUsername = function(username) {
     var dfd = Q.defer();
@@ -176,7 +188,10 @@ User.getById = function(uid) {
     var dfd = Q.defer();
     db.query('SELECT uid, username, email FROM users WHERE uid = $1', [uid])
     .then(function(userObj) {
-        if(userObj[0].length === 0) dfd.reject('No user found'); return;
+        if(userObj[0].length === 0) {
+            dfd.reject('No user found');
+            return;
+        }
         dfd.resolve(new User(userObj[0]))
     })
     .fail(function(err) {
@@ -203,12 +218,16 @@ User.getByAuthToken = function(bantrsauth){
     var dfd = Q.defer();
     db.query('SELECT u.username, u.uid, u.email FROM users u NATURAL JOIN auth a WHERE a.bantrsauth = $1',[bantrsauth])
     .then(function(userObj) {
-        if (userObj[0].length === 0) dfd.reject('No user found'); return;
+        if (userObj.length === 0) {
+            dfd.reject('No user found');
+            return;
+        }
         dfd.resolve(new User(userObj[0]))
     })
     .fail(function(err) {
         dfd.reject(err);
     });
+    return dfd.promise;
 }
 
 module.exports = User;

@@ -228,13 +228,21 @@ room.get('/:id/comments', function(req,res) {
 room.post('/', function(req, res) {
     var roomInfo = req.body; /* title, topic, type, lat, lng, radius */
     var authToken = req.get('authorization');
-    //authToken = '66ff671e2b5147594d82a9bf036330bd37c1a5d2';
+    authToken = '66ff671e2b5147594d82a9bf036330bd37c1a5d2';
     auth.validByAuthToken(authToken)
     .then(function(user) {
         roomInfo.author = user._uid;
         rc.create(roomInfo)
         .then(function(room) {
-            res.json(utils.envelope(room, null))
+            user.joinRoom(room._rid)
+            .then(function() {
+                console.log(room);
+                res.json(utils.envelope(room, null))
+            })
+            .fail(function(err) {
+                console.log(err);
+                res.json(utils.envelope(null, err));
+            });
         })
         .fail(function(err) {
             res.json(utils.envelope(null, err));
