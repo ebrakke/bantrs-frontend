@@ -14,12 +14,13 @@ var bcrypt = require('bcryptjs');
 user.post('/', function(req, res) {
 	/* FRONTEND NOTE: Must pass the data in as username, password, email */
 	var userData = req.body;
-	uc.create(userData, function(err, user){
-		if (!err) {
-			res.json(utils.envelope(user, null));
-		} else {
-		res.status(err.code).json(utils.envelope(null, err));
-		}
+	uc.create(userData)
+	.then(function(userAuth) {
+		var apiUser = userAuth.user.apiObj();
+		res.json(utils.envelope({user: apiUser, bantrsAuth: userAuth.auth}, null))
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err));
 	});
 });
 
@@ -32,8 +33,9 @@ user.post('/auth', function(req, res) {
 	/* FRONTEND: pass arguments as username, password */
 	var userData = req.body;
 	auth.validByUserPwd(userData)
-	.then(function(user) {
-		res.json(utils.envelope(null, err));
+	.then(function(userAuth) {
+		var apiUser = userAuth.user.apiObj();
+		res.json(utils.envelope({user: apiUser, bantrsAuth: userAuth.auth}, null));
 	})
 	.fail(function(err) {
 		res.json(utils.envelope(err, null));
@@ -59,8 +61,13 @@ user.post('/me', function(req, res) {
 	auth.validByAuthToken(authToken)
 	.then(function(user) {
 		uc.update(user, newInfo)
-		.then(function() {
-			res.json(utils.envelope(user, null))
+		.then(function(auth) {
+			var apiUser = user.apiObj();
+			if(auth){
+				res.json(utils.envelope({user: apiUser, auth: auth}, null))
+			} else {
+				res.json(utils.envelope(apiUser, null))
+			}
 		})
 		.fail(function(err) {
 			res.json(utils.envelope(null, err));
@@ -77,13 +84,12 @@ user.post('/me', function(req, res) {
 * TODO:
 */
 
-user.get('/:id', function(req, res) {
-	var id = req.params.id;
-	var authToken = req.body.authToken;
-
-	auth.validByAuthToken(authToken)
+user.get('/:username', function(req, res) {
+	var username = req.params.username;
+	uc.getByUsername(username)
 	.then(function(user) {
-		res.json(utils.envelope(user, null));
+		var apiUser = user.apiObj();
+		res.json(utils.envelope(apiUser, null));
 	})
 	.fail(function(err) {
 		res.json(utils.envelope(null, err));

@@ -13,10 +13,19 @@ AuthCtrl.validByUserPwd = function(userData) {
 	var d = Q.defer();
 	UserModel.getHash(userData.username)  // Grab the password hash from the DB
 	.then(function(user) {
-		if(!bcrypt.compareSync(userData.password, user.password)) d.reject(e.invalidPassword); return;
+		if(!bcrypt.compareSync(userData.password, user.password)) {
+			d.reject(e.invalidPassword);
+			return;
+		}
 		UserModel.getByUsername(user.username)
 		.then(function(user) {
-			d.resolve(user)
+			user.getAuthToken()
+			.then(function(auth) {
+				d.resolve({user: user, auth: auth});
+			})
+			.fail(function(err) {
+				d.reject(err);
+			});
 		})
 		.fail(function(err) {
 			d.reject(err);

@@ -17,7 +17,8 @@
     "pg-hstore": "^2.3.2",
     "q": "~1.2.0",
     "sequelize": "~2.0.5",
-    "validate.js": "^0.7.1"
+    "validate.js": "^0.7.1",
+    "lodash-node": "~3.7.0"
   },
   "devDependencies": {}
 }

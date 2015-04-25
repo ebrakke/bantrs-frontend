@@ -1,13 +1,13 @@
 var db = require('../controllers/dbConnector');
 var rm = require('./RoomModel');
 var Q = require('q');
+var _ = require('lodash-node');
 
 function User(userData) {
     this.username = userData.username;
     this.password = userData.password;
     this.email = userData.email;
     this._uid = userData.uid;
-    this._auth;
 }
 
 // Access the uid because it's private
@@ -29,9 +29,9 @@ User.prototype.getId = function() {
 User.prototype.getRooms = function() {
     var dfd = Q.defer();
     var user = this;
-    db.query('SELECT rid FROM membership WHERE uid = $1', [this.uid])
+    db.query('SELECT rid FROM membership WHERE uid = $1', [this._uid])
     .then(function(roomsList) {
-        user.rooms = roomsList;
+        user.rooms = _.pluck(roomsList, 'rid');
         dfd.resolve();
     })
     .fail(function(err) {
@@ -79,10 +79,10 @@ User.prototype.create = function() {
     return dfd.promise;
 }
 
-User.prototype.updateAuth = function() {
+User.prototype.updateAuth = function(auth) {
     var dfd = Q.defer();
     var user = this;
-    db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [this._auth, this._uid])
+    db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [auth, this._uid])
     .then(function() {
         dfd.resolve();
     })
@@ -106,11 +106,9 @@ User.prototype.delete = function() {
 
 User.prototype.getAuthToken = function() {
     var dfd = Q.defer();
-    var user = this;
     db.query('SELECT bantrsauth FROM auth WHERE uid = $1', [this._uid])
     .then(function(authObj) {
-        user._auth = authObj[0].bantrsauth;
-        dfd.resolve()
+        dfd.resolve(authObj[0].bantrsauth)
     })
     .fail(function(err) {
         dfd.reject(err);
@@ -119,10 +117,9 @@ User.prototype.getAuthToken = function() {
 }
 
 //Create an entry for a new user and his Bantrs auth token
-User.prototype.createAuthToken = function() {
+User.prototype.createAuthToken = function(auth) {
     var dfd = Q.defer();
-    var user = this;
-    db.query('INSERT INTO auth VALUES ($1, $2) RETURNING bantrsauth', [this._uid, this._auth])
+    db.query('INSERT INTO auth VALUES ($1, $2) RETURNING bantrsauth', [this._uid, auth])
     .then(function(authObj) {
         dfd.resolve();
     })
@@ -167,13 +164,25 @@ User.prototype.joinRoom = function(rid) {
     return dfd.promise;
 }
 
+User.prototype.apiObj = function() {
+    var user = this;
+    user.uid = this._uid;
+    user.auth = this._auth;
+    delete user._uid;
+    delete user._auth;
+    return user;
+}
+
 // Get a User object by the username
 User.getByUsername = function(username) {
     var dfd = Q.defer();
     // Send the query to the dbConnector
     db.query("SELECT uid, username, email FROM users where username = $1", [username])
     .then(function(userObj) {
-        if(userObj[0].length === 0) dfd.reject('No user found'); return;
+        if(userObj[0].length === 0) {
+            dfd.reject('No user found');
+            return;
+        }
         dfd.resolve(new User(userObj[0]));
     })
     .fail(function(err) {
@@ -229,5 +238,6 @@ User.getByAuthToken = function(bantrsauth){
     });
     return dfd.promise;
 }
+
 
 module.exports = User;

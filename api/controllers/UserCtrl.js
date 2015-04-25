@@ -17,7 +17,7 @@ var UserCtrl = function () {}
  * Input: userData = {username, password, email}
  * Return: User object with username, email, uid, authToken
  */
-UserCtrl.create = function(userData, callback) {
+UserCtrl.create = function(userData) {
     var d = Q.defer();
     var user = new UserModel(userData);
 
@@ -35,10 +35,10 @@ UserCtrl.create = function(userData, callback) {
     user.create()
     .then(function() {
         delete user.password;
-        user._auth = makeAuth(user._uid);
-        user.createAuthToken()
+        var auth = makeAuth(user._uid);
+        user.createAuthToken(auth)
         .then(function() {
-            d.resolve(user);
+            d.resolve({user: user, auth: auth});
         })
         .fail(function(err) {
             d.reject(err);
@@ -72,10 +72,10 @@ UserCtrl.update = function(user, newInfo) {
     .then(function() {
         if(user.password) { // They changed there password, update the auth token
             delete user.password;
-            user._auth = makeAuth(user._uid);
+            var auth = makeAuth(user._uid);
             user.updateAuth()
             .then(function() {
-                d.resolve();
+                d.resolve(auth);
             })
             .fail(function(err) {
                 d.reject(err);

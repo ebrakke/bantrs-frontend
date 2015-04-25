@@ -94,10 +94,9 @@ room.get('/discover', function(req,res) {
 * Return new comments if valid auth tokens
 */
 room.get('/:id', function(req, res) {
-
+    var auth = req.get('authorization');
     var lat = req.params.lat;
     var lng = req.params.lng;
-    var authToken = req.body.authToken;
 
     // Populate this data from the DB
     var data = {
@@ -134,7 +133,8 @@ room.get('/:id', function(req, res) {
 * Validate user authToken
 */
 room.get('/:id/members', function(req,res) {
-    var authToken = req.body.authToken;
+    var authToken = req.get('authorization');
+
 
     var data = [
         {
