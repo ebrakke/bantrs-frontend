@@ -27,11 +27,13 @@ app.use(cors());
 var user = require('./routes/user');
 var room = require('./routes/room');
 var comment = require('./routes/comment');
+var index = require('./routes/index');
 
 // routes to use
 app.use('/user', user);
 app.use('/room', room);
 app.use('/comment', comment);
+app.use('/', index);
 
 // START THE SERVER
 app.listen(port);
