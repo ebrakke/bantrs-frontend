@@ -16,7 +16,7 @@ db.query = function(query,params){
         var handleError = function(err) {
             if(!err) return false;
             done(client);
-            deffered.reject(err);
+            deferred.reject(err);
             return true;
         }
 

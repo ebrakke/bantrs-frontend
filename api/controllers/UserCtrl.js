@@ -6,6 +6,7 @@ var bcrypt = require('bcryptjs');
 var crypto = require('crypto');
 var e = require('./errors');
 var Q = require('q');
+var Validator = require('../validate');
 
 
 /* UserCtrl Constructor */
@@ -18,11 +19,19 @@ var UserCtrl = function () {}
  */
 UserCtrl.create = function(userData, callback) {
     var d = Q.defer();
-    /* Call Validator */
-    userData.password = bcrypt.hashSync(userData.password, 8); // Hash the password and forget it
-    /* Send the request to create the user */
     var user = new UserModel(userData);
-	user.create()
+
+    /* Validate user creation fields */
+    var validationFailed = Validator.user(user);
+    if (validationFailed) {
+        d.reject(e.invalidUserData, null);
+        return d.promise;
+    }
+
+    // Hash the password and forget it
+    user.password = bcrypt.hashSync(user.password, 8); 
+    /* Send the request to create the user */
+    user.create()
     .then(function() {
         delete user.password;
         user._auth = makeAuth(user._uid);
@@ -40,16 +49,23 @@ UserCtrl.create = function(userData, callback) {
     return d.promise;
 }
 
-
 /* Update user
 	 @param {string[]} newInfo - new username, pw, email
 */
 UserCtrl.update = function(user, newInfo) {
     var d = Q.defer();
     user.username = newInfo.username ? newInfo.username : user.username;
-    user.password = newInfo.password ? bcrypt.hashSync(newInfo.password, 8) : null;
+    user.password = newInfo.password ? newInfo.password : null;
     user.email = newInfo.email ? newInfo.email : user.email;
 
+    /* Validate user update fields */
+    var validationFailed = Validator.user(user);
+    if (validationFailed) {
+        d.reject(e.invalidUserData, null);
+        return d.promise;
+    }
+
+    user.password = user.password ? bcrypt.hashSync(user.password, 8) : null;
     user.update(function() {
         delete user.password;
         d.resolve();
@@ -99,7 +115,7 @@ UserCtrl.getById = function(id) {
 }
 
 var makeAuth = function(id) {
-    return createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
+    return crypto.createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
 }
 
 module.exports = UserCtrl;

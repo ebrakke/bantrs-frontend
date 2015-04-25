@@ -38,5 +38,6 @@ AuthCtrl.validByAuthToken = function(authtoken) {
 		d.reject(err);
 	});
 	return d.promise;
+}
 
 module.exports = AuthCtrl;
