@@ -6,7 +6,7 @@ app.factory('Auth', function(config, $http, $location, $localStorage, User) {
     var Auth = {};
 
     Auth.getUser = function() {
-        return $localStorage.user;
+        return new User($localStorage.user);
     };
 
     Auth.setUser = function(user) {
@@ -29,7 +29,7 @@ app.factory('Auth', function(config, $http, $location, $localStorage, User) {
             console.log(response);
             var data = response.data;
 
-            Auth.setToken(data.authToken);
+            Auth.setToken(data.bantrsAuth);
             Auth.setUser(data.user);
 
             return response.meta.code;
