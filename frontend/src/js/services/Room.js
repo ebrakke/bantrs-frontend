@@ -17,6 +17,8 @@ app.factory('Room', function(config, $http, Comment) {
             lng: room.location.lng,
             radius: room.location.radius
         }).success(function(response, status) {
+            console.log('Room.create', response);
+
             var data = response.data;
 
             room.author = data.author;

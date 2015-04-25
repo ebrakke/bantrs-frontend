@@ -37,7 +37,10 @@ app.factory('User', function(config, $http) {
 
     User.get = function(id) {
         return $http.get(api + '/' + id).success(function(response) {
+            console.log(response);
             return new User(response.data);
+        }).error(function(error) {
+            console.log('error', error);
         });
     };
 

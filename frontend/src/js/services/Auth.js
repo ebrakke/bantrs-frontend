@@ -1,17 +1,16 @@
 'use strict';
 
-app.factory('Auth', function(config, $http, $location, $localStorage) {
+app.factory('Auth', function(config, $http, $location, $localStorage, User) {
     var api = config.api + '/user/auth';
-    var currentUser = null;
 
     var Auth = {};
 
     Auth.getUser = function() {
-        return currentUser;
+        return $localStorage.user;
     };
 
     Auth.setUser = function(user) {
-        currentUser = user;
+        $localStorage.user = user;
     };
 
     Auth.setToken = function(token) {
@@ -19,7 +18,7 @@ app.factory('Auth', function(config, $http, $location, $localStorage) {
     };
 
     Auth.isLogged = function() {
-        return !!$localStorage.token;
+        return !!$localStorage.token && !!$localStorage.user;
     };
 
     Auth.login = function(username, password) {
@@ -27,6 +26,7 @@ app.factory('Auth', function(config, $http, $location, $localStorage) {
             'username': username,
             'password': password
         }).success(function(response, status) {
+            console.log(response);
             var data = response.data;
 
             Auth.setToken(data.authToken);
@@ -38,6 +38,7 @@ app.factory('Auth', function(config, $http, $location, $localStorage) {
 
     Auth.logout = function() {
         delete $localStorage.token;
+        delete $localStorage.user;
 
         $location.path('/login');
     };
