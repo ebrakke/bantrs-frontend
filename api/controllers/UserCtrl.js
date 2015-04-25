@@ -24,6 +24,7 @@ UserCtrl.create = function(userData, callback) {
     /* Validate user creation fields */
     var validationFailed = Validator.user(user);
     if (validationFailed) {
+        e.invalidUserData.msg = validationFailed;
         d.reject(e.invalidUserData, null);
         return d.promise;
     }
@@ -61,6 +62,7 @@ UserCtrl.update = function(user, newInfo) {
     /* Validate user update fields */
     var validationFailed = Validator.user(user);
     if (validationFailed) {
+        e.invalidUserData.msg = validationFailed;
         d.reject(e.invalidUserData, null);
         return d.promise;
     }

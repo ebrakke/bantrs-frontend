@@ -1,5 +1,5 @@
 var db = require('../controllers/dbConnector');
-var Q = require('Q');
+var Q = require('q');
 
 function Room(roomInfo) {
     this.title = roomInfo.title;

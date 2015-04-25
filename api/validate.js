@@ -51,11 +51,20 @@ Validator.room = function (roomObj) {
 	// Validate lat/long as floats
 	var testLocation = [roomObj.location.lat, roomObj.location.lng];
 	for (var i = 0;  i < 2; i++) {
-		console.log(parseFloat(testLocation[i]))
 		if (!parseFloat(testLocation[i])) {
 			return 'Invalid lat/lng';
 		}
 	};
+
+	/* 
+	* Workaround to validate nested room object fields
+	* would like to change.. 
+	* unsure why type couldn't be passed normally
+	*/
+	var newType = roomObj.topic.type;
+	roomObj.topic = roomObj.topic.content;
+	roomObj.type = newType;
+	roomObj.radius = roomObj.location.radius;
 
 	// Validation constraints
 	var constraints = {
@@ -86,11 +95,11 @@ Validator.room = function (roomObj) {
 		radius: {
 			presence: true,
 			inclusion: {
-				within: {'100m': 'block', '800m': 'neighborhood', '8000m': 'city'}
+				within: {'100': 'block', '800': 'neighborhood', '8000': 'city'}
 			}
 		}
 	}
-	return validate(userObj, constraints);	
+	return validate(roomObj, constraints);	
 }
 
 /*
