@@ -17,8 +17,8 @@ Room.prototype.create = function() {
     rep = [this.title + this.author.uid + day.getDate(), this.title, this.topic.content, this.topic.type, this.author.uid, this.location.lat, this.location.lng, this.location.radius];
     db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
     .then(function(returnObj) {
-        room._rid = returnObj.rid;
-        room.createdAt = returnObj.createdat
+        room._rid = returnObj[0].rid;
+        room.createdAt = returnObj[0].createdat
         d.resolve();
     })
     .fail(function(err) {
@@ -31,7 +31,7 @@ Room.getById = function(id) {
     var d = Q.defer();
     db.query("SELECT rid, title, topic, topic_type AS type, author, lat, lng, radius, createdat AS createdAt FROM rooms WHERE rid = $1", [id])
     .then(function(roomObj) {
-        var room = new Room(roomObj);
+        var room = new Room(roomObj[0]);
         d.resolve(room);
     })
     .fail(function(err) {
