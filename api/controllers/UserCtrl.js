@@ -169,4 +169,5 @@ var makeAuth = function(id) {
     return crypto.createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
 }
 
+
 module.exports = UserCtrl;

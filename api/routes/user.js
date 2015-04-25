@@ -4,6 +4,7 @@ var utils = require('../utils');
 var uc = require('../controllers/UserCtrl');
 var auth = require('../controllers/AuthCtrl');
 var bcrypt = require('bcryptjs');
+var _ = require('lodash-node');
 
 /*
 * Create User
@@ -78,6 +79,19 @@ user.post('/me', function(req, res) {
 	});
 });
 
+user.get('/:username/rooms', function(req, res) {
+	var username = req.params.username;
+	uc.getRoomObjects(username)
+	.then(function(rooms) {
+		_.forEach(rooms, function(room) {
+			room = room.apiObj();
+		});
+		res.json(utils.envelope(rooms, null));
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err));
+	});
+});
 
 /*
 * Get User
@@ -127,15 +141,6 @@ user.delete('/me', function(req, res) {
 * return rooms
 */
 
-user.get('/:username/rooms', function(req, res) {
-	var username = req.params.username;
-	uc.getRoomObjects(username)
-	.then(function(rooms) {
-		res.json(utils.envelope(rooms, null));
-	})
-	.fail(function(err) {
-		res.json(utils.envelope(null, err));
-	});
-});
+
 
 module.exports = user;

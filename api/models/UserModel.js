@@ -146,8 +146,8 @@ User.prototype.getActiveRooms = function() {
 
 User.prototype.getRoomObjects = function() {
     var queries = [];
-    user.Rooms.forEach(function(room) {
-        queries.push(rm.getById(room.rid));
+    this.rooms.forEach(function(room) {
+        queries.push(rm.getById(room));
     })
     return Q.all(queries);
 }

@@ -10,6 +10,7 @@ function Room(roomInfo) {
     this._rid = roomInfo.rid;
 }
 
+/* Create a room */
 Room.prototype.create = function() {
     var d = Q.defer();
     var room = this;
@@ -27,6 +28,19 @@ Room.prototype.create = function() {
     return d.promise;
 }
 
+/* Show members of a room */
+Room.prototype.members = function() {
+    
+}
+
+/* Turn a room object into an API object */
+Room.prototype.apiObj = function() {
+    this.rid = this._rid;
+    delete this._rid;
+    return this;
+}
+
+/* Return a room object by ID */
 Room.getById = function(id) {
     var d = Q.defer();
     db.query("SELECT rid, title, topic, topic_type AS type, author, lat, lng, radius, createdat AS createdAt FROM rooms WHERE rid = $1", [id])
