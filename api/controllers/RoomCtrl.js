@@ -15,9 +15,8 @@ var RoomCtrl = {};
 
 RoomCtrl.create = function(roomInfo ) {
     var d = Q.defer();
+    roomInfo.type = 'url';
     var room = new Room(roomInfo);
-
-    console.log(room)
 
     /* Validate room create fields */
     var validationFailed = Validator.room(room);
