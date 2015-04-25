@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Room', function(config, $http) {
+app.factory('Room', function(config, $http, Comment) {
     var api = config.api + '/room';
 
     var Room = function(data) {
@@ -10,18 +10,67 @@ app.factory('Room', function(config, $http) {
     Room.prototype.create = function() {
         var room = this;
 
-        return $http.post(api, room).success(function(response, status) {
-            console.log('[create.success]', response);
-            return response;
+        return $http.post(api, {
+            title: room.title,
+            topic: room.topic.content,
+            lat: room.location.lat,
+            lng: room.location.lng,
+            radius: room.location.radius
+        }).success(function(response, status) {
+            var data = response.data;
+
+            room.author = data.author;
+            room.topic.type = data.topic.type;
+            room.members = data.members;
+            room.newComments = data.newComments;
+            room.member = data.member;
+            room.archived = data.archived;
+            room.createdAt = data.createdAt;
         }).error(function(response, status) {
             console.log('[create.error]', response);
             return status;
         });
     };
 
+    Room.prototype.save = function() {
+        var room = this;
+
+        return $http.post(api + '/' + room.rid, {
+            title: room.title,
+            radius: room.location.radius
+        }).success(function(response) {
+
+        }).error(function(response) {
+
+        });
+    };
+
+    Room.prototype.join = function(lat, lng) {
+        var room = this;
+
+        return $http.post(api + '/' + room.rid + '/join', {
+            lat: lat,
+            lng: lng
+        }).success(function(response) {
+
+        }).error(function(response) {
+
+        });
+    };
+
+    Room.prototype.archive = function() {
+        var room = this;
+
+        return $http.post(api + '/' + room.rid + '/archive').success(function(response) {
+
+        }).error(function(response) {
+
+        });
+    };
+
     Room.get = function(id) {
-        return $http.get(api + '/' + id).then(function(response) {
-            return new Room(response.data.data);
+        return $http.get(api + '/' + id).success(function(response) {
+            return new Room(response.data);
         });
     };
 
@@ -35,8 +84,8 @@ app.factory('Room', function(config, $http) {
             url: api + '/discover',
             method: 'GET',
             params: params
-        }).then(function(response) {
-            var data = response.data.data;
+        }).success(function(response) {
+            var data = response.data;
 
             var rooms = [];
             data.forEach(function(elem) {
@@ -52,7 +101,32 @@ app.factory('Room', function(config, $http) {
         var url = api + '/' + room.rid +  '/comments';
 
         return $http.get(url).then(function(response) {
-            return response.data;
+            var data = response.data;
+
+            var comments = [];
+            data.forEach(function(elem) {
+                comments.push(new Comment(elem));
+            });
+
+            return comments;
+        });
+    };
+
+    Room.prototype.getMembers = function() {
+        var room = this;
+        var url = api + '/' + room.rid +  '/members';
+
+        return $http.get(url).then(function(response) {
+            var data = response.data;
+
+            // var members = [];
+            // data.forEach(function(elem) {
+            //     members.push(new User(elem));
+            // });
+            //
+            // return members;
+
+            return data;
         });
     };
 

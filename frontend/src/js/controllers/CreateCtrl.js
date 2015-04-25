@@ -2,10 +2,14 @@
 
 app.controller('CreateCtrl', function($scope, $http, Room, $timeout) {
     $scope.pageClass = 'page-create';
+
     $scope.room = new Room();
-    $scope.url = '';
-    $scope.title = '';
-    $scope.radius = 0;
+    $scope.room.url = '';
+    $scope.room.title = '';
+    $scope.room.location = {
+        radius: 100
+    };
+
     $scope.error = '';
     $scope.loading = false;
 
