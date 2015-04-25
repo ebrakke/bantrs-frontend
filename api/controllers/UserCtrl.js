@@ -5,6 +5,7 @@ var AuthCtrl = require('./AuthCtrl');
 var bcrypt = require('bcryptjs');
 var crypto = require('crypto');
 var e = require('./errors');
+var Q = require('q');
 
 
 /* UserCtrl Constructor */
@@ -16,90 +17,89 @@ var UserCtrl = function () {}
  * Return: User object with username, email, uid, authToken
  */
 UserCtrl.create = function(userData, callback) {
+    var d = Q.defer();
+    /* Call Validator */
     userData.password = bcrypt.hashSync(userData.password, 8); // Hash the password and forget it
-
     /* Send the request to create the user */
-    var User = new UserModel(userData);
-	var response = User.create();
-    delete User.password;
-
-    response.then(function(result) {
-        /* On a successful insert, get the id and create an auth token */
-        var response = User.getId();
-        response.then(function(results) {
-            /* extract the uid */
-            User.uid = results[0][0].uid;  // Extract the ID from the response
-            User.auth = crypto.createHash('sha1').update(User.uid).update(Math.random().toString(32).slice(2)).digest('hex');  // Generate a new auth token
-
-            var response = User.createAuthToken();  // Put the auth token into the DB
-            response.then(function(results) {
-                /* Return the user object to the router */
-                callback(null, User);
-
-        /* Error handling */
-            }, function(err) {
-                callback(err, null);
-            });
-        }, function(err) {
-            callback(err, null);
-        });
-    }, function(err) {
-        callback(e.usernameExists, null);
+    var user = new UserModel(userData);
+	user.create()
+    .then(function() {
+        delete user.password;
+        user._auth = makeAuth(user._uid);
+        user.createAuthToken()
+        .then(function() {
+            d.resolve(user);
+        })
+        .fail(function(err) {
+            d.reject(err);
+        })
+    })
+    .fail(function(err) {
+        d.reject(err);
     });
+    return d.promise;
 }
 
 
 /* Update user
 	 @param {string[]} newInfo - new username, pw, email
 */
-UserCtrl.update = function(username, authToken, newInfo, callback) {
-    var response = AuthCtrl.validByAuthToken(username, authToken, function(err, result) {
-        var User = result;
+UserCtrl.update = function(user, newInfo) {
+    var d = Q.defer();
+    user.username = newInfo.username ? newInfo.username : user.username;
+    user.password = newInfo.password ? bcrypt.hashSync(newInfo.password, 8) : null;
+    user.email = newInfo.email ? newInfo.email : user.email;
 
-        User.username = newInfo.username ? newInfo.username : User.username;
-        User.password = newInfo.password ? bcrypt.hashSync(newInfo.password, 8) : null;
-        User.email = newInfo.email ? newInfo.email : User.email;
-        var newUser = new UserModel(User);
-        var response = newUser.update();
-        delete newUser.password;
-
-        response.then(function(response){
-            callback(null, newUser);
-        }, function(err) {
-            callback(err, null);
-        });
+    user.update(function() {
+        delete user.password;
+        d.resolve();
+    })
+    .fail(function(err) {
+        d.reject(err);
     });
+    return d.promise;
 }
 
 /* Get a user by username*/
-UserCtrl.getByUsername = function(username, callback) {
-    var response = UserModel.getByUsername(username);
-    response.then(function(results) {
-            if (results[1].rowCount === 0){
-                callback(config.error.userNotFound, null);
-            }
-            User = new UserModel(results[0][0]);
-            var response = User.getRooms();
-            response.then(function(results) {
-
-            })
-
-            callback(err, user);
-    }, function(err) {
-        callback(err, null);
+UserCtrl.getByUsername = function(username) {
+    var d = Q.defer();
+    UserModel.getByUsername(username)
+    .then(function(user) {
+        user.getRooms()
+        .then(function() {
+            d.resolve(user);
+        })
+        .fail(function(err) {
+            d.reject(err)
+        });
+    })
+    .fail(function(err) {
+        d.reject(err);
     });
+    return d.promise;
 }
 
 /* Get a user by id */
-UserCtrl.getById = function(id, callback) {
-    var response = UserModel.getById(id);
-    response.then(function(results) {
-        var err;
-        if (results[1].rowCount === 0){err = 'User not found'}
-        callback(err,results[0][0]);
-    }, function(err) {
-        callback(err, null);
+UserCtrl.getById = function(id) {
+    var d = Q.defer();
+    UserModel.getById(id)
+    .then(function(user) {
+        user.getRooms()
+        .then(function() {
+            d.resolve(user);
+        })
+        .fail(function(err) {
+            d.reject(err);
+        });
+    })
+    .fail(function(err) {
+        d.reject(err);
     });
+    return d.promise;
+}
+
+var makeAuth = function(id) {
+    return createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
 }
 
 module.exports = UserCtrl;

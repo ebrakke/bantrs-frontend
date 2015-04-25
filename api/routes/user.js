@@ -50,18 +50,24 @@ user.post('/auth', function(req, res) {
 user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.body.authToken;
-	var username = req.body.username;
 	var newInfo = {}
-	newInfo.newUsername = req.body.newUsername;
-	newInfo.newPassword = req.body.newPassword;
-	newInfo.newEmail = req.body.newEmail;
+	
+	newInfo.newUsername = req.body.username;
+	newInfo.newPassword = req.body.password;
+	newInfo.newEmail = req.body.email;
 
-	uc.update(username, authToken, newInfo, function(err, user) {
-		if (!err) {
-			res.json(utils.envelope(user, null));
-		} else {
+	auth.validByAuthToken(authToken)
+	.then(function(user) {
+		uc.update(user, newInfo)
+		.then(function() {
+			res.json(utils.envelope(user, null))
+		})
+		.fail(function(err) {
 			res.json(utils.envelope(null, err));
-		}
+		});
+	})
+	.fail(function(err) {
+		res.json(utils.envelope(null, err))
 	});
 });
 
