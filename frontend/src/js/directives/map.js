@@ -13,12 +13,59 @@ app.directive('map', function($window) {
         },
         template: '<section class="map"></section>',
         link: function(scope, element, attrs) {
+            var markers = {
+                small: L.icon({
+                    iconUrl: '/img/small.png',
+                    iconRetinaUrl: '/img/small@2x.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [13, 13],
+                    popupAnchor: [0, 0],
+                }),
+                medium: L.icon({
+                    iconUrl: '/img/medium.png',
+                    iconRetinaUrl: '/img/medium@2x.png',
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 17],
+                    popupAnchor: [0, 0],
+                }),
+                large: L.icon({
+                    iconUrl: '/img/large.png',
+                    iconRetinaUrl: '/img/large@2x.png',
+                    iconSize: [38, 38],
+                    iconAnchor: [19, 19],
+                    popupAnchor: [0, 0],
+                })
+            };
+
+            var createPinContent = function(data) {
+                var content = '<a href="#/room/' + data.rid + '">';
+                content += '<h5>' + data.title + '</h5>';
+                content += '<ul class="horizontal-list">';
+                content += '<li class="list-item">' + data.members + ' members</li>';
+                content += '</ul';
+                content += '</a>';
+
+                return content;
+            };
+
+            var addPinToMap = function(data) {
+                var icon;
+                if (data.location.radius <= 100) {
+                    icon = markers.small;
+                } else if (data.location.radius <= 800) {
+                    icon = markers.medium;
+                } else {
+                    icon = markers.large;
+                }
+
+                var marker = L.marker([data.location.lat, data.location.lng], {icon: icon}).addTo(scope.map);
+                marker.bindPopup(createPinContent(data));
+            };
+
             // Default to display controls
             if (typeof scope.controls === 'undefined') {
                 scope.controls = true;
             }
-
-            console.log('map.scope', scope);
 
             // Set lat and lng if not provided
             if (!scope.lat || !scope.lng) {
@@ -68,53 +115,33 @@ app.directive('map', function($window) {
                 });
             }
 
-            var myIcon = L.icon({
-                iconUrl: '/img/leaflet/marker-icon.png',
-                iconRetinaUrl: '/img/leaflet/marker-icon@2x.png',
-                // shadowUrl: '/img/leaflet/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [11, 40],
-                popupAnchor: [-3, -76],
-                shadowSize: [68, 95],
-                shadowAnchor: [22, 94]
-            });
-
             if (scope.pinSource) {
-                console.log('[pinSource]', scope.pinSource);
                 // Place initial pins
                 if (scope.pinSource) {
                     scope.pinSource.forEach(function(obj) {
-                        L.marker([
-                            obj.location.lat,
-                            obj.location.lng
-                        ], {icon: myIcon}).addTo(scope.map);
+                        addPinToMap(obj);
                     });
                 }
 
                 // Place new pins that are added
                 scope.$watch('pinSource', function(newValue, oldValue) {
-                    console.log('[pinSource changed]', newValue);
-
                     // Create hash table of current pins
                     var oldIds = [];
                     oldValue.forEach(function(obj) {
                         if (obj) {
-                            oldIds[obj.id] = obj;
+                            oldIds[obj.rid] = obj;
                         }
                     });
 
                     // Find new pins just added to array
                     var newPins = newValue.filter(function(obj) {
-                        return !(obj.id in oldIds);
+                        return !(obj.rid in oldIds);
                     });
 
                     // Plot each new pin on that map
                     newPins.forEach(function(obj) {
                         scope.pinSource.forEach(function(obj) {
-                            L.marker([
-                                obj.location.lat,
-                                obj.location.lng
-                            ], {icon: myIcon}).addTo(scope.map);
+                            addPinToMap(obj);
                         });
                     });
                 }, true);
