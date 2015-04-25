@@ -1,24 +1,42 @@
 var db = require('../controllers/dbConnector');
+var Q = require('Q');
 
-function Room(roomInfo, userInfo) {
+function Room(roomInfo) {
     this.title = roomInfo.title;
-    this.location = {lat:roomInfo.lat, lng: roomInfo.lng, radius: roomInfo.radius};
-    this.author = {uid: userInfo.uid, username: userInfo.username, email: userInfo.email};
-    this.topic = {type: 'url', content: roomInfo.content};
+    this.location = {lat: roomInfo.lat, lng: roomInfo.lng, radius: roomInfo.radius};
+    this.author = roomInfo.author;
+    this.topic = {type: roomInfo.type, content: roomInfo.topic};
     this.createdAt = roomInfo.createdAt;
-    this.rid = roomInfo.rid;
+    this._rid = roomInfo.rid;
 }
 
 Room.prototype.create = function() {
+    var d = Q.defer();
+    var room = this;
     var day = new Date(Date.now());
-    rep = {id: this.title + this.author.uid + day.getDate(), title: this.title, topic: this.topic.content, topic_type:this.topic.type, author:this.author.uid, lat:this.location.lat, lng:this.location.lng, radius:this.location.radius};
-    var query = db.query("INSERT INTO rooms VALUES (md5(:id), :title, :topic, :topic_type, :author, :lat, :lng, :radius, now()::timestamp)", {replacements: rep, type:'INSERT'});
-    return query;
+    rep = [this.title + this.author.uid + day.getDate(), this.title, this.topic.content, this.topic.type, this.author.uid, this.location.lat, this.location.lng, this.location.radius];
+    db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
+    .then(function(returnObj) {
+        room._rid = returnObj.rid;
+        room.createdAt = returnObj.createdat
+        d.resolve();
+    })
+    .fail(function(err) {
+        d.reject(err);
+    });
+    return d.promise;
 }
 
-Room.prototype.getIdTime = function() {
-    var query = db.query("SELECT rid,createdat FROM rooms WHERE title = ? AND author = ? AND lat = ? AND lng = ?", {replacements:[this.title, this.author.uid, this.location.lat, this.location.lng]});
-    return query;
+Room.getById = function(id) {
+    var d = Q.defer();
+    db.query("SELECT rid, title, topic, topic_type AS type, author, lat, lng, radius, createdat AS createdAt FROM rooms WHERE rid = $1", [id])
+    .then(function(roomObj) {
+        var room = new Room(roomObj);
+        d.resolve(room);
+    })
+    .fail(function(err) {
+        d.reject(err);
+    })
+    return d.promise;
 }
-
 module.exports = Room;

@@ -2,6 +2,7 @@ var express = require('express');
 var room = express.Router();
 var utils = require('../utils');
 var rc = require('../controllers/RoomCtrl');
+var auth = require('../controllers/AuthCtrl');
 
 /*
 * GET rooms for discover page
@@ -225,11 +226,22 @@ room.get('/:id/comments', function(req,res) {
 * Add the room to the DB
 */
 room.post('/', function(req, res) {
-    var roomInfo = req.body; /* Title, topic, type, lat, lng, radius */
+    var roomInfo = req.body; /* title, topic, type, lat, lng, radius */
     var authToken = req.get('authorization');
     //authToken = '66ff671e2b5147594d82a9bf036330bd37c1a5d2';
-    rc.create(roomInfo, authToken, function(err, room) {
-        res.json(utils.envelope(200,room,null));
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        roomInfo.author = user._uid;
+        rc.create(roomInfo)
+        .then(function(room) {
+            res.json(utils.envelope(room, null))
+        })
+        .fail(function(err) {
+            res.json(utils.envelope(null, err));
+        })
+    })
+    .fail(function(err) {
+        res.json(utils.envelope(null, err));
     });
 
 });

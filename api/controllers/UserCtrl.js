@@ -18,10 +18,11 @@ var UserCtrl = function () {}
  */
 UserCtrl.create = function(userData, callback) {
     var d = Q.defer();
-    /* Call Validator */
-    userData.password = bcrypt.hashSync(userData.password, 8); // Hash the password and forget it
-    /* Send the request to create the user */
     var user = new UserModel(userData);
+    /* Call Validator */
+    user.password = bcrypt.hashSync(user.password, 8); // Hash the password and forget it
+    /* Send the request to create the user */
+
 	user.create()
     .then(function() {
         delete user.password;
@@ -47,16 +48,56 @@ UserCtrl.create = function(userData, callback) {
 UserCtrl.update = function(user, newInfo) {
     var d = Q.defer();
     user.username = newInfo.username ? newInfo.username : user.username;
-    user.password = newInfo.password ? bcrypt.hashSync(newInfo.password, 8) : null;
+    user.password = newInfo.password ? newInfo.password : null;
     user.email = newInfo.email ? newInfo.email : user.email;
 
-    user.update(function() {
-        delete user.password;
-        d.resolve();
+    /* validate the input */
+
+    user.password = user.password ? bcrypt.hashSync(user.password, 8): null;
+    user.update()
+    .then(function() {
+        if(user.password) { // They changed there password, update the auth token
+            delete user.password;
+            user._auth = makeAuth(user._uid);
+            user.updateAuth()
+            .then(function() {
+                d.resolve();
+            })
+            .fail(function(err) {
+                d.reject(err);
+            });
+        } else {
+            delete user.password;
+            d.resolve();
+        }
     })
     .fail(function(err) {
         d.reject(err);
     });
+    return d.promise;
+}
+
+UserCtrl.getRoomObjects = function(username) {
+    var d = Q.defer();
+    UserModel.getByUsername(username)
+    .then(function(user) {
+        user.getRooms()
+        .then(function() {
+            user.getRoomObjects()
+            .then(function(roomObjs) {
+                d.resolve(roomObjs);
+            })
+            .fail(function(err) {
+                d.reject(err);
+            })
+        })
+        .fail(function(err) {
+            d.reject(err)
+        })
+    })
+    .fail(function(err) {
+        d.reject(err);
+    })
     return d.promise;
 }
 
@@ -98,8 +139,20 @@ UserCtrl.getById = function(id) {
     return d.promise;
 }
 
+UserCtrl.delete = function(user) {
+    var d = Q.defer();
+    user.delete()
+    .then(function() {
+        d.resolve();
+    })
+    .fail(function(err) {
+        d.reject(err);
+    })
+    return d.promise;
+}
+
 var makeAuth = function(id) {
-    return createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
+    return crypto.createHash('sha1').update(id).update(Math.random().toString(32)).digest('hex');
 }
 
 module.exports = UserCtrl;

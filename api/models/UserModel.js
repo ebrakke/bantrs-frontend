@@ -1,4 +1,5 @@
 var db = require('../controllers/dbConnector');
+var rm = require('./RoomModel');
 var Q = require('q');
 
 function User(userData) {
@@ -78,9 +79,29 @@ User.prototype.create = function() {
     return dfd.promise;
 }
 
+User.prototype.updateAuth = function() {
+    var dfd = Q.defer();
+    var user = this;
+    db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [this._auth, this._uid])
+    .then(function() {
+        dfd.resolve();
+    })
+    .then(function(err) {
+        dfd.reject();
+    });
+    return dfd.promise;
+}
 // Delete a user from the DB
 User.prototype.delete = function() {
+    var dfd = Q.defer();
     db.query('DELETE FROM users * WHERE users.uid = $1', [this._uid])
+    .then(function(success) {
+        dfd.resolve();
+    })
+    .fail(function(err) {
+        dfd.reject(err);
+    });
+    return dfd.promise;
 }
 
 User.prototype.getAuthToken = function() {
@@ -124,6 +145,14 @@ User.prototype.getActiveRooms = function() {
         dfd.reject(err);
     });
     return dfd.promise;
+}
+
+User.prototype.getRoomObjects = function() {
+    var queries = [];
+    user.Rooms.forEach(function(room) {
+        queries.push(rm.getById(room.rid));
+    })
+    return Q.all(queries);
 }
 
 // Get a User object by the username

@@ -1,11 +1,11 @@
 /*
  * Wrapper for responses
  */
-function envelope(code, data, err){
+function envelope(data, err){
     if (err) {
         var data = {
             meta: {
-                code: code,
+                code: err.code,
                 err: err.msg
             },
             data: {}
@@ -15,7 +15,7 @@ function envelope(code, data, err){
     else {
         data = {
             meta: {
-                code: code,
+                code: 200,
                 err: {}
             },
             data: data
