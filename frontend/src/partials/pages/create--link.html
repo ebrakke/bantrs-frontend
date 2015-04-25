@@ -7,20 +7,20 @@
 </header>
 <section class="push-from-top">
     <form class="createRoom" ng-submit="create()">
-        <input class="input" type="text" placeholder="Link" ng-model="url" />
-        <input class="input" type="text" placeholder="Title" />
+        <input class="input" type="text" placeholder="Link" ng-model="room.topic.content" />
+        <input class="input" type="text" placeholder="Title" ng-model="room.title" />
         <h3 class="font-weight--light">Radius</h3>
         <div class="input-toggle grid">
             <div class="input-toggle__item block-1-4">
-                <input id="toggle-block" name="radius" class="input-toggle__checkbox" type="radio" checked="checked">
+                <input ng-model="room.location.radius" ng-value="100" id="toggle-block" name="radius" class="input-toggle__checkbox" type="radio" checked="checked">
                 <label for="toggle-block" class="option">block</label>
             </div><!--
             --><div class="input-toggle__item block-1-2">
-                <input id="toggle-neighborhood" name="radius" class="input-toggle__checkbox" type="radio">
+                <input ng-model="room.location.radius" ng-value="800" id="toggle-neighborhood" name="radius" class="input-toggle__checkbox" type="radio">
                 <label for="toggle-neighborhood" class="option">neighborhood</label>
             </div><!--
             --><div class="input-toggle__item block-1-4">
-                <input id="toggle-city" name="radius" class="input-toggle__checkbox" type="radio">
+                <input ng-model="room.location.radius" ng-value="8000" id="toggle-city" name="radius" class="input-toggle__checkbox" type="radio">
                 <label for="toggle-city" class="option">city</label>
             </div>
         </div>

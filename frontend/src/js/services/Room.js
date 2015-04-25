@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Room', function(config, $http, User, Comment) {
+app.factory('Room', function(config, $http, Comment) {
     var api = config.api + '/room';
 
     var Room = function(data) {
@@ -19,7 +19,7 @@ app.factory('Room', function(config, $http, User, Comment) {
         }).success(function(response, status) {
             var data = response.data;
 
-            room.author = new User(data.author);
+            room.author = data.author;
             room.topic.type = data.topic.type;
             room.members = data.members;
             room.newComments = data.newComments;
@@ -119,12 +119,14 @@ app.factory('Room', function(config, $http, User, Comment) {
         return $http.get(url).then(function(response) {
             var data = response.data;
 
-            var members = [];
-            data.forEach(function(elem) {
-                members.push(new User(elem));
-            });
+            // var members = [];
+            // data.forEach(function(elem) {
+            //     members.push(new User(elem));
+            // });
+            //
+            // return members;
 
-            return members;
+            return data;
         });
     };
 

@@ -21,7 +21,10 @@
         <p class="message__body" ng-bind-html="comment.comment | linky:'_blank'"></p>
     </div>
     <form class="newMessage grid" ng-submit="postComment(newComment)">
-        <textarea class="block-3-4" rows="1" msd-elastic ng-model="newComment" placeholder="New message"></textarea><!--
-        --><button class="block-1-4 button"><i class="fa fa-comment"></i></button>
+        <textarea class="block-3-4" rows="1" msd-elastic ng-model="newComment.comment" placeholder="New message"></textarea><!--
+        --><button type="submit" class="block-1-4 button" ng-hide="loading"><i class="fa fa-comment"></i></button><!--
+        --><span class="block-1-4 button" ng-show="loading">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
     </form>
 </section>

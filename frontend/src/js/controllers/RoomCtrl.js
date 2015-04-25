@@ -1,9 +1,16 @@
 'use strict';
 
-app.controller('RoomCtrl', function($rootScope, $scope, Room) {
+app.controller('RoomCtrl', function($rootScope, $scope, $timeout, Room, Comment) {
     $scope.room = Room.get('955d0efbfe995480798028ee9637f130');
-    $scope.comments = null;
-    $scope.newComment = null;
+    $scope.comments = [];
+
+    $scope.newComment = new Comment();
+    $scope.newComment.room = {
+        rid: '955d0efbfe995480798028ee9637f130'
+    };
+
+    $scope.error = '';
+    $scope.loading = false;
 
     $scope.room.then(function(r) {
         $scope.room = r;
@@ -16,19 +23,17 @@ app.controller('RoomCtrl', function($rootScope, $scope, Room) {
     });
 
     $scope.postComment = function() {
-        var comment = {
-            'cid': 'bb5cc2bbd90a5d9bb81ce454d66d940c',
-            'rid': '955d0efbfe995480798028ee9637f130',
-            'author': {
-                'uid': '0603152c09e0d7e37ad35bf8105df067',
-                'username': 'tyler',
-                'email': 'tylerwaltze@gmail.com',
-            },
-            'createdAt': new Date(),
-            'comment': $scope.newComment
-        };
+        $scope.loading = true;
 
-        $scope.comments.push(comment);
-        $scope.newComment = null;
+        // $scope.comments.push(comment);
+
+        $scope.newComment.create().success(function(response) {
+
+        }).error(function(response) {
+            $scope.error = 'Error message.';
+        }).then(function() {
+            $scope.newComment.comment = '';
+            $scope.loading = false;
+        });
     };
 });
