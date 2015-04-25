@@ -2,6 +2,8 @@ var auth = require('./AuthCtrl');
 var Room = require('../models/RoomModel');
 var crypto = require('crypto');
 var Q = require('q');
+var Validator = require('../validate');
+var e = require('./errors');
 
 
 var RoomCtrl = {};
@@ -11,10 +13,22 @@ var RoomCtrl = {};
 * parse for type of content
 */
 
-RoomCtrl.create = function(roomInfo) {
+RoomCtrl.create = function(roomInfo ) {
     var d = Q.defer();
-    roomInfo.type = 'url';
     var room = new Room(roomInfo);
+
+    console.log(room)
+
+    /* Validate room create fields */
+    var validationFailed = Validator.room(room);
+    if (validationFailed) {
+        e.invalidRoomData.msg = validationFailed;
+        d.reject(e.invalidRoomData, null);
+        return d.promise;
+    }
+
+    /* Send create room request */
+>>>>>>> 96498967ef69fc6411c57324b7a6c51958bfa54b
     room.create()
     .then(function() {
         d.resolve(room);
