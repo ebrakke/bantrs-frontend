@@ -6,6 +6,7 @@ var bcrypt = require('bcryptjs');
 var crypto = require('crypto');
 var e = require('./errors');
 var Q = require('q');
+var Validator = require('../validate');
 
 
 /* UserCtrl Constructor */
@@ -19,11 +20,18 @@ var UserCtrl = function () {}
 UserCtrl.create = function(userData, callback) {
     var d = Q.defer();
     var user = new UserModel(userData);
-    /* Call Validator */
-    user.password = bcrypt.hashSync(user.password, 8); // Hash the password and forget it
-    /* Send the request to create the user */
 
-	user.create()
+    /* Validate user creation fields */
+    var validationFailed = Validator.user(user);
+    if (validationFailed) {
+        d.reject(e.invalidUserData, null);
+        return d.promise;
+    }
+
+    // Hash the password and forget it
+    user.password = bcrypt.hashSync(user.password, 8);
+    /* Send the request to create the user */
+    user.create()
     .then(function() {
         delete user.password;
         user._auth = makeAuth(user._uid);
@@ -41,7 +49,6 @@ UserCtrl.create = function(userData, callback) {
     return d.promise;
 }
 
-
 /* Update user
 	 @param {string[]} newInfo - new username, pw, email
 */
@@ -51,7 +58,12 @@ UserCtrl.update = function(user, newInfo) {
     user.password = newInfo.password ? newInfo.password : null;
     user.email = newInfo.email ? newInfo.email : user.email;
 
-    /* validate the input */
+    /* Validate user update fields */
+    var validationFailed = Validator.user(user);
+    if (validationFailed) {
+        d.reject(e.invalidUserData, null);
+        return d.promise;
+    }
 
     user.password = user.password ? bcrypt.hashSync(user.password, 8): null;
     user.update()
