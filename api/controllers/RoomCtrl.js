@@ -13,7 +13,7 @@ var RoomCtrl = {};
 * parse for type of content
 */
 
-RoomCtrl.create = function(roomInfo ) {
+RoomCtrl.create = function(roomInfo) {
     var d = Q.defer();
     roomInfo.type = 'url';
     var room = new Room(roomInfo);
@@ -36,14 +36,10 @@ RoomCtrl.create = function(roomInfo ) {
     return d.promise;
 }
 
-RoomCtrl.getById = function(id, lat, lng) {
+RoomCtrl.getById = function(id) {
     var d = Q.defer();
     Room.getById(id)
     .then(function(room) {
-        if(!room.inRange(lat, lng)) {
-            d.reject(e.notInRange);
-            return;
-        }
         room.getMembers()
         .then(function(users) {
             room.members = users.length;
@@ -67,6 +63,28 @@ RoomCtrl.discover = function(lat, lng) {
     })
     .fail(function(err) {
         d.resolve(e.discover);
+    });
+    return d.promise;
+}
+
+RoomCtrl.joinRoom = function(rid, user, lat, lng) {
+    var d = Q.defer();
+    Room.getById(rid)
+    .then(function(room) {
+        if(!room.inRange(lat, lng)) {
+            d.reject(e.notInRange);
+            return;
+        }
+        user.joinRoom(room.rid)
+        .then(function() {
+            d.resolve(room);
+        })
+        .fail(function(err) {
+            d.reject(e.joinRoom);
+        })
+    })
+    .fail(function(err) {
+        d.reject(e.joinRoom);
     });
     return d.promise;
 }

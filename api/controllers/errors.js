@@ -16,6 +16,7 @@ error.invalidRoom = { msg: 'Unable to create room', code: 400 };
 error.invalidRID = { msg: 'Room ID not found', code: 404 };
 error.invalidGetRoomObjs = { msg: 'Unable to get room objects', code: 400 };
 error.invalidGetRooms = { msg: 'Unable to get user\'s rooms ', code: 400 };
+error.joinRoom = { msg: 'Cannot join room', code: 400 };
 error.notInRange = { msg: 'User not in range', code:401 };
 error.discover = { msg: 'And error occured discovering pages', code:500 };
 
