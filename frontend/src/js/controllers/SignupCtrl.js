@@ -7,12 +7,11 @@ app.controller('SignupCtrl', function($scope, $location, User, Auth) {
 
     $scope.register = function() {
         $scope.loading = true;
+        console.log('Signup.register', $scope.user);
+        $scope.user.create().then(function(data) {
 
-        $scope.user.create().then(function(response) {
-            var data = response.data;
-
-            Auth.setToken(data.data.auth);
-            Auth.setUser(data.data);
+            Auth.setToken(data.bantrsAuth);
+            Auth.setUser(data.user);
 
             $location.path('/feed');
         }, function(response) {

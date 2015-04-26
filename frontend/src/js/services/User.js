@@ -1,26 +1,21 @@
 'use strict';
 
-app.factory('User', function(config, $http) {
+app.factory('User', function(config, $http, Room) {
     var api = config.api + '/user';
 
     var User = function(data) {
         angular.extend(this, data);
     };
 
-    var getProperties = function() {
-        return {
-            uid: this.uid || null,
-            username: this.username || null,
-            email: this.email || null
-        };
-    };
-
     User.prototype.create = function() {
         var user = this;
 
-        return $http.post(api, user.getProperties()).success(function(response) {
-            user.uid = response.data.uid;
-        }).error(function(response) {
+        return $http.post(api, user).then(function(response) {
+            var data = response.data.data;
+            user.uid = data.user.uid;
+
+            return data;
+        }, function(response) {
 
         });
     };
@@ -37,7 +32,6 @@ app.factory('User', function(config, $http) {
 
     User.get = function(id) {
         return $http.get(api + '/' + id).success(function(response) {
-            console.log(response);
             return new User(response.data);
         }).error(function(error) {
             console.log('error', error);
@@ -48,8 +42,15 @@ app.factory('User', function(config, $http) {
         var user = this;
         var url = api + '/' + user.username +  '/rooms';
 
-        return $http.get(url).success(function(response) {
-            return response.data;
+        return $http.get(url).then(function(response) {
+            var data = response.data.data;
+
+            var rooms = [];
+            data.forEach(function(elem) {
+                rooms.push(new Room(elem));
+            });
+
+            return rooms;
         });
     };
 

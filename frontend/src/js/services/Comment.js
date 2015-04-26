@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Comment', function(config, $http, User) {
+app.factory('Comment', function(config, $http) {
     var api = config.api + '/comment';
 
     var Comment = function(data) {
@@ -18,7 +18,7 @@ app.factory('Comment', function(config, $http, User) {
 
             comment.cid = data.cid;
             comment.room = data.room;
-            comment.author = new User(data.author);
+            comment.author = data.author;
             comment.createdAt = data.createdAt;
         }).error(function(response) {
 
@@ -32,7 +32,7 @@ app.factory('Comment', function(config, $http, User) {
             return new Comment({
                 cid: data.cid,
                 room: data.room,
-                author: new User(data.author),
+                author: data.author,
                 createdAt: data.createdAt,
                 comment: data.comment
             });

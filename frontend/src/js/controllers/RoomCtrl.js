@@ -44,8 +44,8 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment) {
         });
     };
 
-    $scope.getRootDomain = function(url) {
-        var r = /:\/\/(.[^/]+)/;
-        return url.match(r);
-    };
+    // $scope.getRootDomain = function(url) {
+    //     var r = /:\/\/(.[^/]+)/;
+    //     return url.match(r);
+    // };
 });

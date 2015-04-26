@@ -7,13 +7,13 @@ app.controller('FeedCtrl', function($scope, User, Auth) {
 
     $scope.user.getRooms().then(function(r) {
         console.log(r);
-        $scope.rooms = r.data.data;
+        $scope.rooms = r;
     });
 
-    // Filter feed based on whether a room is archived or not.
+    // Filter feed based on whether a room is active or not.
     // Initially show active rooms.
-    $scope.archived = false;
+    $scope.active = true;
     $scope.showArchived = function(item) {
-        return item.archived === $scope.archived;
+        return item.active === $scope.active;
     };
 });
