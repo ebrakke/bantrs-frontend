@@ -1,8 +1,6 @@
 'use strict';
 
 app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval, Room, Comment, Geolocation) {
-    $scope.pageClass = 'page-room';
-
     $scope.room = null;
     $scope.comments = [];
 

@@ -1,8 +1,6 @@
 'use strict';
 
 app.controller('SettingsCtrl', function($scope, $http, Auth) {
-    $scope.pageClass = 'page-settings';
-
     $scope.error = '';
     $scope.loading = false;
     $scope.user = Auth.getUser();

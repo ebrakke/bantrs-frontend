@@ -7,9 +7,9 @@
 </header>
 <section class="push-from-top">
     <form class="createRoom" ng-submit="save()">
-        <input class="input" type="text" placeholder="Username" />
-        <input class="input" type="text" placeholder="Email" />
-        <input class="input" type="text" placeholder="New Password" />
+        <input ng-model="user.username" class="input" type="text" placeholder="Username" />
+        <input ng-model="user.email" class="input" type="text" placeholder="Email" />
+        <input ng-model="user.password" class="input" type="text" placeholder="New Password" />
     </form>
     <input type="button" value="logout" ng-click="logout()" class="button button-color--red button-size--fullWidth" />
 </section>
