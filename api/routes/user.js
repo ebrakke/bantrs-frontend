@@ -17,8 +17,7 @@ user.post('/', function(req, res) {
 	var userData = req.body;
 	uc.create(userData)
 	.then(function(userAuth) {
-		var apiUser = userAuth.user.apiObj();
-		res.json(utils.envelope({user: apiUser, bantrsAuth: userAuth.auth}, null))
+		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null))
 	})
 	.fail(function(err) {
 		res.json(utils.envelope(null, err));
@@ -35,8 +34,7 @@ user.post('/auth', function(req, res) {
 	var userData = req.body;
 	auth.validByUserPwd(userData)
 	.then(function(userAuth) {
-		var apiUser = userAuth.user.apiObj();
-		res.json(utils.envelope({user: apiUser, bantrsAuth: userAuth.auth}, null));
+		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null));
 	})
 	.fail(function(err) {
 		console.log(err);
@@ -62,11 +60,10 @@ user.post('/me', function(req, res) {
 	.then(function(user) {
 		uc.update(user, newInfo)
 		.then(function(auth) {
-			var apiUser = user.apiObj();
 			if(auth){
-				res.json(utils.envelope({user: apiUser, auth: auth}, null))
+				res.json(utils.envelope({user: user, auth: auth}, null))
 			} else {
-				res.json(utils.envelope(apiUser, null))
+				res.json(utils.envelope(user, null))
 			}
 		})
 		.fail(function(err) {
@@ -83,13 +80,11 @@ user.get('/:username/rooms', function(req, res) {
 	uc.getRoomObjects(username)
 	.then(function(rooms) {
 		_.forEach(rooms, function(room) {
-			room = room.apiObj();
 			room.active = true;
 		});
 		res.json(utils.envelope(rooms, null));
 	})
 	.fail(function(err) {
-		console.log('hit');
 		res.json(utils.envelope(null, err));
 	});
 });
@@ -103,8 +98,7 @@ user.get('/:username', function(req, res) {
 	var username = req.params.username;
 	uc.getByUsername(username)
 	.then(function(user) {
-		var apiUser = user.apiObj();
-		res.json(utils.envelope(apiUser, null));
+		res.json(utils.envelope(user, null));
 	})
 	.fail(function(err) {
 		res.json(utils.envelope(null, err));

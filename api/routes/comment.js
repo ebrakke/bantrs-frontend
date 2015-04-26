@@ -2,6 +2,8 @@ var express = require('express');
 var comment = express.Router();
 var utils = require('../utils');
 var cc = require('../controllers/CommentCtrl');
+var rc = require('../controllers/RoomCtrl');
+var auth = require('../controllers/AuthCtrl');
 
 /*
 * Create comment
@@ -14,8 +16,13 @@ var cc = require('../controllers/CommentCtrl');
 comment.post('/', function(req, res) {
     var authToken = req.body.authToken;
     var rid = req.body.rid;
-    var content = req.body.content;
+    var commentData = req.body;
 
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        commentData.author = user.uid;
+        cc.create(commentData)
+    })
     // If user is authenticated
     var data = {
         "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",

@@ -7,7 +7,7 @@ function User(userData) {
     this.username = userData.username;
     this.password = userData.password;
     this.email = userData.email;
-    this._uid = userData.uid;
+    this.uid = userData.uid;
 }
 
 // Access the uid because it's private
@@ -16,7 +16,7 @@ User.prototype.getId = function() {
     var user = this;
     db.query('SELECT uid FROM users WHERE username = $1', [this.username])
     .then(function(uidObj) {
-        user._uid = uidObj[0].uid;
+        user.uid = uidObj[0].uid;
         dfd.resolve();
     })
     .fail(function(err) {
@@ -29,7 +29,7 @@ User.prototype.getId = function() {
 User.prototype.getRooms = function() {
     var dfd = Q.defer();
     var user = this;
-    db.query('SELECT rid FROM membership WHERE uid = $1', [this._uid])
+    db.query('SELECT rid FROM membership WHERE uid = $1', [this.uid])
     .then(function(roomsList) {
         user.rooms = _.pluck(roomsList, 'rid');
         dfd.resolve();
@@ -44,7 +44,7 @@ User.prototype.getRooms = function() {
 User.prototype.update = function() {
     var dfd = Q.defer();
     if (this.password) {
-        db.query('UPDATE users set username=$1, password=$2, email=$3 WHERE uid=$4', [this.username,this.password,this.email,this._uid])
+        db.query('UPDATE users set username=$1, password=$2, email=$3 WHERE uid=$4', [this.username,this.password,this.email,this.uid])
         .then(function(res) {
             dfd.resolve();
         })
@@ -54,7 +54,7 @@ User.prototype.update = function() {
         return dfd.promise;
     }
 
-    db.query('UPDATE users set username=$1, email=$2 WHERE uid=$3', [this.username, this.email, this._uid])
+    db.query('UPDATE users set username=$1, email=$2 WHERE uid=$3', [this.username, this.email, this.uid])
     .then(function(res) {
         dfd.resolve();
     })
@@ -70,7 +70,7 @@ User.prototype.create = function() {
     // Insert the new user into the db
     db.query('INSERT INTO users VALUES (md5($1), $2, $3, $4) RETURNING uid', [Date.now() + this.username,this.username,this.password,this.email])
     .then(function(uidObj) {
-        user._uid = uidObj[0].uid;
+        user.uid = uidObj[0].uid;
         dfd.resolve();
     })
     .fail(function(err) {
@@ -81,7 +81,7 @@ User.prototype.create = function() {
 
 User.prototype.updateAuth = function(auth) {
     var dfd = Q.defer();
-    db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [auth, this._uid])
+    db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [auth, this.uid])
     .then(function() {
         dfd.resolve();
     })
@@ -93,7 +93,7 @@ User.prototype.updateAuth = function(auth) {
 // Delete a user from the DB
 User.prototype.delete = function() {
     var dfd = Q.defer();
-    db.query('DELETE FROM users * WHERE users.uid = $1', [this._uid])
+    db.query('DELETE FROM users * WHERE users.uid = $1', [this.uid])
     .then(function(success) {
         dfd.resolve();
     })
@@ -105,7 +105,7 @@ User.prototype.delete = function() {
 
 User.prototype.getAuthToken = function() {
     var dfd = Q.defer();
-    db.query('SELECT bantrsauth FROM auth WHERE uid = $1', [this._uid])
+    db.query('SELECT bantrsauth FROM auth WHERE uid = $1', [this.uid])
     .then(function(authObj) {
         dfd.resolve(authObj[0].bantrsauth)
     })
@@ -118,7 +118,7 @@ User.prototype.getAuthToken = function() {
 //Create an entry for a new user and his Bantrs auth token
 User.prototype.createAuthToken = function(auth) {
     var dfd = Q.defer();
-    db.query('INSERT INTO auth VALUES ($1, $2) RETURNING bantrsauth', [this._uid, auth])
+    db.query('INSERT INTO auth VALUES ($1, $2) RETURNING bantrsauth', [this.uid, auth])
     .then(function(authObj) {
         dfd.resolve();
     })
@@ -153,7 +153,7 @@ User.prototype.getRoomObjects = function() {
 
 User.prototype.joinRoom = function(rid) {
     var dfd = Q.defer();
-    db.query('INSERT INTO membership VALUES ($1, $2)', [rid, this._uid])
+    db.query('INSERT INTO membership VALUES ($1, $2)', [rid, this.uid])
     .then(function(result) {
         dfd.resolve();
     })
@@ -175,14 +175,6 @@ User.prototype.archiveRoom = function(rid) {
     return dfd.promise;
 }
 
-User.prototype.apiObj = function() {
-    var user = this;
-    user.uid = this._uid;
-    user.auth = this._auth;
-    delete user._uid;
-    delete user._auth;
-    return user;
-}
 
 // Get a User object by the username
 User.getByUsername = function(username) {

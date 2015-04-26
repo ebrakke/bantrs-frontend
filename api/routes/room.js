@@ -155,7 +155,7 @@ room.post('/', function(req, res) {
     var authToken = req.get('authorization');
     auth.validByAuthToken(authToken)
     .then(function(user) {
-        roomInfo.author = user._uid;
+        roomInfo.author = user.uid;
         rc.create(roomInfo)
         .then(function(room) {
             user.joinRoom(room.rid)

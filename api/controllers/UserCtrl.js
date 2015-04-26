@@ -35,7 +35,7 @@ UserCtrl.create = function(userData) {
     user.create()
     .then(function() {
         delete user.password;
-        var auth = makeAuth(user._uid);
+        var auth = makeAuth(user.uid);
         user.createAuthToken(auth)
         .then(function() {
             d.resolve({user: user, auth: auth});
@@ -72,7 +72,7 @@ UserCtrl.update = function(user, newInfo) {
     .then(function() {
         if(user.password) { // They changed there password, update the auth token
             delete user.password;
-            var auth = makeAuth(user._uid);
+            var auth = makeAuth(user.uid);
             user.updateAuth(auth)
             .then(function() {
                 d.resolve(auth);

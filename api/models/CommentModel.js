@@ -2,8 +2,7 @@ var db = require('../controllers/dbConnector');
 var Q = require('q');
 
 function Comment(commentData, user) {
-    this.user = user;
-    this.author = commentData.author;
+    this.author = commendData.author
     this.cid = commentData.cid;
     this.rid = commentData.rid;
     this.content = commentData.content
