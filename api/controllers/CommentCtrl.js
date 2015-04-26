@@ -19,7 +19,6 @@ CommentCtrl.create = function(commentData) {
     var d = Q.defer();
     var comment = new Comment(commentData);
 
-    console.log(comment)
     /* Validate comment create fields */
     var validationFailed = Validator.comment(comment);
     if (validationFailed) {
@@ -61,7 +60,7 @@ CommentCtrl.getById = function(id) {
 //     var commentData = {
 //         rid: 'a353f1048573f66457d9ce45210d1eff',
 //         author: '13b862a780828990bd0dafddee018909',
-//         content: 'Im a comment'
+//         content: 'Im a comment5'
 //     };
 //     CommentCtrl.create(commentData)
 //     .then(function (comment){

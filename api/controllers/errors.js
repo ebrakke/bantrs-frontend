@@ -34,5 +34,4 @@ error.invalidUserData = { msg: '', code: 400 };
 error.invalidRoomData = { msg: '', code: 400 };
 error.invalidCommentData = { msg: '', code: 400 };
 
-
 module.exports = error
