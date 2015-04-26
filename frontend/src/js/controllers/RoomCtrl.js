@@ -12,7 +12,11 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
     };
 
     $scope.error = '';
-    $scope.loading = false;
+    $scope.loading = {
+        room: true,
+        comments: true,
+        postComment: false
+    };
 
     Room.get($routeParams.rid).then(function(r) {
         $scope.room = r;
@@ -22,10 +26,11 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
         // super ugly hack. Fix later.
         $rootScope.fetchComments = $interval(getComments, 5000);
     }).finally(function() {
+        $scope.loading.room = false;
     });
 
     $scope.postComment = function() {
-        $scope.loading = true;
+        $scope.loading.postComment = true;
 
         $scope.newComment.create().then(function(response) {
             getComments();
@@ -33,7 +38,7 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
             $scope.error = 'Error message.';
         }).finally(function() {
             $scope.newComment.comment = '';
-            $scope.loading = false;
+            $scope.loading.postComment = false;
         });
     };
 
@@ -51,6 +56,8 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
         console.log('[getComments]');
         $scope.room.getComments().then(function(c) {
             $scope.comments = c;
+        }).finally(function() {
+            $scope.loading.comments = false;
         });
     };
 }).run(function($rootScope, $interval) {

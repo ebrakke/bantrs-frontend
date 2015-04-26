@@ -15,6 +15,7 @@
         </div><!--
         --><a class="siteHeader__item block-1-5" href="#/settings"><i class="fa fa-cog"></i></a>
     </header>
+    <loader ng-if="loading.rooms"></loader>
     <section class="feed">
         <feed-item room="room" ng-repeat="room in rooms | filter:showArchived"></feed-item>
     </section>
