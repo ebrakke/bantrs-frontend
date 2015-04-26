@@ -17,8 +17,6 @@ app.factory('Room', function(config, $http, Comment) {
             lng: room.location.lng,
             radius: room.location.radius
         }).then(function(response, status) {
-            console.log('Room.create', response);
-
             var data = response.data.data;
 
             room.author = data.author;
@@ -29,7 +27,6 @@ app.factory('Room', function(config, $http, Comment) {
             room.archived = data.archived;
             room.createdAt = data.createdAt;
         }, function(response, status) {
-            console.log('[create.error]', response);
             return status;
         });
     };
@@ -87,7 +84,7 @@ app.factory('Room', function(config, $http, Comment) {
             method: 'GET',
             params: params
         }).then(function(response) {
-            var data = response.data;
+            var data = response.data.data;
 
             var rooms = [];
             data.forEach(function(elem) {
@@ -95,6 +92,7 @@ app.factory('Room', function(config, $http, Comment) {
             });
 
             return rooms;
+        }, function(error) {
         });
     };
 
@@ -119,16 +117,7 @@ app.factory('Room', function(config, $http, Comment) {
         var url = api + '/' + room.rid +  '/members';
 
         return $http.get(url).then(function(response) {
-            var data = response.data;
-
-            // var members = [];
-            // data.forEach(function(elem) {
-            //     members.push(new User(elem));
-            // });
-            //
-            // return members;
-
-            return data;
+            return response.data;
         });
     };
 

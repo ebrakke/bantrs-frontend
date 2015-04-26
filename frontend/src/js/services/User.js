@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('User', function(config, $http, Auth) {
+app.factory('User', function(config, $http) {
     var api = config.api + '/user';
 
     var User = function(data) {
@@ -29,13 +29,7 @@ app.factory('User', function(config, $http, Auth) {
         var user = this;
 
         return $http.post(api + '/me', user.getProperties()).then(function(response) {
-            var data = response.data.data;
-
-            Auth.setUser(data.user);
-
-            if (data.bantrsAuth) {
-                Auth.setToken(data.bantrsAuth);
-            }
+            return response.data.data;
         }, function(error) {
 
         });

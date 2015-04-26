@@ -10,8 +10,12 @@ app.controller('SettingsCtrl', function($scope, $http, Auth) {
     $scope.save = function() {
         $scope.loading = true;
 
-        $scope.user.save().then(function(response) {
+        $scope.user.save().then(function(data) {
+            Auth.setUser(data.user);
 
+            if (data.bantrsAuth) {
+                Auth.setToken(data.bantrsAuth);
+            }
         }, function(error) {
 
         }).then(function() {

@@ -20,6 +20,7 @@ app.directive('map', function($window) {
                     iconSize: [30, 30],
                     iconAnchor: [13, 13],
                     popupAnchor: [0, 0],
+                    className: 'animated fadeIn'
                 }),
                 medium: L.icon({
                     iconUrl: '/img/medium.png',
@@ -27,6 +28,7 @@ app.directive('map', function($window) {
                     iconSize: [34, 34],
                     iconAnchor: [17, 17],
                     popupAnchor: [0, 0],
+                    className: 'animated fadeIn'
                 }),
                 large: L.icon({
                     iconUrl: '/img/large.png',
@@ -34,6 +36,7 @@ app.directive('map', function($window) {
                     iconSize: [38, 38],
                     iconAnchor: [19, 19],
                     popupAnchor: [0, 0],
+                    className: 'animated fadeIn'
                 })
             };
 

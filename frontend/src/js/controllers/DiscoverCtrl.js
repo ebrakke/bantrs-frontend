@@ -1,10 +1,12 @@
 'use strict';
 
-app.controller('DiscoverCtrl', function($rootScope, $scope, Room) {
+app.controller('DiscoverCtrl', function($rootScope, $scope, Room, Geolocation) {
     $scope.pageClass = 'page-discover';
     $scope.rooms = [];
 
-    Room.discover().then(function(r) {
-        $scope.rooms = r;
+    Geolocation.getLocation().then(function(position) {
+        Room.discover(position.coords.latitude, position.coords.longitude).then(function(r) {
+            $scope.rooms = r;
+        });
     });
 });
