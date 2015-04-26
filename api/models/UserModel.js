@@ -132,7 +132,7 @@ User.prototype.createAuthToken = function(auth) {
 User.prototype.getActiveRooms = function() {
     var dfd = Q.defer();
     var user = this;
-    db.query('SELECT rid FROM memberships WHERE uid = $1 AND active = True', [this.uid])
+    db.query('SELECT rid FROM membership WHERE uid = $1 AND active = True', [this.uid])
     .then(function(roomList) {
         user.rooms = roomList;
         dfd.resolve()
@@ -159,6 +159,18 @@ User.prototype.joinRoom = function(rid) {
     })
     .fail(function(err) {
         dfd.reject(err);
+    });
+    return dfd.promise;
+}
+
+User.prototype.archiveRoom = function(rid) {
+    var dfd = Q.defer();
+    db.query("UPDATE memebership SET active = false WHERE uid = $1 AND rid = $1", [this.uid, rid])
+    .then(function() {
+        dfd.resolve();
+    })
+    .fail(function() {
+        dfd.reject(err)
     });
     return dfd.promise;
 }

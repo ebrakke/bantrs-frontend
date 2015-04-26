@@ -20,6 +20,12 @@ error.joinRoom = { msg: 'Cannot join room', code: 400 };
 error.notInRange = { msg: 'User not in range', code:401 };
 error.discover = { msg: 'And error occured discovering pages', code:500 };
 
+// Comment
+error.invalidComment = { msg: 'Unable to create comment', code: 400 };
+error.invalidCID = { msg: 'Comment ID not found', code: 404 };
+error.invalidGetCommentObjs = { msg: 'Unable to get comment objects', code: 400 };
+error.invalidGetComments = { msg: 'Unable to get room\'s comments ', code: 400 };
+
 // Auth
 error.invalidAuthToken = { msg: 'Unable to create auth token', code: 500 };
 error.invalidAuthTokenUpdate = { msg: 'Unable to update auth token', code: 500 };
@@ -27,6 +33,6 @@ error.invalidAuthTokenUpdate = { msg: 'Unable to update auth token', code: 500 }
 // Validation
 error.invalidUserData = { msg: '', code: 400 };
 error.invalidRoomData = { msg: '', code: 400 };
-
+error.invalidCommentData = { msg: '', code: 400 };
 
 module.exports = error

@@ -70,12 +70,10 @@ user.post('/me', function(req, res) {
 			}
 		})
 		.fail(function(err) {
-			console.log(err);
 			res.json(utils.envelope(null, err));
 		});
 	})
 	.fail(function(err) {
-		console.log(err);
 		res.json(utils.envelope(null, err))
 	});
 });
@@ -91,6 +89,7 @@ user.get('/:username/rooms', function(req, res) {
 		res.json(utils.envelope(rooms, null));
 	})
 	.fail(function(err) {
+		console.log('hit');
 		res.json(utils.envelope(null, err));
 	});
 });

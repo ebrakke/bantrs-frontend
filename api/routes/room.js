@@ -32,14 +32,12 @@ room.get('/discover', function(req,res) {
 */
 room.get('/:id', function(req, res) {
     var authToken = req.get('authorization');
-    var lat = req.query.lat;
-    var lng = req.query.lng;
     var rid = req.params.id;
 
     /* Auth and long lat check */
     auth.validByAuthToken(authToken)
     .then(function(user) {
-        rc.getById(rid, lat, lng)
+        rc.getById(rid)
         .then(function(room) {
             res.json(utils.envelope(room, null));
         })
@@ -223,34 +221,24 @@ room.post('/:id', function(req, res) {
 * Make sure the user is within the radius
 */
 room.post('/:id/join', function(req, res) {
-    var lat = req.query.lat;
-    var lng = req.query.lng;
+    var lat = req.body.lat;
+    var lng = req.body.lng;
+    var authToken = req.get('authorization');
+    var rid = req.params.id;
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        rc.joinRoom(rid, user, lat, lng)
+        .then(function(room) {
+            res.status(200).json(utils.envelope(room, null));
+        })
+        .fail(function(err) {
+            res.status(err.code).json(utils.envelope(null, err));
+        })
+    })
+    .fail(function(err) {
+        res.status(err.code).json(utils.envelope(null, err));
+    })
 
-
-    var data = {
-        "rid": "955d0efbfe995480798028ee9637f130",
-        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
-        "location": {
-            "lat": 42.6915,
-            "lng": -83.3876,
-            "radius": 500
-        },
-        "author": {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com",
-        },
-        "topic": {
-            "type": "url",
-            "data": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
-        },
-        "members": 36,
-        "newComments": 4,
-        "member": true,
-        "createdAt": "2015-03-21 09:30:26.123+07:00"
-    };
-
-    res.json(utils.envelope(data, null));
 
 });
 
@@ -261,9 +249,21 @@ room.post('/:id/join', function(req, res) {
 * Query DB
 */
 room.post('/:id/archive', function(req,res) {
-    var authToken = req.body.authToken;
-
-    res.json(utils.envelope(null, null));
+    var authToken = req.get('authorization');
+    var rid = req.params.id;
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        user.archiveRoom(rid)
+        .then(function() {
+            res.status(200).json(utils.envelope([], null));
+        })
+        .fail(function() {
+            res.status(err.status).json(utils.envelope(null, err));
+        });
+    })
+    .fail(function(err) {
+        res.status(err.status).json(itls.envelope(null, err));
+    });
 });
 
 

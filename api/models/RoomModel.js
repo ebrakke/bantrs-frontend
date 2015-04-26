@@ -21,7 +21,7 @@ Room.prototype.create = function() {
     db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
     .then(function(returnObj) {
         room.rid = returnObj[0].rid;
-        room.createdAt = returnObj[0].createdat
+        room.createdAt = returnObj[0].createdat;
         d.resolve();
     })
     .fail(function(err) {
@@ -43,6 +43,7 @@ Room.prototype.getMembers = function() {
     });
     return d.promise;
 }
+
 
 /* Return a room object by ID */
 Room.getById = function(id) {
@@ -76,6 +77,7 @@ Room.discover = function(lat, lng) {
     })
     return d.promise;
 }
+
 
 /* Turn a room object into an API object */
 Room.prototype.apiObj = function() {

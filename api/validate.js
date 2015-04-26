@@ -38,7 +38,7 @@ Validator.user = function (userObj) {
 		  presence: true,
 		  email: true
 		}
-	}
+	};
 	return validate(userObj, constraints);
 }
 
@@ -54,7 +54,7 @@ Validator.room = function (roomObj) {
 		if (!parseFloat(testLocation[i])) {
 			return 'Invalid lat/lng';
 		}
-	};
+	}
 
 	// Validation constraints
 	var constraints = {
@@ -88,7 +88,7 @@ Validator.room = function (roomObj) {
 				within: {'100': 'block', '800': 'neighborhood', '8000': 'city'}
 			}
 		}
-	}
+	};
 	return validate(roomObj, constraints);
 }
 
@@ -96,9 +96,18 @@ Validator.room = function (roomObj) {
 * Comment Validation
 * Fields: username, password, email
 */
-// Validator.comment = function (commentObj) {
-
-// }
+Validator.comment = function (commentObj) {
+	var constraints = {
+		content: {
+			presence: true,
+			length: {
+				// maximum: SOME NUMBER,
+				minimum: 1
+			}
+		}
+	};
+	return validate(commentObj, constraints);
+}
 
 
 module.exports = Validator;

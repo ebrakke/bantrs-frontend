@@ -1,6 +1,7 @@
 var express = require('express');
 var comment = express.Router();
 var utils = require('../utils');
+var cc = require('../controllers/CommentCtrl');
 
 /*
 * Create comment
