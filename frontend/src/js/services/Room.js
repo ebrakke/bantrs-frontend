@@ -86,7 +86,7 @@ app.factory('Room', function(config, $http, Comment) {
             url: api + '/discover',
             method: 'GET',
             params: params
-        }).success(function(response) {
+        }).then(function(response) {
             var data = response.data;
 
             var rooms = [];

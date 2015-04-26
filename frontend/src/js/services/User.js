@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('User', function(config, $http) {
+app.factory('User', function(config, $http, Auth) {
     var api = config.api + '/user';
 
     var User = function(data) {
@@ -28,9 +28,15 @@ app.factory('User', function(config, $http) {
     User.prototype.save = function() {
         var user = this;
 
-        return $http.post(api + '/me', user.getProperties()).success(function(response) {
-            user.uid = response.data.uid;
-        }).error(function(response) {
+        return $http.post(api + '/me', user.getProperties()).then(function(response) {
+            var data = response.data.data;
+
+            Auth.setUser(data.user);
+
+            if (data.bantrsAuth) {
+                Auth.setToken(data.bantrsAuth);
+            }
+        }, function(error) {
 
         });
     };
