@@ -45,6 +45,19 @@ Room.prototype.getMembers = function() {
     return d.promise;
 }
 
+Room.prototype.getComments = function() {
+    var d = Q.defer();
+    db.query("SELECT cid FROM comments WHERE rid = $1", [this.rid])
+    .then(function(commentObjs) {
+        var comments = _.pluck(commentObjs, 'cid')
+        d.resolve(comments);
+    })
+    .fail(function(err) {
+        d.reject(err);
+    });
+    return d.promise;
+}
+
 
 /* Return a room object by ID */
 Room.getById = function(id) {

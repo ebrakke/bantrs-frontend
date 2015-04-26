@@ -7,7 +7,7 @@ var rc = require('./RoomCtrl');
 var e = require('./errors');
 var Q = require('q');
 var Validator = require('../validate');
-
+var _ = require('lodash-node');
 
 /* CommentCtrl Constructor */
 var CommentCtrl = function () {}
@@ -32,7 +32,6 @@ CommentCtrl.create = function(commentData) {
     /* Send create comment request */
     comment.create()
     .then(function() {
-        console.log('[After Create]', comment);
         rc.getByIdCompact(comment.room)
         .then(function(room) {
             comment.room = room;
@@ -86,26 +85,6 @@ CommentCtrl.getById = function(id) {
     return d.promise;
 }
 
-CommentCtrl.getCommentsByRoom = function(rid) {
-    var d = Q.defer();
-    Comment.getRoomComments(rid)
-    .then(function(comments) {
-        _.forEach(comments, function(comment) {
-            uc.getByIdCompact(comment.author)
-            .then(function(user) {
-                comment.author = user;
-            })
-            .fail(function(err) {
-                d.reject(e.invalidUID);
-            });
-        });
-        d.resolve(comments);
-    })
-    .fail(function(err) {
-        e.reject(e.invalidRID);
-    })
-    return d.promise;
-}
 
 // var test = function() {
 //     var commentData = {

@@ -4,6 +4,8 @@ var sendData = require('../utils').sendData;
 var rc = require('../controllers/RoomCtrl');
 var cc = require('../controllers/CommentCtrl');
 var auth = require('../controllers/AuthCtrl');
+var _ = require('lodash-node');
+var Q = require('q');
 
 /*
 * GET rooms for discover page
@@ -75,80 +77,39 @@ room.get('/:id', function(req, res) {
 /*
 * GET room comments
 * TODO:
-* Validate authToken or validate location
-* Query DB
-* Send response to envelope
 */
 room.get('/:id/comments', function(req,res) {
-    var authToken = req.body.authToken;
-    var lat = req.params.lat;
-    var lng = req.params.lng;
+    var authToken = req.get('authorization');
+    var lat = req.query.lat;
+    var lng = req.query.lng;
+    var rid = req.params.id;
 
-    var data = [
-        {
-            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "createdAt": "2015-03-21 09:30:26.123-05:00",
-            "comment": "Hopefully Meerkat will do better than Josh's other recent investment"
-        },
-        {
-            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "erik",
-                "email": "erik@gmail.com",
-            },
-            "createdAt": "2015-03-22 09:30:26.123-05:00",
-            "comment": "Looks like they also raised from Aleph? https://twitter.com/asknbid/status/579066396400693248"
-        },
-        {
-            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "logan",
-                "email": "logan@gmail.com",
-            },
-            "createdAt": "2015-03-22 09:45:26.123-05:00",
-            "comment": "that was their $3.4m round from last year it seems"
-        },
-        {
-            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "erik",
-                "email": "erik@gmail.com",
-            },
-            "createdAt": "2015-03-22 10:45:26.123-05:00",
-            "comment": "Just in time as the bubble is soon to pop. Where is the revenue coming from?"
-        },
-        {
-            "cid": "bb5cc2bbd90a5d9bb81ce454d66d940c",
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "john",
-                "email": "john@gmail.com",
-            },
-            "createdAt": "2015-03-22 11:30:26.123-05:00",
-            "comment": "Where does the revenue come from with thousands of live eyeballs? For serious?"
-        }
-    ];
-
-    res.json(utils.envelope(data, null));
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        rc.getByIdCompact(rid)
+        .then(function(room) {
+            room.getComments()
+            .then(function(commentIds) {
+                var comments = [];
+                _.forEach(commentIds, function(cid) {
+                    var comment = cc.getById(cid);
+                    comments.push(comment);
+                })
+                Q.all(comments).then(function(comments) {
+                    _.forEach(comments, function(comment) {
+                        comment.rid = comment.room.rid;
+                        delete comment.room;
+                    })
+                    sendData(res, comments)
+                })
+            })
+        }).fail(function(err) { console.log(err) })
+    }).fail(function(err) { console.log(err) })
 });
 
 /*
 * POST room
 * TODO:
-* Add the room to the DB
 */
 room.post('/', function(req, res) {
     var roomInfo = req.body; /* title, topic, type, lat, lng, radius */
@@ -216,8 +177,6 @@ room.post('/:id', function(req, res) {
 /*
 * POST user to room
 * TODO:
-* Update the memberhsip relation
-* Make sure the user is within the radius
 */
 room.post('/:id/join', function(req, res) {
     var lat = req.body.lat;

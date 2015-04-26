@@ -1,5 +1,7 @@
 var db = require('../controllers/dbConnector');
 var Q = require('q');
+var _ = require('lodash-node');
+var um = require('./UserModel');
 
 function Comment(commentData, user) {
     this.author = commentData.author;
@@ -32,6 +34,17 @@ Comment.prototype.create = function() {
     return d.promise;
 }
 
+Comment.prototype.getUserObj = function() {
+    var d = Q.defer();
+    var comment = this;
+    um.getById(this.author)
+    .then(function(user) {
+        comment.author = user;
+        d.resolve();
+    }).fail(function(err) { d.reject(err)});
+    return d.promise;
+}
+
 Comment.getById = function(id) {
     var d = Q.defer();
     db.query("SELECT cid, author, rid, comment, createdat AS \"createdAt\" FROM comments WHERE cid = $1", [id])
@@ -45,22 +58,6 @@ Comment.getById = function(id) {
     return d.promise;
 }
 
-Comment.getRoomComments = function(rid) {
-    var d = Q.defer();
-    db.query("SELECT cid, author, rid, comment, createdat AS \"createdAt\" FROM comments WHERE rid = $1", [rid])
-    .then(function(commentObjs) {
-        var comments = [];
-        _.forEach(commentObjs, function(commentInfo) {
-            var comment = createComment(commentInfo)
-            comments.push(comment);
-        });
-        d.resolve(comments);
-    })
-    .fail(function(err) {
-        d.reject(err);
-    });
-    return d.promise;
-}
 
 var createComment = function(commentInfo) {
     return new Comment(commentInfo);
