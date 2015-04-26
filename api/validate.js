@@ -12,8 +12,6 @@ var Validator = {};
  * Only return one error message
  */
 var simpleError = function(errorObj) {
-	console.log('[errorObj]', errorObj);
-
 	if (errorObj) {
 		for(first in errorObj) {
 			console.log('first', errorObj[first]);
