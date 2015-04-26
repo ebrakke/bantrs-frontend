@@ -67,8 +67,6 @@ RoomCtrl.discover = function(lat, lng) {
     return d.promise;
 }
 
-<<<<<<< HEAD
-
 RoomCtrl.joinRoom = function(rid, user, lat, lng) {
     var d = Q.defer();
     Room.getById(rid)
