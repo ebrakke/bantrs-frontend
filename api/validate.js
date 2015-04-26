@@ -8,6 +8,19 @@ var validate = require('validate.js');
 */
 var Validator = {};
 
+/*
+ * Only return one error message
+ */
+var simpleError = function(errorObj) {
+	console.log('[errorObj]', errorObj);
+
+	if (errorObj) {
+		for(first in errorObj) {
+			console.log('first', errorObj[first]);
+			return errorObj[first][0];
+		}
+	}
+};
 
 /*
 * User Validation
@@ -17,29 +30,28 @@ Validator.user = function (userObj) {
 
 	// Validation constraints
 	var constraints = {
-
 		username: {
 			presence: true,
 			length: {
-		  	minimum: 4,
-		    maximum: 14
-	  	}
+				minimum: 4,
+				maximum: 14
+			}
 		},
 
 		password: {
-		  presence: true,
-		  length: {
-		    minimum: 4,
-		    maximum: 14
-		  }
+			presence: true,
+			length: {
+				minimum: 4
+			}
 		},
 
 		email: {
-		  presence: true,
-		  email: true
+			presence: true,
+			email: true
 		}
 	};
-	return validate(userObj, constraints);
+
+	return simpleError(validate(userObj, constraints));
 }
 
 /*
@@ -47,14 +59,6 @@ Validator.user = function (userObj) {
 * Fields: title, topic, topic_type, author, lat, lng, radius
 */
 Validator.room = function (roomObj) {
-
-	// Validate lat/long as floats
-	var testLocation = [roomObj.location.lat, roomObj.location.lng];
-	for (var i = 0;  i < 2; i++) {
-		if (!parseFloat(testLocation[i])) {
-			return 'Invalid lat/lng';
-		}
-	}
 
 	// Validation constraints
 	var constraints = {
@@ -82,6 +86,22 @@ Validator.room = function (roomObj) {
 			}
 		},
 
+		'location.lat': {
+			presence: true,
+			numericality: {
+				lessThanOrEqualTo: 90,
+				greaterThanOrEqualTo: -90
+			}
+		},
+
+		'location.lng': {
+			presence: true,
+			numericality: {
+				lessThanOrEqualTo: 180,
+				greaterThanOrEqualTo: -180
+			}
+		},
+
 		'location.radius': {
 			presence: true,
 			inclusion: {
@@ -89,7 +109,8 @@ Validator.room = function (roomObj) {
 			}
 		}
 	};
-	return validate(roomObj, constraints);
+
+	return simpleError(validate(roomObj, constraints));
 }
 
 /*
@@ -106,7 +127,7 @@ Validator.comment = function (commentObj) {
 			}
 		}
 	};
-	return validate(commentObj, constraints);
+	return simpleError(validate(commentObj, constraints));
 }
 
 
