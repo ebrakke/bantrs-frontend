@@ -41,11 +41,11 @@ UserCtrl.create = function(userData) {
             d.resolve({user: user, auth: auth});
         })
         .fail(function(err) {
-            d.reject(err);
+            d.reject(e.invalidAuthToken);
         })
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUser);
     });
     return d.promise;
 }
@@ -78,7 +78,7 @@ UserCtrl.update = function(user, newInfo) {
                 d.resolve(auth);
             })
             .fail(function(err) {
-                d.reject(err);
+                d.reject(e.invalidAuthTokenUpdate);
             });
         } else {
             delete user.password;
@@ -86,7 +86,7 @@ UserCtrl.update = function(user, newInfo) {
         }
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUserUpdate);
     });
     return d.promise;
 }
@@ -102,15 +102,15 @@ UserCtrl.getRoomObjects = function(username) {
                 d.resolve(roomObjs);
             })
             .fail(function(err) {
-                d.reject(err);
+                d.reject(e.invalidGetRoomObjs);
             })
         })
         .fail(function(err) {
-            d.reject(err)
+            d.reject(e.invalidGetRooms)
         })
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUsername);
     })
     return d.promise;
 }
@@ -125,11 +125,11 @@ UserCtrl.getByUsername = function(username) {
             d.resolve(user);
         })
         .fail(function(err) {
-            d.reject(err)
+            d.reject(e.invalidGetRooms)
         });
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUsername);
     });
     return d.promise;
 }
@@ -144,11 +144,11 @@ UserCtrl.getById = function(id) {
             d.resolve(user);
         })
         .fail(function(err) {
-            d.reject(err);
+            d.reject(e.invalidGetRooms);
         });
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUID);
     });
     return d.promise;
 }
@@ -160,7 +160,7 @@ UserCtrl.delete = function(user) {
         d.resolve();
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidUserDelete);
     })
     return d.promise;
 }

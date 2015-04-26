@@ -32,7 +32,7 @@ RoomCtrl.create = function(roomInfo ) {
         d.resolve(room);
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidRoom);
     })
     return d.promise;
 }
@@ -43,36 +43,39 @@ RoomCtrl.getById = function(id) {
     .then(function(room) {
         d.resolve(room)
     })
-    .then(function(err) {
-        d.reject(err);
+    .fail(function(err) {
+        d.reject(e.invalidRID);
     })
     return d.promise;
 }
 
 var test = function() {
-    // roomInfo = {
-    //     title: 'Here is a room title',
-    //     topic: 'www.example.com',
-    //     author: '13b862a780828990bd0dafddee018909',
-    //     lat: '78.0983',
-    //     lng: '56.0997',
-    //     radius: '800',
-    //     type: 'url'
-    // }
-    // RoomCtrl.create(roomInfo)
+    roomInfo = {
+        title: 'Here is a room title',
+        topic: 'www.example.com',
+        author: '13b862a780828990bd0dafddee018909',
+        lat: '78.0983',
+        lng: '56.0997',
+        radius: '800',
+        type: 'url'
+    }
+    RoomCtrl.create(roomInfo)
+    .then(function(room) {
+        console.log(room);
+    })
+    .fail(function(err) {
+        console.log(err);
+    })
+
+    // RoomCtrl.getById('a353f1048573f66457d9ce45210d1eff')
     // .then(function(room) {
     //     console.log(room);
     // })
     // .fail(function(err) {
-    //     console.log(err);
+    //     console.log(err)
     // })
-
-    RoomCtrl.getById('a353f1048573f66457d9ce45210d1eff')
-    .then(function(room) {
-        console.log(room);
-    });
 }
 
-//test();
+test();
 
 module.exports = RoomCtrl;
