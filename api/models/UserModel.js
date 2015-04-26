@@ -2,6 +2,7 @@ var db = require('../controllers/dbConnector');
 var rm = require('./RoomModel');
 var Q = require('q');
 var _ = require('lodash-node');
+var e = require('../controllers/errors');
 
 function User(userData) {
     this.username = userData.username;
@@ -218,7 +219,12 @@ User.getHash = function(username) {
     var dfd = Q.defer();
     db.query('SELECT username, password FROM users WHERE username = $1', [username])
     .then(function(userObj) {
-        dfd.resolve(new User(userObj[0]));
+        if (userObj.length > 0) {
+            dfd.resolve(new User(userObj[0]));
+        } else {
+            e.invalidUserData.msg = 'Invalid username/password.';
+            dfd.reject(e.invalidUserData);
+        }
     })
     .fail(function(err) {
         dfd.reject(err);

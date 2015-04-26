@@ -53,6 +53,33 @@ Validator.user = function (userObj) {
 }
 
 /*
+* Auth Validation
+* Fields: username, password
+*/
+Validator.auth = function (userObj) {
+
+	// Validation constraints
+	var constraints = {
+		username: {
+			presence: true,
+			length: {
+				minimum: 4,
+				maximum: 14
+			}
+		},
+
+		password: {
+			presence: true,
+			length: {
+				minimum: 4
+			}
+		}
+	};
+
+	return simpleError(validate(userObj, constraints));
+}
+
+/*
 * Room Validation
 * Fields: title, topic, topic_type, author, lat, lng, radius
 */
