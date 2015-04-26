@@ -20,6 +20,14 @@
         margin: @itemMargin;
         background: @grey;
 
+        &.ng-enter {
+            animation: zoomIn .3s;
+        }
+
+        &.archiving.ng-leave {
+            animation: fadeOutUp .2s;
+        }
+
         .background {
             position: absolute;
             top: 0;

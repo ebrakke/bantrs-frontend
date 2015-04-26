@@ -4,5 +4,6 @@ var app = angular.module('bantrs', [
     'ngAnimate',
     'angularMoment',
     'ngStorage',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'angular-gestures'
 ]);
