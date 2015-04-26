@@ -9,14 +9,14 @@ app.controller('SettingsCtrl', function($scope, $http, Auth) {
         $scope.loading = true;
 
         $scope.user.save().then(function(data) {
-            Auth.setUser(data.user);
+            Auth.setUser($scope.user);
 
             if (data.bantrsAuth) {
                 Auth.setToken(data.bantrsAuth);
             }
         }, function(error) {
 
-        }).then(function() {
+        }).finally(function() {
             $scope.loading = false;
         });
     };

@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Room', function(config, $http, Comment) {
+app.factory('Room', function(config, $q, $http, Comment) {
     var api = config.api + '/room';
 
     var Room = function(data) {
@@ -9,15 +9,16 @@ app.factory('Room', function(config, $http, Comment) {
 
     Room.prototype.create = function() {
         var room = this;
+        var deferred = $q.defer();
 
-        return $http.post(api, {
+        $http.post(api, {
             title: room.title,
             topic: room.topic.content,
             lat: room.location.lat,
             lng: room.location.lng,
             radius: room.location.radius
-        }).then(function(response, status) {
-            var data = response.data.data;
+        }).succes(function(response) {
+            var data = response.data;
 
             room.rid = data.rid;
             room.author = data.author;
@@ -27,99 +28,135 @@ app.factory('Room', function(config, $http, Comment) {
             room.member = data.member;
             room.archived = data.archived;
             room.createdAt = data.createdAt;
-        }, function(response, status) {
-            return status;
+
+            deferred.resolve();
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.prototype.save = function() {
         var room = this;
+        var deferred = $q.defer();
 
-        return $http.post(api + '/' + room.rid, {
+        $http.post(api + '/' + room.rid, {
             title: room.title,
             radius: room.location.radius
         }).success(function(response) {
-
-        }).error(function(response) {
-
+            deferred.resolve();
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.prototype.join = function(lat, lng) {
         var room = this;
+        var deferred = $q.defer();
 
-        return $http.post(api + '/' + room.rid + '/join', {
+        $http.post(api + '/' + room.rid + '/join', {
             lat: lat,
             lng: lng
-        }).then(function(response) {
+        }).success(function(response) {
             room.member = true;
-        }, function(error) {
 
+            deferred.resolve();
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.prototype.archive = function() {
         var room = this;
+        var deferred = $q.defer();
 
-        return $http.post(api + '/' + room.rid + '/archive').success(function(response) {
-
-        }).error(function(response) {
-
+        $http.post(api + '/' + room.rid + '/archive').success(function(response) {
+            deferred.resolve();
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.get = function(id) {
-        return $http.get(api + '/' + id).then(function(response) {
-            return new Room(response.data.data);
+        var deferred = $q.defer();
+
+        $http.get(api + '/' + id).success(function(response) {
+            deferred.resolve(new Room(response.data));
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.discover = function(lat, lng) {
+        var deferred = $q.defer();
+
         var params = {
             'lat': lat,
             'lng': lng
         };
 
-        return $http({
+        $http({
             url: api + '/discover',
             method: 'GET',
             params: params
-        }).then(function(response) {
-            var data = response.data.data;
+        }).success(function(response) {
+            var data = response.data;
 
             var rooms = [];
             data.forEach(function(elem) {
                 rooms.push(new Room(elem));
             });
 
-            return rooms;
-        }, function(error) {
+            deferred.resolve(rooms);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.prototype.getComments = function() {
         var room = this;
+        var deferred = $q.defer();
         var url = api + '/' + room.rid +  '/comments';
 
-        return $http.get(url).then(function(response) {
-            var data = response.data.data;
+        $http.get(url).success(function(response) {
+            var data = response.data;
 
             var comments = [];
             data.forEach(function(elem) {
                 comments.push(new Comment(elem));
             });
 
-            return comments;
+            deferred.resolve(comments);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Room.prototype.getMembers = function() {
         var room = this;
+        var deferred = $q.defer();
         var url = api + '/' + room.rid +  '/members';
 
-        return $http.get(url).then(function(response) {
-            return response.data;
+        $http.get(url).success(function(response) {
+            deferred.resolve(response.data);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     return Room;

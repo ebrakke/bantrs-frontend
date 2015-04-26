@@ -32,8 +32,8 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
 
         $scope.newComment.create().then(function(response) {
             getComments();
-        }, function(response) {
-            $scope.error = 'Error message.';
+        }, function(error) {
+            $scope.error = error;
         }).finally(function() {
             $scope.newComment.comment = '';
             $scope.loading.postComment = false;

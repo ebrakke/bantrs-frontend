@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('User', function(config, $http, Room) {
+app.factory('User', function(config, $q, $http, Room) {
     var api = config.api + '/user';
 
     var User = function(data) {
@@ -9,49 +9,64 @@ app.factory('User', function(config, $http, Room) {
 
     User.prototype.create = function() {
         var user = this;
+        var deferred = $q.defer();
 
-        return $http.post(api, user).then(function(response) {
-            var data = response.data.data;
+        $http.post(api, user).success(function(response) {
+            var data = response.data;
             user.uid = data.user.uid;
 
-            return data;
-        }, function(response) {
-
+            deferred.resolve(data);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     User.prototype.save = function() {
         var user = this;
+        var deferred = $q.defer();
 
-        return $http.post(api + '/me', user.getProperties()).then(function(response) {
-            return response.data.data;
-        }, function(error) {
-
+        $http.post(api + '/me', user.getProperties()).success(function(response) {
+            deferred.resolve(response.data);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     User.get = function(id) {
-        return $http.get(api + '/' + id).success(function(response) {
-            return new User(response.data);
+        var deferred = $q.defer();
+
+        $http.get(api + '/' + id).success(function(response) {
+            deferred.resolve(new User(response.data));
         }).error(function(error) {
-            console.log('error', error);
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     User.prototype.getRooms = function() {
         var user = this;
+        var deferred = $q.defer();
         var url = api + '/' + user.username +  '/rooms';
 
-        return $http.get(url).then(function(response) {
-            var data = response.data.data;
+        $http.get(url).success(function(response) {
+            var data = response.data;
 
             var rooms = [];
             data.forEach(function(elem) {
                 rooms.push(new Room(elem));
             });
 
-            return rooms;
+            deferred.resolve(rooms);
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     return User;
