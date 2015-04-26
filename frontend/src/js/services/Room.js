@@ -71,8 +71,8 @@ app.factory('Room', function(config, $http, Comment) {
     };
 
     Room.get = function(id) {
-        return $http.get(api + '/' + id).success(function(response) {
-            return new Room(response.data);
+        return $http.get(api + '/' + id).then(function(response) {
+            return new Room(response.data.data);
         });
     };
 
@@ -103,7 +103,7 @@ app.factory('Room', function(config, $http, Comment) {
         var url = api + '/' + room.rid +  '/comments';
 
         return $http.get(url).then(function(response) {
-            var data = response.data;
+            var data = response.data.data;
 
             var comments = [];
             data.forEach(function(elem) {

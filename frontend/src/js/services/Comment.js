@@ -7,7 +7,7 @@ app.factory('Comment', function(config, $http, User) {
         angular.extend(this, data);
     };
 
-    Comment.create = function() {
+    Comment.prototype.create = function() {
         var comment = this;
 
         return $http.post(api, {

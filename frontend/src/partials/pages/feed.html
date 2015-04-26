@@ -16,7 +16,7 @@
         --><a class="siteHeader__item block-1-5" href="#/settings"><i class="fa fa-cog"></i></a>
     </header>
     <section class="feed">
-        <a href="#/room" ng-repeat="room in rooms | filter:showArchived">
+        <a ng-href="#/room/{{room.rid}}" ng-repeat="room in rooms | filter:showArchived">
             <div class="feed__item {{room.topic.type}}-item">
                 <div class="background" ng-if="room.topic.type == 'media'">
                     <img ng-src="{{room.topic.content}}" />

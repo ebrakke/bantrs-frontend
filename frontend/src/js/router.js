@@ -10,7 +10,7 @@ app.config(function($routeProvider, $httpProvider) {
     }).when('/discover', {
         templateUrl: 'partials/pages/discover.html',
         controller: 'DiscoverCtrl'
-    }).when('/room', {
+    }).when('/room/:rid', {
         templateUrl: 'partials/pages/room.html',
         controller: 'RoomCtrl'
     }).when('/create', {
