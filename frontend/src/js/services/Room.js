@@ -19,7 +19,7 @@ app.factory('Room', function(config, $http, Comment) {
         }).then(function(response, status) {
             console.log('Room.create', response);
 
-            var data = response.data;
+            var data = response.data.data;
 
             room.author = data.author;
             room.topic.type = data.topic.type;
