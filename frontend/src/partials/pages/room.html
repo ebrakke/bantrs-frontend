@@ -6,7 +6,7 @@
         --><li class="siteHeader__item block-1-5" ng-if="room.member"><i class="fa fa-group"></i></li>
     </ul>
 </header>
-<section class="room push-from-top">
+<section class="room push-from-top" ng-if="!loading.room">
     <!--<div class="cover--image">
         <img class="" src="http://lorempixel.com/400/250/" />
     </div>-->
@@ -23,9 +23,10 @@
     </div>
     <form class="newMessage grid" ng-submit="postComment(newComment)">
         <textarea class="block-3-4" rows="1" msd-elastic ng-model="newComment.comment" placeholder="New message"></textarea><!--
-        --><button type="submit" class="block-1-4 button" ng-hide="loading"><i class="fa fa-comment"></i></button><!--
-        --><span class="block-1-4 button" ng-show="loading">
+        --><button type="submit" class="block-1-4 button" ng-hide="loading.postComment"><i class="fa fa-comment"></i></button><!--
+        --><span class="block-1-4 button" ng-show="loading.postComment">
             <i class="fa fa-refresh fa-spin"></i>
         </span>
     </form>
 </section>
+<loader ng-if="loading.room"></loader>

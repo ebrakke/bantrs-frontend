@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('map', function($window) {
+app.directive('map', function($window, Geolocation) {
     return {
         restrict: 'E',
         replace: true,
@@ -11,7 +11,7 @@ app.directive('map', function($window) {
             lng: '=?',
             pinSource: '=?'
         },
-        template: '<section class="map"></section>',
+        template: '<section class="map"><loader ng-if="!map"></loader></section>',
         link: function(scope, element, attrs) {
             var markers = {
                 small: L.icon({
@@ -65,6 +65,24 @@ app.directive('map', function($window) {
                 marker.bindPopup(createPinContent(data));
             };
 
+            var buildMap = function() {
+                scope.map = L.map(element[0], {
+                    scrollWheelZoom: false,
+                    center: [scope.lat, scope.lng],
+                    zoom: 15,
+                    minZoom: 5,
+                    maxZoom: 20,
+                    keyboard: false,
+                    attributionControl: false,
+                    zoomControl: scope.controls
+                });
+
+                L.tileLayer(
+                    'https://{s}.tiles.mapbox.com/v3/phantomburn.jmgom0bf/{z}/{x}/{y}.png', {
+                    attribution: '<a href="">About Our Maps</a>'
+                }).addTo(scope.map);
+            };
+
             // Default to display controls
             if (typeof scope.controls === 'undefined') {
                 scope.controls = true;
@@ -77,45 +95,16 @@ app.directive('map', function($window) {
             }
 
             // Create map
-            scope.map = L.map(element[0], {
-                scrollWheelZoom: false,
-                center: [scope.lat, scope.lng],
-                zoom: 15,
-                minZoom: 5,
-                maxZoom: 20,
-                keyboard: false,
-                attributionControl: false,
-                zoomControl: scope.controls
-            });
-
-            // Add map attributes
-            if (scope.attr) {
-                scope.map.addControl(L.control.attribution({
-                    position: 'topright',
-                    prefix: false
-                }));
-            }
-
-            L.tileLayer(
-                'https://{s}.tiles.mapbox.com/v3/phantomburn.jmgom0bf/{z}/{x}/{y}.png', {
-                attribution: '<a href="">About Our Maps</a>'
-            }).addTo(scope.map);
-
             // Set center of map to user's location
             if (scope.locate) {
-                scope.map.locate({
-                    setView: true,
-                    enableHighAccuracy: true,
-                    maxZoom: 15
-                });
+                Geolocation.getLocation().then(function(position) {
+                    scope.lat = position.coords.latitude;
+                    scope.lng = position.coords.longitude;
 
-                // Wait for location be found
-                scope.map.on('locationfound', function(e) {
-                    console.log('run this');
-                    // Update map's center
-                    scope.lat = e.latlng.lat;
-                    scope.lng = e.latlng.lng;
+                    buildMap();
                 });
+            } else {
+                buildMap();
             }
 
             if (scope.pinSource) {

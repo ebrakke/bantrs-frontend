@@ -44,6 +44,7 @@
         <script src="js/config.js"></script>
         <script src="js/router.js"></script>
 
+        <script src="js/controllers/AppCtrl.js"></script>
         <script src="js/controllers/RootCtrl.js"></script>
         <script src="js/controllers/FeedCtrl.js"></script>
         <script src="js/controllers/CreateCtrl.js"></script>
@@ -62,11 +63,12 @@
         <script src="js/directives/map.js"></script>
         <script src="js/directives/feedItem.js"></script>
         <script src="js/directives/backButton.js"></script>
+        <script src="js/directives/loader.js"></script>
 
         <script src="js/filters/rootDomain.js"></script>
     </head>
-    <body>
-        <ng-view class="page {{pageClass}}" ng-class="{'reverse': back}"></ng-view>
+    <body ng-controller="AppCtrl">
+        <ng-view class="page transition-{{transitionType}}" ng-class="{'reverse': back}"></ng-view>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>

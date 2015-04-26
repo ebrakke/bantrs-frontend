@@ -3,33 +3,42 @@
 app.config(function($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
         templateUrl: 'partials/pages/splash.html',
-        controller: 'RootCtrl'
+        controller: 'RootCtrl',
+        transition: 'main'
     }).when('/feed', {
         templateUrl: 'partials/pages/feed.html',
-        controller: 'FeedCtrl'
+        controller: 'FeedCtrl',
+        transition: 'main'
     }).when('/discover', {
         templateUrl: 'partials/pages/discover.html',
-        controller: 'DiscoverCtrl'
+        controller: 'DiscoverCtrl',
+        transition: 'main'
     }).when('/room/:rid', {
         templateUrl: 'partials/pages/room.html',
-        controller: 'RoomCtrl'
+        controller: 'RoomCtrl',
+        transition: 'main'
     }).when('/create', {
         templateUrl: 'partials/pages/create.html',
-        controller: 'CreateCtrl'
+        controller: 'CreateCtrl',
+        transition: 'main'
     }).when('/create/link', {
         templateUrl: 'partials/pages/create--link.html',
-        controller: 'CreateCtrl'
+        controller: 'CreateCtrl',
+        transition: 'main'
     }).when('/create/location', {
         templateUrl: 'partials/pages/create--location.html',
     }).when('/login', {
         templateUrl: 'partials/pages/landing.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        transition: 'main'
     }).when('/signup', {
         templateUrl: 'partials/pages/signup.html',
-        controller: 'SignupCtrl'
+        controller: 'SignupCtrl',
+        transition: 'main'
     }).when('/settings', {
         templateUrl: 'partials/pages/settings.html',
-        controller: 'SettingsCtrl'
+        controller: 'SettingsCtrl',
+        transition: 'main'
     });
 
     // Handle authentication requirements

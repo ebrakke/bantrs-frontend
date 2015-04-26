@@ -1,8 +1,6 @@
 'use strict';
 
 app.controller('CreateCtrl', function($scope, $http, $location, Room, Geolocation) {
-    $scope.pageClass = 'page-create';
-
     $scope.room = new Room();
     $scope.room.title = '';
     $scope.room.topic = {
