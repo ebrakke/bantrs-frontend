@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('RoomCtrl', function($routeParams, $scope, $interval, Room, Comment, Geolocation) {
+app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval, Room, Comment, Geolocation) {
     $scope.pageClass = 'page-room';
 
     $scope.room = null;
@@ -18,7 +18,9 @@ app.controller('RoomCtrl', function($routeParams, $scope, $interval, Room, Comme
         $scope.room = r;
 
         getComments();
-        $interval(getComments, 5000);
+
+        // super ugly hack. Fix later.
+        $rootScope.fetchComments = $interval(getComments, 5000);
     }).finally(function() {
     });
 
@@ -51,4 +53,9 @@ app.controller('RoomCtrl', function($routeParams, $scope, $interval, Room, Comme
             $scope.comments = c;
         });
     };
+}).run(function($rootScope, $interval) {
+    // More of the ugle hack.
+    $rootScope.$on('$routeChangeStart', function() {
+        $interval.cancel($rootScope.fetchComments);
+    });
 });

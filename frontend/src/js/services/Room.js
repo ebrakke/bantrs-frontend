@@ -52,6 +52,7 @@ app.factory('Room', function(config, $http, Comment) {
             lat: lat,
             lng: lng
         }).then(function(response) {
+            room.member = true;
         }, function(error) {
 
         });
