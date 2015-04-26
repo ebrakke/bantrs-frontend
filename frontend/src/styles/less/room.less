@@ -1,0 +1,77 @@
+.room {
+    padding-bottom: 75px;
+
+    .cover {
+        &--image {
+            margin-bottom: 15px;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        &--link {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: @blue-light;
+
+            .title {
+                margin-bottom: 5px;
+                color: #fff;
+                font-weight: 300;
+                line-height: 1.4;
+            }
+
+            .icon {
+                width: 25px;
+                height: 25px;
+                margin-right: 5px;
+            }
+
+            .domain {
+                color: @blue-darkest;
+            }
+        }
+    }
+
+    .message {
+        margin: 0 15px 15px 15px;
+
+        &__info {
+            .user {
+                font-weight: bold;
+            }
+
+            .time {
+                .muted;
+
+                text-align: right;
+                font-size: .9rem;
+            }
+        }
+
+        &__body {
+            word-break: break-word;
+
+            a {
+                color: @accent;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .newMessage {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        border-top: 1px solid @grey;
+        background: #fff;
+
+        textarea {
+            border: none;
+            outline: none;
+        }
+    }
+}

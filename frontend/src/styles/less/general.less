@@ -1,0 +1,44 @@
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+}
+
+html,
+body,
+.body {
+	height: 100%;
+	display: block;
+}
+
+/*
+ * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
+ */
+
+img {
+	vertical-align: middle;
+}
+
+/*
+ * Vertically center elements
+*/
+.vertically-center {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+/**
+ * Clearfix helper
+ * Used to contain floats: h5bp.com/q
+ */
+
+.clearfix:before,
+.clearfix:after {
+	content: "";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}

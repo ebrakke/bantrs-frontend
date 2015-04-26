@@ -1,0 +1,33 @@
+.siteHeader {
+    background: @accent;
+    color: @accent-darkest;
+    text-align: center;
+    font-size: 2rem;
+    line-height: 1;
+    height: @siteHeaderHeight;
+    z-index: 10000;
+
+    &--fixed {
+        &:extend(.siteHeader);
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        & + .push-from-top {
+            padding-top: 50px;
+        }
+    }
+
+    &__item {
+        line-height: @siteHeaderHeight;
+    }
+
+    .input-toggle {
+        font-size: 1rem;
+        vertical-align: middle;
+
+        .toggle(@accent-dark, @accent, #fff);
+    }
+}

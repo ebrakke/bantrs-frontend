@@ -1,0 +1,27 @@
+.mainNavigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: @mainNavigationHeight;
+    line-height: @mainNavigationHeight;
+    font-size: 3rem;
+    background: @grey-darkest;
+    color: @grey-dark;
+
+    &__item {
+        text-align: center;
+
+        &.active {
+            color: #fff;
+        }
+
+        a {
+            display: block;
+        }
+    }
+}
+
+.push-from-bottom {
+    padding-bottom: @mainNavigationHeight;
+}
