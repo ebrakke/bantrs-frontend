@@ -41,8 +41,7 @@ room.get('/:id', function(req, res) {
     .then(function(user) {
         rc.getById(rid, lat, lng)
         .then(function(room) {
-            var apiRoom = room.apiObj();
-            res.json(utils.envelope(apiRoom, null));
+            res.json(utils.envelope(room, null));
         })
         .fail(function(err) {
             res.status(err.code).json(utils.envelope(null, err));
@@ -161,7 +160,7 @@ room.post('/', function(req, res) {
         roomInfo.author = user._uid;
         rc.create(roomInfo)
         .then(function(room) {
-            user.joinRoom(room._rid)
+            user.joinRoom(room.rid)
             .then(function() {
                 res.json(utils.envelope(room, null))
             })

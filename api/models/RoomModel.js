@@ -9,7 +9,7 @@ function Room(roomInfo) {
     this.author = roomInfo.author;
     this.topic = {type: roomInfo.type, content: roomInfo.topic};
     this.createdAt = roomInfo.createdAt;
-    this._rid = roomInfo.rid;
+    this.rid = roomInfo.rid;
 }
 
 /* Create a room */
@@ -20,7 +20,7 @@ Room.prototype.create = function() {
     rep = [this.title + this.author.uid + day.getDate(), this.title, this.topic.content, this.topic.type, this.author.uid, this.location.lat, this.location.lng, this.location.radius];
     db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
     .then(function(returnObj) {
-        room._rid = returnObj[0].rid;
+        room.rid = returnObj[0].rid;
         room.createdAt = returnObj[0].createdat
         d.resolve();
     })
@@ -33,7 +33,7 @@ Room.prototype.create = function() {
 /* Show members of a room */
 Room.prototype.getMembers = function() {
     var d = Q.defer();
-    db.query("SELECT uid FROM membership WHERE rid = $1", [this._rid])
+    db.query("SELECT uid FROM membership WHERE rid = $1", [this.rid])
     .then(function(userObjs) {
         var users = _.pluck(userObjs, 'uid');
         d.resolve(users);
@@ -79,8 +79,8 @@ Room.discover = function(lat, lng) {
 
 /* Turn a room object into an API object */
 Room.prototype.apiObj = function() {
-    this.rid = this._rid;
-    delete this._rid;
+    this.rid = this.rid;
+    delete this.rid;
     return this;
 }
 
