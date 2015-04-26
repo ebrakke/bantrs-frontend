@@ -1,7 +1,7 @@
 var validate = require('validate.js');
 
 
-/*  
+/*
 * Validate inputs (create/update)
 * Expects a data object (user, room, comment)
 * returns error message if invalid, null if valid
@@ -12,7 +12,7 @@ var Validator = {};
 /*
 * User Validation
 * Fields: username, password, email
-*/ 
+*/
 Validator.user = function (userObj) {
 
 	// Validation constraints
@@ -45,7 +45,7 @@ Validator.user = function (userObj) {
 /*
 * Room Validation
 * Fields: title, topic, topic_type, author, lat, lng, radius
-*/ 
+*/
 Validator.room = function (roomObj) {
 
 	// Validate lat/long as floats
@@ -56,19 +56,9 @@ Validator.room = function (roomObj) {
 		}
 	};
 
-	/* 
-	* Workaround to validate nested room object fields
-	* would like to change.. 
-	* unsure why type couldn't be passed normally
-	*/
-	var newType = roomObj.topic.type;
-	roomObj.topic = roomObj.topic.content;
-	roomObj.type = newType;
-	roomObj.radius = roomObj.location.radius;
-
 	// Validation constraints
 	var constraints = {
-		
+
 		title: {
 			presence: true,
 			length: {
@@ -77,7 +67,7 @@ Validator.room = function (roomObj) {
 			}
 		},
 
-		topic: {
+		'topic.content': {
 			presence: true,
 			length: {
 				minimum: 1,
@@ -85,27 +75,27 @@ Validator.room = function (roomObj) {
 			}
 		},
 
-		type: {
+		'topic.type': {
 			presence: true,
 			inclusion: {
 				within: {'url': '', 'photo': '', 'location': ''}
 			}
 		},
 
-		radius: {
+		'location.radius': {
 			presence: true,
 			inclusion: {
 				within: {'100': 'block', '800': 'neighborhood', '8000': 'city'}
 			}
 		}
 	}
-	return validate(roomObj, constraints);	
+	return validate(roomObj, constraints);
 }
 
 /*
 * Comment Validation
 * Fields: username, password, email
-*/ 
+*/
 // Validator.comment = function (commentObj) {
 
 // }
