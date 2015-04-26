@@ -19,6 +19,7 @@ app.factory('Room', function(config, $http, Comment) {
         }).then(function(response, status) {
             var data = response.data.data;
 
+            room.rid = data.rid;
             room.author = data.author;
             room.topic.type = data.topic.type;
             room.members = data.members;
@@ -50,9 +51,8 @@ app.factory('Room', function(config, $http, Comment) {
         return $http.post(api + '/' + room.rid + '/join', {
             lat: lat,
             lng: lng
-        }).success(function(response) {
-
-        }).error(function(response) {
+        }).then(function(response) {
+        }, function(error) {
 
         });
     };

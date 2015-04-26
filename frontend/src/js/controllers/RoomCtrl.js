@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment) {
+app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geolocation) {
     $scope.pageClass = 'page-room';
 
     $scope.room = null;
@@ -37,10 +37,12 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment) {
     };
 
     $scope.join = function() {
-        $scope.room.join.then(function(response) {
+        Geolocation.getLocation().then(function(position) {
+            $scope.room.join(position.coords.latitude, position.coords.longitude).then(function(response) {
 
-        }, function(error) {
+            }, function(error) {
 
+            });
         });
     };
 
