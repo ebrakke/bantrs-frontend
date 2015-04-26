@@ -195,6 +195,7 @@ User.getByUsername = function(username) {
 }
 
 
+
 // Get a User object by the uid
 User.getById = function(uid) {
     var dfd = Q.defer();

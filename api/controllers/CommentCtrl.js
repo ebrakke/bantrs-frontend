@@ -2,6 +2,8 @@
 
 var Comment = require('../models/CommentModel');
 var AuthCtrl = require('./AuthCtrl');
+var uc = require('./UserCtrl');
+var rc = require('./RoomCtrl');
 var e = require('./errors');
 var Q = require('q');
 var Validator = require('../validate');
@@ -30,7 +32,22 @@ CommentCtrl.create = function(commentData) {
     /* Send create comment request */
     comment.create()
     .then(function() {
-        d.resolve(comment);
+        console.log('[After Create]', comment);
+        rc.getByIdCompact(comment.room)
+        .then(function(room) {
+            comment.room = room;
+            uc.getByIdCompact(comment.author)
+            .then(function(user) {
+                comment.author = user;
+                d.resolve(comment);
+            })
+            .fail(function(err) {
+                d.reject(e.invalidUID)
+            });
+        })
+        .fail(function(err) {
+            d.reject(e.invalidRID)
+        })
     })
     .fail(function(err) {
         d.reject(e.invalidComment);
@@ -39,7 +56,7 @@ CommentCtrl.create = function(commentData) {
 }
 
 
-/* Get a comment 
+/* Get a comment
  * Input: id
  * Return: Comment = {cid, room, author, createdAt, comment}
  */
@@ -47,7 +64,21 @@ CommentCtrl.getById = function(id) {
     var d = Q.defer();
     Comment.getById(id)
     .then(function(comment) {
-        d.resolve(comment)
+        rc.getByIdCompact(comment.room)
+        .then(function(room) {
+            comment.room = room;
+            uc.getByIdCompact(comment.author)
+            .then(function(user) {
+                comment.author = user;
+                d.resolve(comment)
+            })
+            .fail(function(err) {
+                d.reject(e.invalidUID);
+            })
+        })
+        .fail(function(err) {
+            d.reject(e.invalidRID);
+        })
     })
     .fail(function(err) {
         d.reject(e.invalidCID);
@@ -55,6 +86,26 @@ CommentCtrl.getById = function(id) {
     return d.promise;
 }
 
+CommentCtrl.getCommentsByRoom = function(rid) {
+    var d = Q.defer();
+    Comment.getRoomComments(rid)
+    .then(function(comments) {
+        _.forEach(comments, function(comment) {
+            uc.getByIdCompact(comment.author)
+            .then(function(user) {
+                comment.author = user;
+            })
+            .fail(function(err) {
+                d.reject(e.invalidUID);
+            });
+        });
+        d.resolve(comments);
+    })
+    .fail(function(err) {
+        e.reject(e.invalidRID);
+    })
+    return d.promise;
+}
 
 // var test = function() {
 //     var commentData = {

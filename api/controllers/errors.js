@@ -27,7 +27,7 @@ error.invalidGetCommentObjs = { msg: 'Unable to get comment objects', code: 400 
 error.invalidGetComments = { msg: 'Unable to get room\'s comments ', code: 400 };
 
 // Auth
-error.invalidAuthToken = { msg: 'Unable to create auth token', code: 500 };
+error.invalidAuthToken = { msg: 'Invalid auth token', code: 400 };
 error.invalidAuthTokenUpdate = { msg: 'Unable to update auth token', code: 500 };
 
 // Validation

@@ -1,7 +1,8 @@
 var express = require('express');
 var room = express.Router();
-var utils = require('../utils');
+var sendData = require('../utils').sendData;
 var rc = require('../controllers/RoomCtrl');
+var cc = require('../controllers/CommentCtrl');
 var auth = require('../controllers/AuthCtrl');
 
 /*
@@ -15,10 +16,28 @@ room.get('/discover', function(req,res) {
 
     rc.discover(lat, lng)
     .then(function(rooms) {
-        res.status(200).json(utils.envelope(rooms, null));
+        sendData(res, rooms)
     })
     .fail(function(err) {
-        res.status(err.code).json(null, err);
+        sendData(res, null, err);
+    });
+});
+
+room.get('/:id/members', function(req,res) {
+    var authToken = req.get('authorization');
+    var rid = req.params.id;
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        rc.getMembers(rid)
+        .then(function(users) {
+            sendData(res, users);
+        })
+        .fail(function(err) {
+            sendData(res, null, err);
+        });
+    })
+    .fail(function(err) {
+        sendData(res, null, err);
     });
 });
 
@@ -39,38 +58,19 @@ room.get('/:id', function(req, res) {
     .then(function(user) {
         rc.getById(rid)
         .then(function(room) {
-            res.json(utils.envelope(room, null));
+            sendData(res, room);
         })
         .fail(function(err) {
-            res.status(err.code).json(utils.envelope(null, err));
+            sendData(res, null, err);
         });
     })
     .fail(function(err) {
-        res.status(err.code).json(null, err);
-    })
+        sendData(res, null, err);
+    });
 
 });
 
-/*
-* GET room members
-* TODO:
-* Query the DB
-* Validate user authToken
-*/
-room.get('/:id/members', function(req,res) {
-    var authToken = req.get('authorization');
 
-
-    var data = [
-        {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com",
-        }
-    ];
-
-    res.json(utils.envelope(data, null));
-});
 
 /*
 * GET room comments
@@ -160,20 +160,19 @@ room.post('/', function(req, res) {
         .then(function(room) {
             user.joinRoom(room.rid)
             .then(function() {
-                res.json(utils.envelope(room, null))
+                sendData(res, room);
             })
             .fail(function(err) {
-                res.json(utils.envelope(null, err));
+                sendData(res, null, err);
             });
         })
         .fail(function(err) {
-            res.json(utils.envelope(null, err));
-        })
+            sendData(res, null, err);
+        });
     })
     .fail(function(err) {
-        res.json(utils.envelope(null, err));
+        sendData(res, null, err);
     });
-
 });
 
 /*
@@ -229,17 +228,15 @@ room.post('/:id/join', function(req, res) {
     .then(function(user) {
         rc.joinRoom(rid, user, lat, lng)
         .then(function(room) {
-            res.status(200).json(utils.envelope(room, null));
+            sendData(res, room);
         })
         .fail(function(err) {
-            res.status(err.code).json(utils.envelope(null, err));
-        })
+            sendData(res, null, err);
+        });
     })
     .fail(function(err) {
-        res.status(err.code).json(utils.envelope(null, err));
-    })
-
-
+        sendData(res, null, err);
+    });
 });
 
 /*
@@ -255,14 +252,14 @@ room.post('/:id/archive', function(req,res) {
     .then(function(user) {
         user.archiveRoom(rid)
         .then(function() {
-            res.status(200).json(utils.envelope([], null));
+            sendData(res, {});
         })
-        .fail(function() {
-            res.status(err.status).json(utils.envelope(null, err));
+        .fail(function(err) {
+            sendData(res, null, err);
         });
     })
     .fail(function(err) {
-        res.status(err.status).json(itls.envelope(null, err));
+        sendData(res, null, err);
     });
 });
 

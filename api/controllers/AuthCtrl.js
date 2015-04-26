@@ -37,14 +37,18 @@ AuthCtrl.validByUserPwd = function(userData) {
 	return d.promise;
 }
 
-AuthCtrl.validByAuthToken = function(authtoken) {
+AuthCtrl.validByAuthToken = function(authToken) {
 	var d = Q.defer();
-	UserModel.getByAuthToken(authtoken)
+	if(!authToken) {
+		d.reject(e.notAuthorized);
+		return d.promise;
+	}
+	UserModel.getByAuthToken(authToken)
 	.then(function(user) {
 		d.resolve(user)
 	})
 	.fail(function(err) {
-		d.reject(err);
+		d.reject(e.invalidAuthToken);
 	});
 	return d.promise;
 }

@@ -3,7 +3,9 @@ var Room = require('../models/RoomModel');
 var crypto = require('crypto');
 var Q = require('q');
 var Validator = require('../validate');
+var uc = require('./UserCtrl');
 var e = require('./errors');
+var _ = require('lodash-node');
 
 
 var RoomCtrl = {};
@@ -51,6 +53,44 @@ RoomCtrl.getById = function(id) {
     })
     .fail(function(err) {
         d.reject(e.invalidRID);
+    })
+    return d.promise;
+}
+
+RoomCtrl.getMembers = function(rid) {
+    var d = Q.defer();
+    Room.getById(rid)
+    .then(function(room) {
+        room.getMembers()
+        .then(function(userIds) {
+            uc.getUserObjects(userIds)
+            .then(function(users) {
+                d.resolve(users);
+            })
+            .fail(function(err) {
+                d.reject(e.invalidUID);
+            });
+        })
+        .fail(function(err) {
+            d.reject(e.invalidRID);
+        });
+    })
+    .fail(function(err) {
+        d.reject(e.invalidRID);
+    });
+
+    return d.promise;
+
+}
+
+RoomCtrl.getByIdCompact = function(id) {
+    var d = Q.defer();
+    Room.getById(id)
+    .then(function(room) {
+        d.resolve(room)
+    })
+    .fail(function(err) {
+        d.reject(e.invalidRID)
     })
     return d.promise;
 }

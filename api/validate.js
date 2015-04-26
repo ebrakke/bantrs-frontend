@@ -98,7 +98,7 @@ Validator.room = function (roomObj) {
 */
 Validator.comment = function (commentObj) {
 	var constraints = {
-		content: {
+		comment: {
 			presence: true,
 			length: {
 				// maximum: SOME NUMBER,

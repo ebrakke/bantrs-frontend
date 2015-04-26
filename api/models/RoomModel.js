@@ -3,6 +3,7 @@ var Q = require('q');
 var _ = require('lodash-node');
 var utils = require('../utils')
 
+
 function Room(roomInfo) {
     this.title = roomInfo.title;
     this.location = {lat: roomInfo.lat, lng: roomInfo.lng, radius: roomInfo.radius};

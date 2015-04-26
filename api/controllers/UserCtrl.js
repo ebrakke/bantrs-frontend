@@ -7,6 +7,7 @@ var crypto = require('crypto');
 var e = require('./errors');
 var Q = require('q');
 var Validator = require('../validate');
+var _ = require('lodash-node')
 
 
 /* UserCtrl Constructor */
@@ -115,6 +116,15 @@ UserCtrl.getRoomObjects = function(username) {
     return d.promise;
 }
 
+UserCtrl.getUserObjects = function(uids) {
+    var users = [];
+    _.forEach(uids, function(uid) {
+        users.push(UserModel.getById(uid));
+    });
+    console.log(users);
+    return Q.all(users);
+}
+
 /* Get a user by username*/
 UserCtrl.getByUsername = function(username) {
     var d = Q.defer();
@@ -150,6 +160,19 @@ UserCtrl.getById = function(id) {
     .fail(function(err) {
         d.reject(e.invalidUID);
     });
+    return d.promise;
+}
+
+/* Get compact user */
+UserCtrl.getByIdCompact = function(id) {
+    var d = Q.defer();
+    UserModel.getById(id)
+    .then(function(user) {
+        d.resolve(user)
+    })
+    .fail(function(err) {
+        d.reject(e.invalidUID)
+    })
     return d.promise;
 }
 

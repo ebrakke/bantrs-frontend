@@ -12,16 +12,22 @@ function envelope(data, err){
         }
         return data;
     }
-    else {
-        data = {
-            meta: {
-                code: 200,
-                err: {}
-            },
-            data: data
-        };
-        return data;
+    data = {
+        meta: {
+            code: 200,
+            err: {}
+        },
+        data: data
+    };
+    return data;
+}
+
+function sendData(res, success, err) {
+    if(err){
+        res.status(err.code).json(utils.envelope(null, err));
+        return;
     }
+    res.status(200).json(utils.envelope(success, null));
 }
 
 function distance(lat1, lng1, lat2, lng2) {
@@ -46,7 +52,8 @@ function distance(lat1, lng1, lat2, lng2) {
 // Object of functions to export
 utils = {
     'envelope': envelope,
-    'distance': distance
+    'distance': distance,
+    'sendData': sendData
 };
 
 // Export statement
