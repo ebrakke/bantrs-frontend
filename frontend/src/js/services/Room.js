@@ -16,7 +16,7 @@ app.factory('Room', function(config, $http, Comment) {
             lat: room.location.lat,
             lng: room.location.lng,
             radius: room.location.radius
-        }).success(function(response, status) {
+        }).then(function(response, status) {
             console.log('Room.create', response);
 
             var data = response.data;
@@ -28,7 +28,7 @@ app.factory('Room', function(config, $http, Comment) {
             room.member = data.member;
             room.archived = data.archived;
             room.createdAt = data.createdAt;
-        }).error(function(response, status) {
+        }, function(response, status) {
             console.log('[create.error]', response);
             return status;
         });

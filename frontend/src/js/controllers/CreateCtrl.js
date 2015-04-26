@@ -23,11 +23,11 @@ app.controller('CreateCtrl', function($scope, $http, Room, Geolocation) {
     $scope.create = function() {
         $scope.loading = true;
 
-        $scope.room.create().success(function(response) {
+        $scope.room.create().then(function(response) {
             console.log('CreateCtrl.create', response);
-        }).error(function(response) {
+        }, function(response) {
             $scope.error = 'Error message.';
-        }).then(function() {
+        }).finally(function() {
             $scope.loading = false;
         });
     };
