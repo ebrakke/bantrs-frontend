@@ -20,7 +20,7 @@ user.post('/', function(req, res) {
 		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null))
 	})
 	.fail(function(err) {
-		res.json(utils.envelope(null, err));
+		res.status(err.code).json(utils.envelope(null, err));
 	});
 });
 

@@ -3,6 +3,7 @@
 var bcrypt = require('bcryptjs');
 var UserModel = require('../models/UserModel');
 var e = require('./errors');
+var Validator = require('../validate');
 var Q = require('q');
 
 /* AuthCtrl Constructor */
@@ -11,6 +12,15 @@ var AuthCtrl = function () {};
 /* Validate a supplied username and password */
 AuthCtrl.validByUserPwd = function(userData) {
 	var d = Q.defer();
+
+	/* Validate user login fields */
+    var validationFailed = Validator.auth(userData);
+    if (validationFailed) {
+        e.invalidUserData.msg = validationFailed;
+        d.reject(e.invalidUserData, null);
+        return d.promise;
+    }
+
 	UserModel.getHash(userData.username)  // Grab the password hash from the DB
 	.then(function(user) {
 		if(!bcrypt.compareSync(userData.password, user.password)) {

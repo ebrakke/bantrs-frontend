@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('Auth', function(config, $http, $location, $localStorage, User) {
+app.factory('Auth', function(config, $http, $location, $q, $localStorage, User) {
     var api = config.api + '/user/auth';
 
     var Auth = {};
@@ -22,18 +22,23 @@ app.factory('Auth', function(config, $http, $location, $localStorage, User) {
     };
 
     Auth.login = function(username, password) {
-        return $http.post(api, {
+        var deferred = $q.defer();
+
+        $http.post(api, {
             'username': username,
             'password': password
         }).success(function(response, status) {
-            console.log(response);
             var data = response.data;
 
             Auth.setToken(data.bantrsAuth);
             Auth.setUser(data.user);
 
-            return response.meta.code;
+            deferred.resolve();
+        }).error(function(error) {
+            deferred.reject(error.meta.err);
         });
+
+        return deferred.promise;
     };
 
     Auth.logout = function() {
