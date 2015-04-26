@@ -35,4 +35,17 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment) {
             $scope.loading = false;
         });
     };
+
+    $scope.join = function() {
+        $scope.room.join.then(function(response) {
+
+        }, function(error) {
+
+        });
+    };
+
+    $scope.getRootDomain = function(url) {
+        var r = /:\/\/(.[^/]+)/;
+        return url.match(r);
+    };
 });
