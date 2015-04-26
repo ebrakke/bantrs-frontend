@@ -5,6 +5,6 @@ app.filter('rootDomain', function() {
         console.log('rootDomain', url);
 
         var r = /:\/\/(.[^/]+)/;
-        return url.match(r)[1];
+        return url.match(r) ? url.match(r)[1] : null;
     };
 });
