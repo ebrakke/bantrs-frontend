@@ -6,7 +6,7 @@ var um = require('./UserModel');
 function Comment(commentData, user) {
     this.author = commentData.author;
     this.cid = commentData.cid;
-    this.room = commentData.rid || commentData.room
+    this.room = commentData.rid || commentData.room;
     this.comment = commentData.comment;
     this.createdAt = commentData.createdAt
 }
