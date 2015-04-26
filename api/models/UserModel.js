@@ -81,13 +81,12 @@ User.prototype.create = function() {
 
 User.prototype.updateAuth = function(auth) {
     var dfd = Q.defer();
-    var user = this;
     db.query('UPDATE auth SET bantrsauth = $1 WHERE uid = $2', [auth, this._uid])
     .then(function() {
         dfd.resolve();
     })
-    .then(function(err) {
-        dfd.reject();
+    .fail(function(err) {
+        dfd.reject(err);
     });
     return dfd.promise;
 }

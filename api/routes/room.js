@@ -10,79 +10,16 @@ var auth = require('../controllers/AuthCtrl');
 * Query the DB for rooms within range
 */
 room.get('/discover', function(req,res) {
-    var lat = req.params.lat;
-    var lng = req.params.lng;
+    var lat = req.query.lat;
+    var lng = req.query.lng;
 
-    var data = [
-        {
-            "rid": "955d0efbfe995480798028ee9637f130",
-            "title": "Meerkat Raises $12M At $40M Valuation",
-            "location": {
-                "lat": 42.349137,
-                "lng": -71.095748,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "url",
-                "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-21 09:30:26.123+07:00"
-        },
-		{
-            "rid": "f06b37ced98f420683ac8cf2ad661cde",
-            "title": "Churro Ice Cream Sandwich",
-            "location": {
-                "lat": 42.349454,
-                "lng": -71.099396,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "media",
-                "content": "https://c4.staticflickr.com/8/7146/6841661349_7840647f4b_b.jpg"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-20 09:30:26.123+07:00"
-        },
-		{
-            "rid": "199ee3f689c470aabdbe659d33beea59",
-            "title": "Obama imposes stricter standards on fracking",
-            "location": {
-                "lat": 42.348597,
-                "lng": -71.102142,
-                "radius": 500
-            },
-            "author": {
-                "uid": "0603152c09e0d7e37ad35bf8105df067",
-                "username": "tyler",
-                "email": "tylerwaltze@gmail.com",
-            },
-            "topic": {
-                "type": "url",
-                "content": "http://www.theverge.com/2015/3/20/8266455/fracking-obama-regulations-hydraulic-drilling"
-            },
-            "members": 36,
-            "newComments": 4,
-            "member": true,
-            "createdAt": "2015-03-18 09:30:26.123+07:00"
-        }
-    ];
-
-    res.json(utils.envelope(data, null));
+    rc.discover(lat, lng)
+    .then(function(rooms) {
+        res.status(200).json(utils.envelope(rooms, null));
+    })
+    .fail(function(err) {
+        res.status(err.code).json(null, err);
+    });
 });
 
 /*
@@ -94,36 +31,27 @@ room.get('/discover', function(req,res) {
 * Return new comments if valid auth tokens
 */
 room.get('/:id', function(req, res) {
-    var auth = req.get('authorization');
-    var lat = req.params.lat;
-    var lng = req.params.lng;
+    var authToken = req.get('authorization');
+    var lat = req.query.lat;
+    var lng = req.query.lng;
+    var rid = req.params.id;
 
-    // Populate this data from the DB
-    var data = {
-        "rid": "955d0efbfe995480798028ee9637f130",
-        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
-        "location": {
-            "lat": 42.6915,
-            "lng": -83.3876,
-            "radius": 500
-        },
-        "author": {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com",
-        },
-        "topic": {
-            "type": "url",
-            "data": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
-        },
-        "members": 36,
-        "newComments": 4,
-        "member": true,
-        "createdAt": "2015-03-21 09:30:26.123+07:00"
-    };
+    /* Auth and long lat check */
+    auth.validByAuthToken(authToken)
+    .then(function(user) {
+        rc.getById(rid, lat, lng)
+        .then(function(room) {
+            var apiRoom = room.apiObj();
+            res.json(utils.envelope(apiRoom, null));
+        })
+        .fail(function(err) {
+            res.status(err.code).json(utils.envelope(null, err));
+        });
+    })
+    .fail(function(err) {
+        res.status(err.code).json(null, err);
+    })
 
-    // Add metadata to the response
-    res.json(utils.envelope(data, null));
 });
 
 /*
@@ -228,7 +156,6 @@ room.get('/:id/comments', function(req,res) {
 room.post('/', function(req, res) {
     var roomInfo = req.body; /* title, topic, type, lat, lng, radius */
     var authToken = req.get('authorization');
-    authToken = '66ff671e2b5147594d82a9bf036330bd37c1a5d2';
     auth.validByAuthToken(authToken)
     .then(function(user) {
         roomInfo.author = user._uid;
@@ -236,11 +163,9 @@ room.post('/', function(req, res) {
         .then(function(room) {
             user.joinRoom(room._rid)
             .then(function() {
-                console.log(room);
                 res.json(utils.envelope(room, null))
             })
             .fail(function(err) {
-                console.log(err);
                 res.json(utils.envelope(null, err));
             });
         })
@@ -299,8 +224,9 @@ room.post('/:id', function(req, res) {
 * Make sure the user is within the radius
 */
 room.post('/:id/join', function(req, res) {
-    var lat = req.params.lat;
-    var lng = req.params.lng;
+    var lat = req.query.lat;
+    var lng = req.query.lng;
+
 
     var data = {
         "rid": "955d0efbfe995480798028ee9637f130",

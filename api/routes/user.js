@@ -39,7 +39,8 @@ user.post('/auth', function(req, res) {
 		res.json(utils.envelope({user: apiUser, bantrsAuth: userAuth.auth}, null));
 	})
 	.fail(function(err) {
-		res.json(utils.envelope(err, null));
+		console.log(err);
+		res.status(err.code).json(utils.envelope(null, err));
 	});
 });
 
@@ -52,12 +53,10 @@ user.post('/auth', function(req, res) {
 
 user.post('/me', function(req, res) {
 	//validate the user
-	var authToken = req.body.authToken;
+	var authToken = req.get('authorization');
 	var newInfo = {}
 
-	newInfo.newUsername = req.body.username;
-	newInfo.newPassword = req.body.password;
-	newInfo.newEmail = req.body.email;
+	newInfo = req.body;
 
 	auth.validByAuthToken(authToken)
 	.then(function(user) {
@@ -71,10 +70,12 @@ user.post('/me', function(req, res) {
 			}
 		})
 		.fail(function(err) {
+			console.log(err);
 			res.json(utils.envelope(null, err));
 		});
 	})
 	.fail(function(err) {
+		console.log(err);
 		res.json(utils.envelope(null, err))
 	});
 });
@@ -85,6 +86,7 @@ user.get('/:username/rooms', function(req, res) {
 	.then(function(rooms) {
 		_.forEach(rooms, function(room) {
 			room = room.apiObj();
+			room.active = true;
 		});
 		res.json(utils.envelope(rooms, null));
 	})
@@ -118,7 +120,7 @@ user.get('/:username', function(req, res) {
 */
 
 user.delete('/me', function(req, res) {
-	var authToken = req.body.authToken;
+	var authToken = req.get('authorization');
 	auth.validByAuthToken(auth)
 	.then(function(user) {
 		uc.delete(user)

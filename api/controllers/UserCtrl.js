@@ -73,7 +73,7 @@ UserCtrl.update = function(user, newInfo) {
         if(user.password) { // They changed there password, update the auth token
             delete user.password;
             var auth = makeAuth(user._uid);
-            user.updateAuth()
+            user.updateAuth(auth)
             .then(function() {
                 d.resolve(auth);
             })
