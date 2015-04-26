@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('CreateCtrl', function($scope, $http, Room, Geolocation) {
+app.controller('CreateCtrl', function($scope, $http, $location, Room, Geolocation) {
     $scope.pageClass = 'page-create';
 
     $scope.room = new Room();
@@ -23,11 +23,11 @@ app.controller('CreateCtrl', function($scope, $http, Room, Geolocation) {
     $scope.create = function() {
         $scope.loading = true;
 
-        $scope.room.create().success(function(response) {
-            console.log('CreateCtrl.create', response);
-        }).error(function(response) {
+        $scope.room.create().then(function(response) {
+            $location.path('/room/' + $scope.room.rid);
+        }, function(response) {
             $scope.error = 'Error message.';
-        }).then(function() {
+        }).finally(function() {
             $scope.loading = false;
         });
     };

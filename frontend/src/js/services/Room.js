@@ -16,10 +16,10 @@ app.factory('Room', function(config, $http, Comment) {
             lat: room.location.lat,
             lng: room.location.lng,
             radius: room.location.radius
-        }).success(function(response, status) {
+        }).then(function(response, status) {
             console.log('Room.create', response);
 
-            var data = response.data;
+            var data = response.data.data;
 
             room.author = data.author;
             room.topic.type = data.topic.type;
@@ -28,7 +28,7 @@ app.factory('Room', function(config, $http, Comment) {
             room.member = data.member;
             room.archived = data.archived;
             room.createdAt = data.createdAt;
-        }).error(function(response, status) {
+        }, function(response, status) {
             console.log('[create.error]', response);
             return status;
         });
@@ -86,7 +86,7 @@ app.factory('Room', function(config, $http, Comment) {
             url: api + '/discover',
             method: 'GET',
             params: params
-        }).success(function(response) {
+        }).then(function(response) {
             var data = response.data;
 
             var rooms = [];

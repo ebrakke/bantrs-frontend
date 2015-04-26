@@ -31,7 +31,7 @@ RoomCtrl.create = function(roomInfo ) {
         d.resolve(room);
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidRoom);
     })
     return d.promise;
 }
@@ -54,7 +54,7 @@ RoomCtrl.getById = function(id, lat, lng) {
         });
     })
     .fail(function(err) {
-        d.reject(err);
+        d.reject(e.invalidRID);
     })
     return d.promise;
 }
@@ -70,7 +70,5 @@ RoomCtrl.discover = function(lat, lng) {
     });
     return d.promise;
 }
-
-//test();
 
 module.exports = RoomCtrl;
