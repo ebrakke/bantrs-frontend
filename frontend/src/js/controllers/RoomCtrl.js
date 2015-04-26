@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geolocation) {
+app.controller('RoomCtrl', function($routeParams, $scope, $interval, Room, Comment, Geolocation) {
     $scope.pageClass = 'page-room';
 
     $scope.room = null;
@@ -17,9 +17,8 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geoloca
     Room.get($routeParams.rid).then(function(r) {
         $scope.room = r;
 
-        $scope.room.getComments().then(function(c) {
-            $scope.comments = c;
-        });
+        getComments();
+        $interval(getComments, 5000);
     }).finally(function() {
     });
 
@@ -27,7 +26,7 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geoloca
         $scope.loading = true;
 
         $scope.newComment.create().then(function(response) {
-
+            getComments();
         }, function(response) {
             $scope.error = 'Error message.';
         }).finally(function() {
@@ -46,8 +45,10 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geoloca
         });
     };
 
-    // $scope.getRootDomain = function(url) {
-    //     var r = /:\/\/(.[^/]+)/;
-    //     return url.match(r);
-    // };
+    var getComments = function() {
+        console.log('[getComments]');
+        $scope.room.getComments().then(function(c) {
+            $scope.comments = c;
+        });
+    };
 });
