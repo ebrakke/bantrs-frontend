@@ -17,7 +17,7 @@ Room.prototype.create = function() {
     var d = Q.defer();
     var room = this;
     var day = new Date(Date.now());
-    rep = [this.title + this.author.uid + day.getDate(), this.title, this.topic.content, this.topic.type, this.author.uid, this.location.lat, this.location.lng, this.location.radius];
+    rep = [this.title + this.author + day.getDate(), this.title, this.topic.content, this.topic.type, this.author, this.location.lat, this.location.lng, this.location.radius];
     db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
     .then(function(returnObj) {
         room.rid = returnObj[0].rid;
