@@ -82,7 +82,7 @@ Room.discover = function(lat, lng) {
             var room = new Room(room);
             rooms.push(room);
         });
-        _.filter(rooms, function(room) {
+        rooms = _.filter(rooms, function(room) {
             return room.inRange(lat, lng);
         });
         d.resolve(rooms);
