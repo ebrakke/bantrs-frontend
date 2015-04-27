@@ -37,7 +37,6 @@ user.post('/auth', function(req, res) {
 		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null));
 	})
 	.fail(function(err) {
-		console.log(err);
 		res.status(err.code).json(utils.envelope(null, err));
 	});
 });
@@ -61,9 +60,9 @@ user.post('/me', function(req, res) {
 		uc.update(user, newInfo)
 		.then(function(auth) {
 			if(auth){
-				res.json(utils.envelope({user: user, auth: auth}, null))
+				res.status(200).json(utils.envelope({user: user, auth: auth}, null))
 			} else {
-				res.json(utils.envelope(user, null))
+				res.status(200).json(utils.envelope(user, null))
 			}
 		})
 		.fail(function(err) {

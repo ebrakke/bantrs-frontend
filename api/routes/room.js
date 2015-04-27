@@ -57,6 +57,7 @@ room.get('/:id', function(req, res) {
 
     /* Auth and long lat check */
     auth.validByAuthToken(authToken).then(function(user) {
+        user.visitRoom(rid);
         var room = rc.getById(rid)
         user.getActiveRooms().then(function() {
             room.then(function(room) {

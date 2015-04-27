@@ -166,7 +166,7 @@ User.prototype.joinRoom = function(rid) {
 
 User.prototype.archiveRoom = function(rid) {
     var dfd = Q.defer();
-    db.query("UPDATE memebership SET active = false WHERE uid = $1 AND rid = $1", [this.uid, rid])
+    db.query("UPDATE membership SET active = false WHERE uid = $1 AND rid = $1", [this.uid, rid])
     .then(function() {
         dfd.resolve();
     })
@@ -176,6 +176,9 @@ User.prototype.archiveRoom = function(rid) {
     return dfd.promise;
 }
 
+User.prototype.visitRoom = function(rid) {
+    db.query("UPDATE membership SET last_active = now()::timestamp WHERE uid = $1 AND rid = $2", [this.uid, rid])
+}
 
 // Get a User object by the username
 User.getByUsername = function(username) {

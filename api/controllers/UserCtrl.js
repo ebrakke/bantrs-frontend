@@ -96,7 +96,7 @@ UserCtrl.getRoomObjects = function(username) {
     var d = Q.defer();
     UserModel.getByUsername(username)
     .then(function(user) {
-        user.getRooms()
+        user.getActiveRooms()
         .then(function() {
             user.getRoomObjects()
             .then(function(roomObjs) {
