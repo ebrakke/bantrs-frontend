@@ -17,7 +17,7 @@ app.factory('Room', function(config, $q, $http, Comment) {
             lat: room.location.lat,
             lng: room.location.lng,
             radius: room.location.radius
-        }).succes(function(response) {
+        }).success(function(response) {
             var data = response.data;
 
             room.rid = data.rid;
