@@ -21,7 +21,7 @@ app.factory('Foursquare', function(config, $q, $http) {
             method: 'JSONP',
             params: params
         }).success(function(response) {
-            var venues = response.venues;
+            var venues = response.response.venues;
 
             deferred.resolve(venues);
         }).error(function(error) {

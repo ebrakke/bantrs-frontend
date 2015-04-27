@@ -9,6 +9,7 @@ app.directive('map', function($window, Geolocation) {
             controls: '=?',
             lat: '=?',
             lng: '=?',
+            pinAtCenter: '=?',
             pinSource: '=?'
         },
         template: '<section class="map"><loader ng-if="!map"></loader></section>',
@@ -81,6 +82,12 @@ app.directive('map', function($window, Geolocation) {
                     'https://{s}.tiles.mapbox.com/v3/phantomburn.jmgom0bf/{z}/{x}/{y}.png', {
                     attribution: '<a href="">About Our Maps</a>'
                 }).addTo(scope.map);
+
+                // Add pin to center of map
+                if (scope.pinAtCenter) {
+                    // Add pin at location
+                    L.marker([scope.lat, scope.lng], {icon: markers.large}).addTo(scope.map);
+                }
             };
 
             // Default to display controls

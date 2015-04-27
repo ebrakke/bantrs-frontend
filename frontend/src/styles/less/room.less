@@ -32,6 +32,42 @@
                 color: @blue-darkest;
             }
         }
+
+        &--map {
+            position: relative;
+            height: 200px;
+            margin-bottom: 15px;
+
+            .map {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                z-index: 100;
+            }
+
+            .info {
+                position: relative;
+                height: 100%;
+                z-index: 500;
+                color: #fff;
+                padding: 20px;
+                white-space: normal;
+                font-weight: 300;
+                background-image: linear-gradient(
+                    to top,
+                    #000,
+                    rgba(0, 0, 0, 0.1)
+                );
+
+                .meta {
+                    position: absolute;
+                    bottom: 0;
+                }
+            }
+        }
     }
 
     .message {

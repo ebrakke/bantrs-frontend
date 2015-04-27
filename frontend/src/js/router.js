@@ -27,6 +27,8 @@ app.config(function($routeProvider, $httpProvider) {
         transition: 'main'
     }).when('/create/location', {
         templateUrl: 'partials/pages/create--location.html',
+        controller: 'CreateCtrl',
+        transition: 'main'
     }).when('/login', {
         templateUrl: 'partials/pages/landing.html',
         controller: 'LoginCtrl',
