@@ -79,7 +79,8 @@ Room.discover = function(lat, lng) {
     .then(function(roomObjs) {
         var rooms = [];
         _.forEach(roomObjs, function(room) {
-            rooms.push(new Room(room));
+            var room = new Room(room);
+            rooms.push(room);
         });
         _.filter(rooms, function(room) {
             return room.inRange(lat, lng);
@@ -92,13 +93,6 @@ Room.discover = function(lat, lng) {
     return d.promise;
 }
 
-
-/* Turn a room object into an API object */
-Room.prototype.apiObj = function() {
-    this.rid = this.rid;
-    delete this.rid;
-    return this;
-}
 
 Room.prototype.inRange = function(lat1, lng1) {
     var distance = utils.distance(lat1, lng1, this.location.lat, this.location.lng);

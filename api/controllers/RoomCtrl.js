@@ -99,7 +99,14 @@ RoomCtrl.discover = function(lat, lng) {
     var d = Q.defer();
     Room.discover(lat, lng)
     .then(function(rooms) {
-        d.resolve(rooms);
+        var returnRooms = [];
+        _.forEach(rooms, function(room) {
+            room.getMembers().then(function(members) {
+                room.members = members.length;
+                returnRooms.push(room);
+                if(returnRooms.length === rooms.length) d.resolve(returnRooms)
+            })
+        });
     })
     .fail(function(err) {
         d.resolve(e.discover);
