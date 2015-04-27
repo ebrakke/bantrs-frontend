@@ -17,18 +17,20 @@ comment.post('/', function(req, res) {
 
     auth.validByAuthToken(authToken)
     .then(function(user) {
-        commentData.author = user.uid;
-        cc.create(commentData)
-        .then(function(comment) {
-            sendData(res, comment)
-        })
-        .fail(function(err) {
-            sendData(res, null, err);
-        })
-    })
-    .fail(function(err) {
-        sendData(res, null, err);
-    })
+        user.getActiveRooms()
+        .then(function() {
+            if(user.rooms.indexOf(comment.rid) === -1) {
+                err = {msg: 'User not active in this room', code: 401}
+                sendData(res, null, err);
+                return;
+            }
+            commentData.author = user.uid;
+            cc.create(commentData)
+            .then(function(comment) {
+                sendData(res, comment)
+            }).fail(function(err) { sendData(res, null, err); });
+        }).fail(function(err) { sendData(res, null, err); });
+    }).fail(function(err) { sendData(res, null, err); });
 });
 
 /*
