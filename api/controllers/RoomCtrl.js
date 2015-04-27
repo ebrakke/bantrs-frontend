@@ -10,6 +10,12 @@ var _ = require('lodash-node');
 
 var RoomCtrl = {};
 
+var isURL = function(s) {
+    var urlregex = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
+
+    return urlregex.test(s);
+};
+
 /*
 * TODO
 * parse for type of content
@@ -17,7 +23,13 @@ var RoomCtrl = {};
 
 RoomCtrl.create = function(roomInfo) {
     var d = Q.defer();
-    roomInfo.type = 'url';
+
+    if (isURL(roomInfo.topic)) {
+        roomInfo.type = 'url';
+    } else {
+        roomInfo.type = 'location';
+    }
+
     var room = new Room(roomInfo);
     /* Validate room create fields */
     var validationFailed = Validator.room(room);
