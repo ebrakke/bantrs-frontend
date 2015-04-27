@@ -31,6 +31,7 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
         $scope.loading.postComment = true;
 
         $scope.newComment.create().then(function(response) {
+            $scope.comments.push(angular.copy($scope.newComment));
             getComments();
         }, function(error) {
             $scope.error = error;
