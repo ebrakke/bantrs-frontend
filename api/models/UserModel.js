@@ -135,7 +135,7 @@ User.prototype.getActiveRooms = function() {
     var user = this;
     db.query('SELECT rid FROM membership WHERE uid = $1 AND active = True', [this.uid])
     .then(function(roomList) {
-        user.rooms = roomList;
+        user.rooms = _.pluck(roomList, 'rid');
         dfd.resolve()
     })
     .fail(function(err) {

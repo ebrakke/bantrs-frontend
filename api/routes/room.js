@@ -56,20 +56,23 @@ room.get('/:id', function(req, res) {
     var rid = req.params.id;
 
     /* Auth and long lat check */
-    auth.validByAuthToken(authToken)
-    .then(function(user) {
-        rc.getById(rid)
-        .then(function(room) {
-            sendData(res, room);
+    auth.validByAuthToken(authToken).then(function(user) {
+        var room = rc.getById(rid)
+        user.getActiveRooms().then(function() {
+            room.then(function(room) {
+                if(user.rooms.indexOf(rid) === -1) {
+                    room.member = false;
+                    room.active = false;
+                    sendData(res, room);
+                    return;
+                }
+                room.member = true;
+                room.active = true;
+                sendData(res, room);
+                return;
+            })
         })
-        .fail(function(err) {
-            sendData(res, null, err);
-        });
     })
-    .fail(function(err) {
-        sendData(res, null, err);
-    });
-
 });
 
 

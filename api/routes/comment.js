@@ -19,7 +19,7 @@ comment.post('/', function(req, res) {
     .then(function(user) {
         user.getActiveRooms()
         .then(function() {
-            if(user.rooms.indexOf(comment.rid) === -1) {
+            if(user.rooms.indexOf(commentData.room) === -1) {
                 err = {msg: 'User not active in this room', code: 401}
                 sendData(res, null, err);
                 return;
@@ -28,7 +28,10 @@ comment.post('/', function(req, res) {
             cc.create(commentData)
             .then(function(comment) {
                 sendData(res, comment)
-            }).fail(function(err) { sendData(res, null, err); });
+            })
+
+            /* Error handling */
+            .fail(function(err) { sendData(res, null, err); });
         }).fail(function(err) { sendData(res, null, err); });
     }).fail(function(err) { sendData(res, null, err); });
 });
