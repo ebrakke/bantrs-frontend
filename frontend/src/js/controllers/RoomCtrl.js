@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval, Room, Comment, Geolocation) {
+app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geolocation) {
     $scope.room = null;
     $scope.comments = [];
 
@@ -20,9 +20,6 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
         $scope.room = r;
 
         getComments();
-
-        // super ugly hack. Fix later.
-        $rootScope.fetchComments = $interval(getComments, 5000);
     }).finally(function() {
         $scope.loading.room = false;
     });
@@ -51,17 +48,27 @@ app.controller('RoomCtrl', function($rootScope, $routeParams, $scope, $interval,
         });
     };
 
+    // Method to continually load comments.
+    // Once you load the room's comments, immediately
+    // start loading them again.
+    $scope.loadComments = true;
     var getComments = function() {
         console.log('[getComments]');
         $scope.room.getComments().then(function(c) {
             $scope.comments = c;
+
+            // Recursively load comments.
+            if ($scope.loadComments) {
+                getComments();
+            }
         }).finally(function() {
             $scope.loading.comments = false;
         });
     };
-}).run(function($rootScope, $interval) {
-    // More of the ugle hack.
-    $rootScope.$on('$routeChangeStart', function() {
-        $interval.cancel($rootScope.fetchComments);
+
+    $scope.$on('$destroy', function() {
+        // Stop loading comments when the user
+        // leaves the page.
+        $scope.loadComments = false;
     });
 });
