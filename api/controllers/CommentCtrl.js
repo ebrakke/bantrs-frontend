@@ -20,7 +20,6 @@ var CommentCtrl = function () {}
 CommentCtrl.create = function(commentData) {
     var d = Q.defer();
     var comment = new Comment(commentData);
-    console.log(comment);
     /* Validate comment create fields */
     var validationFailed = Validator.comment(comment);
     if (validationFailed) {
@@ -85,22 +84,5 @@ CommentCtrl.getById = function(id) {
     return d.promise;
 }
 
-
-// var test = function() {
-//     var commentData = {
-//         rid: 'a353f1048573f66457d9ce45210d1eff',
-//         author: '13b862a780828990bd0dafddee018909',
-//         content: 'Im a comment5'
-//     };
-//     CommentCtrl.create(commentData)
-//     .then(function (comment){
-//         console.log(comment)
-//     })
-//     .fail(function (err){
-//         console.log(err)
-//     });
-// }
-
-// test()
 
 module.exports = CommentCtrl;
