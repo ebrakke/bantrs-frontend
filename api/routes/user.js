@@ -78,9 +78,6 @@ user.get('/:username/rooms', function(req, res) {
 	var username = req.params.username;
 	uc.getRoomObjects(username)
 	.then(function(rooms) {
-		_.forEach(rooms, function(room) {
-			room.active = true;
-		});
 		res.json(utils.envelope(rooms, null));
 	})
 	.fail(function(err) {

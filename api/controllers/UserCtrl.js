@@ -96,10 +96,8 @@ UserCtrl.getRoomObjects = function(username) {
     var d = Q.defer();
     UserModel.getByUsername(username)
     .then(function(user) {
-        console.log('[Found User]', user);
         user.getRoomObjects()
         .then(function(roomObjs) {
-            console.log('[Found Rooms]', roomObjs);
             d.resolve(roomObjs);
         })
         .fail(function(err) {

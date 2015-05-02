@@ -203,12 +203,10 @@ room.post('/:id/archive', function(req,res) {
             sendData(res, {});
         })
         .fail(function(err) {
-            console.log(err);
             sendData(res, null, err);
         });
     })
     .fail(function(err) {
-        console.log(err);
         sendData(res, null, err);
     });
 });

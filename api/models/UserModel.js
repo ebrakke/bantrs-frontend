@@ -131,23 +131,38 @@ User.prototype.getRoomObjects = function() {
 
 User.prototype.joinRoom = function(rid) {
     var d = Q.defer();
-    db.query('INSERT INTO membership VALUES ($1, $2)', [rid, this.uid])
+    var user = this;
+    db.query('SELECT uid FROM membership WHERE uid = $1 AND rid = $2', [this.uid, rid])
     .then(function(result) {
-        d.resolve();
+        /* Check if user is joining room for first time or just reactivating a room */
+        if (result === []){
+            db.query('INSERT INTO membership VALUES ($1, $2)', [rid, user.uid])
+            .then(function(result) {
+                d.resolve();
+            })
+            .fail(function(err) {
+                d.reject(err);
+            });
+        } else {
+            db.query('UPDATE membership SET active = true WHERE uid = $1 AND rid = $2', [user.uid, rid])
+            .then(function() {
+                d.resolve();
+            })
+            .fail(function(err) {
+                d.reject(err);
+            })
+        }
     })
-    .fail(function(err) {
-        d.reject(err);
-    });
     return d.promise;
 }
 
 User.prototype.archiveRoom = function(rid) {
     var d = Q.defer();
-    db.query("UPDATE membership SET active = false WHERE uid = $1 AND rid = $1", [this.uid, rid])
+    db.query("UPDATE membership SET active = false WHERE uid = $1 AND rid = $2", [this.uid, rid])
     .then(function() {
         d.resolve();
     })
-    .fail(function() {
+    .fail(function(err) {
         d.reject(err)
     });
     return d.promise;
