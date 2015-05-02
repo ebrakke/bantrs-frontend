@@ -1,8 +1,8 @@
 var db = require('../controllers/dbConnector');
 var Q = require('q');
 var _ = require('lodash-node');
-var um = require('./UserModel');
 
+/* Comment Constructor */
 function Comment(commentData) {
     this.author = {uid: commentData.author, email: commentData.email, username: commentData.username} || commentData.author;
     this.cid = commentData.cid;
@@ -11,7 +11,7 @@ function Comment(commentData) {
     this.createdAt = commentData.createdAt
 }
 
-
+/* Create a comment */
 Comment.prototype.create = function() {
     var d = Q.defer();
     var comment = this;
@@ -34,17 +34,20 @@ Comment.prototype.create = function() {
     return d.promise;
 }
 
+/* Return the User Object of the comment author */
 Comment.prototype.getUserObj = function() {
     var d = Q.defer();
     var comment = this;
-    um.getById(this.author)
+    db.query('SELECT uid, username, email FROM users WHERE uid = $1', [this.author.uid || this.author])
     .then(function(user) {
-        comment.author = user;
+        var OC = require('./objCreator');
+        comment.author = OC.user(user);
         d.resolve();
     }).fail(function(err) { d.reject(err)});
     return d.promise;
 }
 
+/* Find a comment by the ID */
 Comment.getById = function(id) {
     var d = Q.defer();
     db.query("SELECT cid, author, rid, comment, createdat AS \"createdAt\" FROM comments WHERE cid = $1", [id])
@@ -56,11 +59,6 @@ Comment.getById = function(id) {
         d.reject(err);
     })
     return d.promise;
-}
-
-
-var createComment = function(commentInfo) {
-    return new Comment(commentInfo);
 }
 
 

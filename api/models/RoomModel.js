@@ -2,9 +2,6 @@ var db = require('../controllers/dbConnector');
 var Q = require('q');
 var _ = require('lodash-node');
 var utils = require('../utils');
-var um = require('./UserModel');
-var Comment = require('./CommentModel');
-
 
 function Room(roomInfo) {
     this.title = roomInfo.title;
@@ -13,6 +10,7 @@ function Room(roomInfo) {
     this.topic = {type: roomInfo.type || roomInfo.topic_type, content: roomInfo.topic};
     this.createdAt = roomInfo.createdAt || roomInfo.createdat;
     this.rid = roomInfo.rid;
+    this.active = roomInfo.active;
 }
 
 /* Create a room */
@@ -36,9 +34,13 @@ Room.prototype.create = function() {
 /* Show members of a room */
 Room.prototype.getMembers = function() {
     var d = Q.defer();
-    db.query("SELECT uid FROM membership WHERE rid = $1", [this.rid])
+    db.query("SELECT u.uid, u.email, u.username FROM users u, membership m WHERE u.uid = m.uid AND m.rid = $1", [this.rid])
     .then(function(userObjs) {
-        var users = _.pluck(userObjs, 'uid');
+        var OC = require('./objCreator');
+        var users = [];
+        _.forEach(userObjs, function(user) {
+            users.push(OC.user(user));
+        });
         d.resolve(users);
     })
     .fail(function(err) {
@@ -52,8 +54,9 @@ Room.prototype.getComments = function() {
     db.query("SELECT c.cid, c.rid, c.comment, c.createdat AS \"createdAt\", c.author, u.username, u.email FROM comments c, users u WHERE c.rid = $1 and c.author = u.uid ORDER BY createdat DESC", [this.rid])
     .then(function(commentInfo) {
         var comments = [];
+        var OC = require('./objCreator');
         _.forEach(commentInfo, function(comment) {
-            comments.push(new Comment(comment));
+            comments.push(OC.comment(comment));
         });
         d.resolve(comments);
     })
@@ -78,6 +81,7 @@ Room.getById = function(id) {
     return d.promise;
 }
 
+/* Return all room objects that are in range of the lat, lng provided */
 Room.discover = function(lat, lng) {
     var d = Q.defer();
     db.query("SELECT * FROM rooms WHERE abs(abs(lat) - abs($1)) < 0.1 AND abs(abs(lng) - abs($2)) < 0.1", [lat, lng])
@@ -98,11 +102,9 @@ Room.discover = function(lat, lng) {
     return d.promise;
 }
 
-
 Room.prototype.inRange = function(lat1, lng1) {
     var distance = utils.distance(lat1, lng1, this.location.lat, this.location.lng);
     return (distance <= this.location.radius);
-
 }
 
 

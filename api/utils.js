@@ -30,6 +30,7 @@ function sendData(res, success, err) {
     res.status(200).json(utils.envelope(success, null));
 }
 
+
 function distance(lat1, lng1, lat2, lng2) {
     var deg2rad = function(deg) {
         return deg * (Math.PI/180)

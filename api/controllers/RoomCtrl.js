@@ -69,32 +69,26 @@ RoomCtrl.getById = function(id) {
     return d.promise;
 }
 
+/* Get all members of a room as user objects */
 RoomCtrl.getMembers = function(rid) {
     var d = Q.defer();
     Room.getById(rid)
     .then(function(room) {
         room.getMembers()
-        .then(function(userIds) {
-            uc.getUserObjects(userIds)
-            .then(function(users) {
-                d.resolve(users);
-            })
-            .fail(function(err) {
-                d.reject(e.invalidUID);
-            });
+        .then(function(users) {
+            d.resolve(users);
         })
         .fail(function(err) {
-            d.reject(e.invalidRID);
+            d.reject(e.invalidUID);
         });
     })
     .fail(function(err) {
         d.reject(e.invalidRID);
     });
-
     return d.promise;
-
 }
 
+/* Get a compact version of a room */
 RoomCtrl.getByIdCompact = function(id) {
     var d = Q.defer();
     Room.getById(id)
@@ -107,6 +101,7 @@ RoomCtrl.getByIdCompact = function(id) {
     return d.promise;
 }
 
+/* Return all room objects that are in range of a lat, lng */
 RoomCtrl.discover = function(lat, lng) {
     var d = Q.defer();
     Room.discover(lat, lng)
@@ -147,34 +142,5 @@ RoomCtrl.joinRoom = function(rid, user, lat, lng) {
     });
     return d.promise;
 }
-
-// var test = function() {
-//     roomInfo = {
-//         title: 'Here is a room title',
-//         topic: 'www.example.com',
-//         author: '13b862a780828990bd0dafddee018909',
-//         lat: '78.0983',
-//         lng: '56.0997',
-//         radius: '800',
-//         type: 'url'
-//     }
-//     RoomCtrl.create(roomInfo)
-//     .then(function(room) {
-//         console.log(room);
-//     })
-//     .fail(function(err) {
-//         console.log(err);
-//     })
-
-//     RoomCtrl.getById('a353f1048573f66457d9ce45210d1eff')
-//     .then(function(room) {
-//         console.log(room);
-//     })
-//     .fail(function(err) {
-//         console.log(err)
-//     })
-// }
-
-// test();
 
 module.exports = RoomCtrl;

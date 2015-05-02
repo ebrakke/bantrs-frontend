@@ -55,7 +55,7 @@ room.get('/:id', function(req, res) {
     var authToken = req.get('authorization');
     var rid = req.params.id;
 
-    /* Auth and long lat check */
+    /* Auth check */
     auth.validByAuthToken(authToken).then(function(user) {
         user.visitRoom(rid);
         var room = rc.getById(rid)
@@ -72,11 +72,9 @@ room.get('/:id', function(req, res) {
                 sendData(res, room);
                 return;
             })
-        })
-    })
+        }).fail(function(err) { console.log(err); sendData(res, null, err); });
+    }).fail(function(err) { console.log(err); sendData(res, null, err); });
 });
-
-
 
 /*
 * GET room comments
@@ -84,8 +82,6 @@ room.get('/:id', function(req, res) {
 */
 room.get('/:id/comments', function(req,res) {
     var authToken = req.get('authorization');
-    var lat = req.query.lat;
-    var lng = req.query.lng;
     var rid = req.params.id;
 
     auth.validByAuthToken(authToken)
@@ -207,10 +203,12 @@ room.post('/:id/archive', function(req,res) {
             sendData(res, {});
         })
         .fail(function(err) {
+            console.log(err);
             sendData(res, null, err);
         });
     })
     .fail(function(err) {
+        console.log(err);
         sendData(res, null, err);
     });
 });
