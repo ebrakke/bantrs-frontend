@@ -93,22 +93,11 @@ room.get('/:id/comments', function(req,res) {
         rc.getByIdCompact(rid)
         .then(function(room) {
             room.getComments()
-            .then(function(commentIds) {
-                var comments = [];
-                _.forEach(commentIds, function(cid) {
-                    var comment = cc.getById(cid);
-                    comments.push(comment);
-                })
-                Q.all(comments).then(function(comments) {
-                    _.forEach(comments, function(comment) {
-                        comment.rid = comment.room.rid;
-                        delete comment.room;
-                    })
-                    sendData(res, comments)
-                })
-            })
+            .then(function(comments) {
+                sendData(res, comments)
+            }).fail(function(err) { console.log(err) })
         }).fail(function(err) { console.log(err) })
-    }).fail(function(err) { console.log(err) })
+    });
 });
 
 /*

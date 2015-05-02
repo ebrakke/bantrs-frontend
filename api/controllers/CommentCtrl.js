@@ -20,7 +20,7 @@ var CommentCtrl = function () {}
 CommentCtrl.create = function(commentData) {
     var d = Q.defer();
     var comment = new Comment(commentData);
-
+    console.log(comment);
     /* Validate comment create fields */
     var validationFailed = Validator.comment(comment);
     if (validationFailed) {
@@ -35,7 +35,7 @@ CommentCtrl.create = function(commentData) {
         rc.getByIdCompact(comment.room)
         .then(function(room) {
             comment.room = room;
-            uc.getByIdCompact(comment.author)
+            uc.getByIdCompact(comment.author.uid)
             .then(function(user) {
                 comment.author = user;
                 d.resolve(comment);

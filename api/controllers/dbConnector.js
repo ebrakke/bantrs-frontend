@@ -6,7 +6,7 @@ var connString = config.db.type + '://' + config.db.username + ':' + config.db.p
 * This is basically a config file for the pg node package
 * TODO
 */
-
+pg.defaults.poolSize = 20;
 function db() {}
 
 db.query = function(query,params){

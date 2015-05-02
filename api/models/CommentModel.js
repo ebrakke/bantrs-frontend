@@ -3,8 +3,8 @@ var Q = require('q');
 var _ = require('lodash-node');
 var um = require('./UserModel');
 
-function Comment(commentData, user) {
-    this.author = commentData.author;
+function Comment(commentData) {
+    this.author = {uid: commentData.author, email: commentData.email, username: commentData.username} || commentData.author;
     this.cid = commentData.cid;
     this.room = commentData.rid || commentData.room;
     this.comment = commentData.comment;
@@ -16,10 +16,10 @@ Comment.prototype.create = function() {
     var d = Q.defer();
     var comment = this;
     var day = new Date(Date.now());
-    rep = [
-        this.room + this.author + day.getMilliseconds(),
+    var rep = [
+        this.room + this.author.uid + day.getMilliseconds(),
         this.room,
-        this.author,
+        this.author.uid,
         this.comment
     ];
     db.query("INSERT INTO comments VALUES (md5($1), $2, $3, now()::timestamp, $4) RETURNING cid, createdat AS \"createdAt\"", rep)

@@ -1,15 +1,17 @@
 var db = require('../controllers/dbConnector');
 var Q = require('q');
 var _ = require('lodash-node');
-var utils = require('../utils')
+var utils = require('../utils');
+var um = require('./UserModel');
+var Comment = require('./CommentModel');
 
 
 function Room(roomInfo) {
     this.title = roomInfo.title;
     this.location = {lat: roomInfo.lat, lng: roomInfo.lng, radius: roomInfo.radius};
     this.author = roomInfo.author;
-    this.topic = {type: roomInfo.type, content: roomInfo.topic};
-    this.createdAt = roomInfo.createdAt;
+    this.topic = {type: roomInfo.type || roomInfo.topic_type, content: roomInfo.topic};
+    this.createdAt = roomInfo.createdAt || roomInfo.createdat;
     this.rid = roomInfo.rid;
 }
 
@@ -18,7 +20,7 @@ Room.prototype.create = function() {
     var d = Q.defer();
     var room = this;
     var day = new Date(Date.now());
-    rep = [this.title + this.author + day.getDate(), this.title, this.topic.content, this.topic.type, this.author, this.location.lat, this.location.lng, this.location.radius];
+    var rep = [this.title + this.author + day.getDate(), this.title, this.topic.content, this.topic.type, this.author, this.location.lat, this.location.lng, this.location.radius];
     db.query("INSERT INTO rooms VALUES (md5($1), $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING rid, createdat", rep)
     .then(function(returnObj) {
         room.rid = returnObj[0].rid;
@@ -47,9 +49,12 @@ Room.prototype.getMembers = function() {
 
 Room.prototype.getComments = function() {
     var d = Q.defer();
-    db.query("SELECT cid FROM comments WHERE rid = $1", [this.rid])
-    .then(function(commentObjs) {
-        var comments = _.pluck(commentObjs, 'cid')
+    db.query("SELECT c.cid, c.rid, c.comment, c.createdat AS \"createdAt\", c.author, u.username, u.email FROM comments c, users u WHERE c.rid = $1 and c.author = u.uid ORDER BY createdat DESC", [this.rid])
+    .then(function(commentInfo) {
+        var comments = [];
+        _.forEach(commentInfo, function(comment) {
+            comments.push(new Comment(comment));
+        });
         d.resolve(comments);
     })
     .fail(function(err) {
@@ -75,7 +80,7 @@ Room.getById = function(id) {
 
 Room.discover = function(lat, lng) {
     var d = Q.defer();
-    db.query("SELECT rid, title, topic, topic_type AS type, author, lat, lng, radius, createdat AS \"createdAt\" FROM rooms WHERE abs(abs(lat) - abs($1)) < 0.1 AND abs(abs(lng) - abs($2)) < 0.1", [lat, lng])
+    db.query("SELECT * FROM rooms WHERE abs(abs(lat) - abs($1)) < 0.1 AND abs(abs(lng) - abs($2)) < 0.1", [lat, lng])
     .then(function(roomObjs) {
         var rooms = [];
         _.forEach(roomObjs, function(room) {

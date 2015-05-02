@@ -252,5 +252,9 @@ User.getByAuthToken = function(bantrsauth){
     return dfd.promise;
 }
 
+User.makeObj = function(userInfo) {
+    return new User(userInfo);
+}
+
 
 module.exports = User;
