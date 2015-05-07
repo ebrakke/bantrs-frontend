@@ -4,11 +4,11 @@ var config = {};
 // Add config elements
 config.db = {};
 
-config.db.username = 'dev';
-config.db.password = 'bostonterrierdev';
-config.db.host = 'cs411-server.cqoxejj92lef.us-west-2.rds.amazonaws.com';
-config.db.type = 'postgres';
-config.db.name = 'cs411db';
+config.db.username = '';
+config.db.password = '';
+config.db.host = '';
+config.db.type = '';
+config.db.name = '';
 
 
 
