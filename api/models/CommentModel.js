@@ -8,7 +8,7 @@ function Comment(commentData) {
     this.cid = commentData.cid;
     this.room = commentData.rid || commentData.room;
     this.comment = commentData.comment;
-    this.createdAt = commentData.createdAt
+    this.createdAt = commentData.createdAt;
 }
 
 /* Create a comment */
@@ -22,7 +22,7 @@ Comment.prototype.create = function() {
         this.author.uid,
         this.comment
     ];
-    db.query("INSERT INTO comments VALUES (md5($1), $2, $3, now()::timestamp, $4) RETURNING cid, createdat AS \"createdAt\"", rep)
+    db.query('INSERT INTO comments VALUES (md5($1), $2, $3, now()::timestamp, $4) RETURNING cid, createdat AS \"createdAt\"', rep)
     .then(function (returnObj) {
         comment.cid = returnObj[0].cid;
         comment.createdAt = returnObj[0].createdAt;
@@ -30,9 +30,9 @@ Comment.prototype.create = function() {
     })
     .fail(function (err) {
         d.reject(err);
-    })
+    });
     return d.promise;
-}
+};
 
 /* Return the User Object of the comment author */
 Comment.prototype.getUserObj = function() {
@@ -43,23 +43,23 @@ Comment.prototype.getUserObj = function() {
         var OC = require('./objCreator');
         comment.author = OC.user(user);
         d.resolve();
-    }).fail(function(err) { d.reject(err)});
+    }).fail(function(err) { d.reject(err); });
     return d.promise;
-}
+};
 
 /* Find a comment by the ID */
 Comment.getById = function(id) {
     var d = Q.defer();
-    db.query("SELECT cid, author, rid, comment, createdat AS \"createdAt\" FROM comments WHERE cid = $1", [id])
+    db.query('SELECT cid, author, rid, comment, createdat AS \"createdAt\" FROM comments WHERE cid = $1', [id])
     .then(function(commentObj) {
         var comment = new Comment(commentObj[0]);
         d.resolve(comment);
     })
     .fail(function(err) {
         d.reject(err);
-    })
+    });
     return d.promise;
-}
+};
 
 
 module.exports = Comment;

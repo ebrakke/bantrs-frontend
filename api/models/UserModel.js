@@ -12,18 +12,16 @@ function User(userData) {
 
 // Query the DB for the rooms that a user's rooms
 User.prototype.getActiveRooms = function() {
-    var d = Q.defer();
-    var user = this;
-    db.query('SELECT rid FROM membership WHERE uid = $1 AND active = true', [this.uid])
+    var self = this;
+    return db.query('SELECT rid FROM membership WHERE uid = $1 AND active = true', [this.uid])
     .then(function(roomList) {
-        user.rooms = _.pluck(roomList, 'rid');
-        d.resolve();
+        self.rooms = _.pluck(roomList, 'rid');
+        return;
     })
     .fail(function(err) {
-        d.reject(err);
+        throw new Error(err);
     });
-    return d.promise;
-}
+};
 
 // Update a user object
 User.prototype.update = function() {
@@ -44,25 +42,23 @@ User.prototype.update = function() {
         d.resolve();
     })
     .fail(function(err) {
-        d.reject(err)
-    });
-    return d.promise;
-}
-// Create a user, update the uid of the User object
-User.prototype.create = function() {
-    var d = Q.defer();
-    var user = this;
-    // Insert the new user into the db
-    db.query('INSERT INTO users VALUES (md5($1), $2, $3, $4) RETURNING uid', [Date.now() + this.username,this.username,this.password,this.email])
-    .then(function(uidObj) {
-        user.uid = uidObj[0].uid;
-        d.resolve();
-    })
-    .fail(function(err) {
         d.reject(err);
     });
     return d.promise;
-}
+};
+// Create a user, update the uid of the User object
+User.prototype.create = function() {
+    var self = this;
+    // Insert the new user into the db
+    return db.query('INSERT INTO users VALUES (md5($1), $2, $3, $4) RETURNING uid', [Date.now() + this.username,this.username,this.password,this.email])
+    .then(function(uidObj) {
+        self.uid = uidObj[0].uid;
+        return;
+    })
+    .fail(function(err) {
+        throw new Error(err);
+    });
+};
 
 User.prototype.updateAuth = function(auth) {
     var d = Q.defer();
@@ -74,31 +70,30 @@ User.prototype.updateAuth = function(auth) {
         d.reject(err);
     });
     return d.promise;
-}
+};
 // Delete a user from the DB
 User.prototype.delete = function() {
-    var d = Q.defer();
-    db.query('DELETE FROM users * WHERE users.uid = $1', [this.uid])
+    
+    return db.query('DELETE FROM users * WHERE users.uid = $1', [this.uid])
     .then(function(success) {
-        d.resolve();
+        return;
     })
     .fail(function(err) {
-        d.reject(err);
+        throw new Error(err);
     });
-    return d.promise;
-}
+};
 
 User.prototype.getAuthToken = function() {
     var d = Q.defer();
     db.query('SELECT bantrsauth FROM auth WHERE uid = $1', [this.uid])
     .then(function(authObj) {
-        d.resolve(authObj[0].bantrsauth)
+        d.resolve(authObj[0].bantrsauth);
     })
     .fail(function(err) {
         d.reject(err);
     });
     return d.promise;
-}
+};
 
 //Create an entry for a new user and his Bantrs auth token
 User.prototype.createAuthToken = function(auth) {
@@ -108,10 +103,10 @@ User.prototype.createAuthToken = function(auth) {
         d.resolve();
     })
     .fail(function(err) {
-        d.reject(err)
+        d.reject(err);
     });
     return d.promise;
-}
+};
 
 User.prototype.getRoomObjects = function() {
     var d = Q.defer();
@@ -127,7 +122,7 @@ User.prototype.getRoomObjects = function() {
         d.reject(err);
     });
     return d.promise;
-}
+};
 
 User.prototype.joinRoom = function(rid) {
     var d = Q.defer();
@@ -150,45 +145,42 @@ User.prototype.joinRoom = function(rid) {
             })
             .fail(function(err) {
                 d.reject(err);
-            })
+            });
         }
-    })
+    });
     return d.promise;
-}
+};
 
 User.prototype.archiveRoom = function(rid) {
     var d = Q.defer();
-    db.query("UPDATE membership SET active = false WHERE uid = $1 AND rid = $2", [this.uid, rid])
+    db.query('UPDATE membership SET active = false WHERE uid = $1 AND rid = $2', [this.uid, rid])
     .then(function() {
         d.resolve();
-    })
-    .fail(function(err) {
-        d.reject(err)
-    });
-    return d.promise;
-}
-
-User.prototype.visitRoom = function(rid) {
-    db.query("UPDATE membership SET last_active = now()::timestamp WHERE uid = $1 AND rid = $2", [this.uid, rid])
-}
-
-// Get a User object by the username
-User.getByUsername = function(username) {
-    var d = Q.defer();
-    // Send the query to the dbConnector
-    db.query("SELECT uid, username, email FROM users where username = $1", [username])
-    .then(function(userObj) {
-        if(userObj[0].length === 0) {
-            d.reject('No user found');
-            return;
-        }
-        d.resolve(new User(userObj[0]));
     })
     .fail(function(err) {
         d.reject(err);
     });
     return d.promise;
-}
+};
+
+User.prototype.visitRoom = function(rid) {
+    db.query('UPDATE membership SET last_active = now()::timestamp WHERE uid = $1 AND rid = $2', [this.uid, rid]);
+};
+
+// Get a User object by the username
+User.getByUsername = function(username) {
+    // Send the query to the dbConnector
+    return db.query('SELECT uid, username, email FROM users where username = $1', [username])
+    .then(function(userObj) {
+        if(userObj[0].length === 0) {
+            throw new Error('User not found');
+        }
+        return new User(userObj[0]);
+    })
+    .fail(function(err) {
+        throw new Error();
+    });
+};
 
 
 
@@ -201,13 +193,13 @@ User.getById = function(uid) {
             d.reject('No user found');
             return;
         }
-        d.resolve(new User(userObj[0]))
+        d.resolve(new User(userObj[0]));
     })
     .fail(function(err) {
         d.reject(err);
     });
     return d.promise;
-}
+};
 
 // Get the stored hashed password of a user
 User.getHash = function(username) {
@@ -225,7 +217,7 @@ User.getHash = function(username) {
         d.reject(err);
     });
     return d.promise;
-}
+};
 
 // Get a User object by the banstrsauth
 User.getByAuthToken = function(bantrsauth){
@@ -236,12 +228,12 @@ User.getByAuthToken = function(bantrsauth){
             d.reject('No user found');
             return;
         }
-        d.resolve(new User(userObj[0]))
+        d.resolve(new User(userObj[0]));
     })
     .fail(function(err) {
         d.reject(err);
     });
     return d.promise;
-}
+};
 
 module.exports = User;

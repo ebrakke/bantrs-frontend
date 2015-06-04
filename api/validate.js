@@ -1,4 +1,5 @@
 var validate = require('validate.js');
+var Q = require('q');
 
 
 /*
@@ -12,12 +13,15 @@ var Validator = {};
  * Only return one error message
  */
 var simpleError = function(errorObj) {
-	if (errorObj) {
-		for(first in errorObj) {
-			console.log('first', errorObj[first]);
-			return errorObj[first][0];
+	return Q.fcall(function() {
+		if (errorObj) {
+			for(var first in errorObj) {
+				console.log('first', errorObj[first]);
+				throw new Error(errorObj[first][0]);
+			}
 		}
-	}
+		return;
+	});
 };
 
 /*
@@ -50,7 +54,7 @@ Validator.user = function (userObj) {
 	};
 
 	return simpleError(validate(userObj, constraints));
-}
+};
 
 /*
 * Auth Validation
@@ -77,7 +81,7 @@ Validator.auth = function (userObj) {
 	};
 
 	return simpleError(validate(userObj, constraints));
-}
+};
 
 /*
 * Room Validation
@@ -136,7 +140,7 @@ Validator.room = function (roomObj) {
 	};
 
 	return simpleError(validate(roomObj, constraints));
-}
+};
 
 /*
 * Comment Validation
@@ -153,7 +157,7 @@ Validator.comment = function (commentObj) {
 		}
 	};
 	return simpleError(validate(commentObj, constraints));
-}
+};
 
 
 module.exports = Validator;

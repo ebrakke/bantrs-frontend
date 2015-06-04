@@ -17,7 +17,7 @@ user.post('/', function(req, res) {
 	var userData = req.body;
 	uc.create(userData)
 	.then(function(userAuth) {
-		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null))
+		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null));
 	})
 	.fail(function(err) {
 		res.status(err.code).json(utils.envelope(null, err));
@@ -51,7 +51,7 @@ user.post('/auth', function(req, res) {
 user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.get('authorization');
-	var newInfo = {}
+	var newInfo = {};
 
 	newInfo = req.body;
 
@@ -60,9 +60,9 @@ user.post('/me', function(req, res) {
 		uc.update(user, newInfo)
 		.then(function(auth) {
 			if(auth){
-				res.status(200).json(utils.envelope({user: user, auth: auth}, null))
+				res.status(200).json(utils.envelope({user: user, auth: auth}, null));
 			} else {
-				res.status(200).json(utils.envelope(user, null))
+				res.status(200).json(utils.envelope(user, null));
 			}
 		})
 		.fail(function(err) {
@@ -70,7 +70,7 @@ user.post('/me', function(req, res) {
 		});
 	})
 	.fail(function(err) {
-		res.json(utils.envelope(null, err))
+		res.json(utils.envelope(null, err));
 	});
 });
 
@@ -93,12 +93,12 @@ user.get('/:username/rooms', function(req, res) {
 user.get('/:username', function(req, res) {
 	var username = req.params.username;
 	uc.getByUsername(username)
-	.then(function(user) {
+	.then(function(user) { 
 		res.json(utils.envelope(user, null));
 	})
 	.fail(function(err) {
 		res.json(utils.envelope(null, err));
-	})
+	});
 });
 
 /*
@@ -114,7 +114,7 @@ user.delete('/me', function(req, res) {
 	.then(function(user) {
 		uc.delete(user)
 		.then(function() {
-			res.json(utils.envelope({}, null))
+			res.json(utils.envelope({}, null));
 		})
 		.fail(function(err) {
 			res.json(utils.envelope(null, err));

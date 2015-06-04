@@ -10,7 +10,7 @@ var Validator = require('../validate');
 var _ = require('lodash-node');
 
 /* CommentCtrl Constructor */
-var CommentCtrl = function () {}
+var CommentCtrl = function () {};
 
 
  /* Create a new comment
@@ -40,18 +40,18 @@ CommentCtrl.create = function(commentData) {
                 d.resolve(comment);
             })
             .fail(function(err) {
-                d.reject(e.invalidUID)
+                d.reject(e.invalidUID);
             });
         })
         .fail(function(err) {
-            d.reject(e.invalidRID)
-        })
+            d.reject(e.invalidRID);
+        });
     })
     .fail(function(err) {
         d.reject(e.invalidComment);
-    })
+    });
     return d.promise;
-}
+};
 
 
 /* Get a comment
@@ -68,21 +68,21 @@ CommentCtrl.getById = function(id) {
             uc.getByIdCompact(comment.author)
             .then(function(user) {
                 comment.author = user;
-                d.resolve(comment)
+                d.resolve(comment);
             })
             .fail(function(err) {
                 d.reject(e.invalidUID);
-            })
+            });
         })
         .fail(function(err) {
             d.reject(e.invalidRID);
-        })
+        });
     })
     .fail(function(err) {
         d.reject(e.invalidCID);
-    })
+    });
     return d.promise;
-}
+};
 
 
 module.exports = CommentCtrl;

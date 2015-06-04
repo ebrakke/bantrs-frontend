@@ -18,7 +18,7 @@ room.get('/discover', function(req,res) {
 
     rc.discover(lat, lng)
     .then(function(rooms) {
-        sendData(res, rooms)
+        sendData(res, rooms);
     })
     .fail(function(err) {
         sendData(res, null, err);
@@ -58,7 +58,7 @@ room.get('/:id', function(req, res) {
     /* Auth check */
     auth.validByAuthToken(authToken).then(function(user) {
         user.visitRoom(rid);
-        var room = rc.getById(rid)
+        var room = rc.getById(rid);
         user.getActiveRooms().then(function() {
             room.then(function(room) {
                 if(user.rooms.indexOf(rid) === -1) {
@@ -71,7 +71,7 @@ room.get('/:id', function(req, res) {
                 room.active = true;
                 sendData(res, room);
                 return;
-            })
+            });
         }).fail(function(err) { console.log(err); sendData(res, null, err); });
     }).fail(function(err) { console.log(err); sendData(res, null, err); });
 });
@@ -90,9 +90,9 @@ room.get('/:id/comments', function(req,res) {
         .then(function(room) {
             room.getComments()
             .then(function(comments) {
-                sendData(res, comments)
-            }).fail(function(err) { console.log(err) })
-        }).fail(function(err) { console.log(err) })
+                sendData(res, comments);
+            }).fail(function(err) { console.log(err); });
+        }).fail(function(err) { console.log(err); });
     });
 });
 
@@ -137,26 +137,26 @@ room.post('/:id', function(req, res) {
     var radius = req.params.radius;
 
     var data =  {
-        "rid": "955d0efbfe995480798028ee9637f130",
-        "title": "Meerkat Raises $12M From Greylock At A $40M Valuation",
-        "location": {
-            "lat": 42.6915,
-            "lng": -83.3876,
-            "radius": 500
+        'rid': '955d0efbfe995480798028ee9637f130',
+        'title': 'Meerkat Raises $12M From Greylock At A $40M Valuation',
+        'location': {
+            'lat': 42.6915,
+            'lng': -83.3876,
+            'radius': 500
         },
-        "author": {
-            "uid": "0603152c09e0d7e37ad35bf8105df067",
-            "username": "tyler",
-            "email": "tylerwaltze@gmail.com",
+        'author': {
+            'uid': '0603152c09e0d7e37ad35bf8105df067',
+            'username': 'tyler',
+            'email': 'tylerwaltze@gmail.com',
         },
-        "topic": {
-            "type": "url",
-            "content": "http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation"
+        'topic': {
+            'type': 'url',
+            'content': 'http://techcrunch.com/2015/03/20/live-now-meerkat-raises-12m-from-greylock-at-a-40m-valuation'
         },
-        "members": 36,
-        "newComments": 4,
-        "member": true,
-        "createdAt": "2015-03-21 09:30:26.123+07:00"
+        'members': 36,
+        'newComments': 4,
+        'member': true,
+        'createdAt': '2015-03-21 09:30:26.123+07:00'
     };
 
     res.json(utils.envelope(data, null));

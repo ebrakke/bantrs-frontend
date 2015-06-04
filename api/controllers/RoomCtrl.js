@@ -46,9 +46,9 @@ RoomCtrl.create = function(roomInfo) {
     })
     .fail(function(err) {
         d.reject(e.invalidRoom);
-    })
+    });
     return d.promise;
-}
+};
 
 RoomCtrl.getById = function(id) {
     var d = Q.defer();
@@ -65,9 +65,9 @@ RoomCtrl.getById = function(id) {
     })
     .fail(function(err) {
         d.reject(e.invalidRID);
-    })
+    });
     return d.promise;
-}
+};
 
 /* Get all members of a room as user objects */
 RoomCtrl.getMembers = function(rid) {
@@ -86,20 +86,20 @@ RoomCtrl.getMembers = function(rid) {
         d.reject(e.invalidRID);
     });
     return d.promise;
-}
+};
 
 /* Get a compact version of a room */
 RoomCtrl.getByIdCompact = function(id) {
     var d = Q.defer();
     Room.getById(id)
     .then(function(room) {
-        d.resolve(room)
+        d.resolve(room);
     })
     .fail(function(err) {
-        d.reject(e.invalidRID)
-    })
+        d.reject(e.invalidRID);
+    });
     return d.promise;
-}
+};
 
 /* Return all room objects that are in range of a lat, lng */
 RoomCtrl.discover = function(lat, lng) {
@@ -111,15 +111,15 @@ RoomCtrl.discover = function(lat, lng) {
             room.getMembers().then(function(members) {
                 room.members = members.length;
                 returnRooms.push(room);
-                if(returnRooms.length === rooms.length) d.resolve(returnRooms)
-            })
+                if(returnRooms.length === rooms.length) d.resolve(returnRooms);
+            });
         });
     })
     .fail(function(err) {
         d.resolve(e.discover);
     });
     return d.promise;
-}
+};
 
 RoomCtrl.joinRoom = function(rid, user, lat, lng) {
     var d = Q.defer();
@@ -135,12 +135,12 @@ RoomCtrl.joinRoom = function(rid, user, lat, lng) {
         })
         .fail(function(err) {
             d.reject(e.joinRoom);
-        })
+        });
     })
     .fail(function(err) {
         d.reject(e.joinRoom);
     });
     return d.promise;
-}
+};
 
 module.exports = RoomCtrl;

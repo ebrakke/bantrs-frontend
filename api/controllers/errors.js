@@ -6,6 +6,13 @@ error.invalidUserUpdate = { msg: 'Unable to update user', code: 400 };
 error.invalidUserDelete = { msg: 'Unable to delete user', code: 500 };
 error.invalidUsername = { msg: 'Username not found', code: 404 };
 error.invalidUID = { msg: 'User ID not found', code: 404 };
+error.Error = function(data) {
+	this.msg = data.msg;
+	this.code = data.code;
+};
+
+error.Error.prototype = Object.create(Error.prototype);
+error.Error.constructor = error.Error;
 
 error.invalidPassword = { msg: 'Invalid username or password', code : 400 };
 error.usernameExists = { msg: 'Username already exists', code: 400 };
@@ -35,4 +42,4 @@ error.invalidUserData = { msg: '', code: 400 };
 error.invalidRoomData = { msg: '', code: 400 };
 error.invalidCommentData = { msg: '', code: 400 };
 
-module.exports = error
+module.exports = error;

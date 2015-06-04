@@ -20,14 +20,14 @@ comment.post('/', function(req, res) {
         user.getActiveRooms()
         .then(function() {
             if(user.rooms.indexOf(commentData.room) === -1) {
-                err = {msg: 'User not active in this room', code: 401}
+                err = {msg: 'User not active in this room', code: 401};
                 sendData(res, null, err);
                 return;
             }
             commentData.author = user.uid;
             cc.create(commentData)
             .then(function(comment) {
-                sendData(res, comment)
+                sendData(res, comment);
             })
 
             /* Error handling */
@@ -50,8 +50,8 @@ comment.get('/:id', function(req, res) {
         sendData(res, comment);
     })
     .fail(function(err) {
-        sendData(res, null, err)
-    })
+        sendData(res, null, err);
+    });
 });
 
 module.exports = comment;

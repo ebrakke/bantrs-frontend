@@ -45,7 +45,7 @@ AuthCtrl.validByUserPwd = function(userData) {
 		d.reject(err);
 	});
 	return d.promise;
-}
+};
 
 AuthCtrl.validByAuthToken = function(authToken) {
 	var d = Q.defer();
@@ -55,12 +55,12 @@ AuthCtrl.validByAuthToken = function(authToken) {
 	}
 	UserModel.getByAuthToken(authToken)
 	.then(function(user) {
-		d.resolve(user)
+		d.resolve(user);
 	})
 	.fail(function(err) {
 		d.reject(e.invalidAuthToken);
 	});
 	return d.promise;
-}
+};
 
 module.exports = AuthCtrl;

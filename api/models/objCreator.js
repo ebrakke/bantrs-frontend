@@ -2,7 +2,7 @@ var Room = require('./RoomModel');
 var Comment = require('./CommentModel');
 var User = require('./UserModel');
 
-var objCreator = function() {}
+var objCreator = function() {};
 
 objCreator.room = function(roomInfo) {
     return new Room(roomInfo);

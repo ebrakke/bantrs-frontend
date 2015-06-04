@@ -18,7 +18,7 @@ db.query = function(query,params){
             done(client);
             deferred.reject(err);
             return true;
-        }
+        };
 
         if(handleError(err)) return;
 
@@ -27,9 +27,9 @@ db.query = function(query,params){
             done(client);
             deferred.resolve(result.rows);
         });
-    })
+    });
     return deferred.promise;
-}
+};
 
 
 module.exports = db;
