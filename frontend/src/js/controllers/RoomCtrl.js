@@ -13,7 +13,8 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geoloca
     $scope.loading = {
         room: true,
         comments: true,
-        postComment: false
+        postComment: false,
+        join: false
     };
 
     Room.get($routeParams.rid).then(function(r) {
@@ -39,11 +40,15 @@ app.controller('RoomCtrl', function($routeParams, $scope, Room, Comment, Geoloca
     };
 
     $scope.join = function() {
+        $scope.loading.join = true;
+
         Geolocation.getLocation().then(function(position) {
             $scope.room.join(position.coords.latitude, position.coords.longitude).then(function(response) {
 
             }, function(error) {
 
+            }).finally(function() {
+                $scope.loading.join = false;
             });
         });
     };
