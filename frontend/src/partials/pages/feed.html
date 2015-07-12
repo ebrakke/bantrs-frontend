@@ -1,4 +1,4 @@
-<div class="page push-from-bottom">
+<div class="page--feed push-from-bottom">
     <header class="siteHeader grid--middle">
         <span class="siteHeader__item block-1-5" href=""></span><!--
         --><div class="block-3-5">
@@ -17,6 +17,7 @@
     </header>
     <loader ng-if="loading.rooms"></loader>
     <section class="feed">
+        <feed-item room="room" ng-repeat="room in rooms | filter:showArchived"></feed-item>
         <feed-item room="room" ng-repeat="room in rooms | filter:showArchived"></feed-item>
     </section>
 </div>

@@ -1,7 +1,14 @@
+.page--feed {
+    .page;
+
+    background: #efefef;
+}
+
 .feed {
     @itemHeight: 350px * .9;
     @itemWidth: 200px * .9;
     @itemMargin: 10px;
+    @itemCoverHeight: 75%;
 
     position: relative;
     white-space: nowrap;
@@ -16,10 +23,11 @@
         display: inline-block;
         position: relative;
         vertical-align: top;
+        white-space: normal;
         width: @itemWidth;
         height: @itemHeight;
         margin: @itemMargin;
-        background: @grey;
+        background: #fff;
 
         &.ng-enter {
             animation: zoomIn .3s;
@@ -30,13 +38,12 @@
         }
 
         .background {
+            overflow: hidden;
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            overflow: hidden;
-            filter: blur(2px);
+            bottom: 100 - @itemCoverHeight;
             z-index: 100;
 
             img {
@@ -47,25 +54,35 @@
             }
         }
 
-        .info {
+        .overlay {
+            line-height: 1.2;
+            overflow: hidden;
+            height: @itemCoverHeight;
             position: relative;
-            height: 100%;
             z-index: 500;
-            color: #fff;
-            padding: 20px;
-            white-space: normal;
-            font-weight: 300;
             background-image: linear-gradient(
                 to top,
-                #000,
-                rgba(0, 0, 0, 0.1)
+                rgba(0, 0, 0, 1),
+                rgba(0, 0, 0, 0) 50%
             );
 
             .title {
-                line-height: 1.2;
-                overflow: hidden;
                 text-overflow: ellipsis;
+                font-weight: 300;
+                color: #fff;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 10px;
             }
+        }
+
+        .info {
+            height: 100 - @itemCoverHeight;
+            background: #fff;
+            font-size: 1.3rem;
+            padding: 10px;
 
             .meta {
                 position: absolute;
@@ -76,22 +93,43 @@
                 font-size: 1.3rem;
             }
 
-            .notification {
-                border: 5px solid @green;
-                height: 65px;
-                width: 65px;
-                line-height: 55px; // height - borderWidth * 2
-                border-radius: 50%;
-                font-size: 1.7rem;
+            .footer {
+                font-size: 1rem;
+                color: @grey;
                 text-align: center;
-                display: inline-block;
-            }
 
-            .creation {
-                display: inline-block;
-                margin-left: 10px;
-                vertical-align: middle;
+                .list-item {
+                    position: relative;
+
+                    &::after {
+                        content: "|";
+                        position: absolute;
+                        top: 0;
+                    }
+
+                    &:last-of-type::after {
+                        display: none;
+                    }
+                }
             }
+        }
+
+        .notification {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            border: 3px solid @green;
+            background: @green-light;
+            color: @green-dark;
+            z-index: 1000;
+            height: 40px;
+            width: 40px;
+            line-height: 34px; // height - borderWidth * 2
+            border-radius: 50%;
+            font-size: 1.3rem;
+            font-weight: 300;
+            text-align: center;
+            display: inline-block;
         }
     }
 }

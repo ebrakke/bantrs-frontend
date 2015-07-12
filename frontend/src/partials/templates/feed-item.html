@@ -3,14 +3,15 @@
         <img ng-src="{{room.topic.content}}" />
     </div>
     <map class="background" ng-if="room.topic.type != 'media'" lat="room.location.lat" lng="room.location.lng" locate="false" controls="false"></map>
+    <div class="overlay">
+        <h3 class="title">{{room.title}}</h3>
+    </div>
+    <span class="notification" ng-show="room.newComments">{{room.newComments}}</span>
     <div class="info">
-        <h1 class="title">{{room.title}}</h1>
-        <div class="meta">
-            <span class="notification" ng-show="room.newComments">{{room.newComments}}</span>
-            <ul class="creation">
-                <li>{{room.author.username}}</li>
-                <li am-time-ago="room.createdAt"></li>
-            </ul>
+        <span>{{room.members}}</span>
+        <ul class="footer horizontal-list">
+            <li class="list-item">by {{room.author.username}}</li><!--
+            --><li class="list-item" am-time-ago="room.createdAt"></li>
         </div>
     </div>
 </a>
