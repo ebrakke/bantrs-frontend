@@ -1,6 +1,7 @@
 var pg = require('pg');
 var config = require('../config');
 var Q = require('q');
+var errors = require('../shared/errors');
 var connString = config.db.type + '://' + config.db.username + ':' + config.db.password + '@' + config.db.host + '/' + config.db.name;
 /*
 * This is basically a config file for the pg node package
@@ -16,8 +17,8 @@ db.query = function(query,params){
         var handleError = function(err) {
             if(!err) return false;
             done(client);
-            deferred.reject(err);
-            return true;
+            console.log(err);
+            return Q.reject(errors.dbError);
         };
 
         if(handleError(err)) return;

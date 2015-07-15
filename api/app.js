@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var middleware = require('./shared/middleware');
 
 // define our app using express
 var app = express();
@@ -34,6 +35,10 @@ app.use('/user', user);
 app.use('/room', room);
 app.use('/comment', comment);
 app.use('/', index);
+
+app.use(middleware.sendData);
+//error handling
+app.use(middleware.handleError);
 
 // START THE SERVER
 app.listen(port);

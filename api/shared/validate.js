@@ -13,15 +13,13 @@ var Validator = {};
  * Only return one error message
  */
 var simpleError = function(errorObj) {
-	return Q.fcall(function() {
-		if (errorObj) {
-			for(var first in errorObj) {
-				console.log('first', errorObj[first]);
-				throw new Error(errorObj[first][0]);
-			}
+	if (errorObj) {
+		for(var first in errorObj) {
+			console.log('first', errorObj[first]);
+			return errorObj[first][0];
 		}
-		return;
-	});
+	}
+	return;
 };
 
 /*

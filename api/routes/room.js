@@ -1,11 +1,9 @@
 var express = require('express');
 var room = express.Router();
-var sendData = require('../utils').sendData;
-var rc = require('../controllers/RoomCtrl');
-var cc = require('../controllers/CommentCtrl');
-var auth = require('../controllers/AuthCtrl');
-var _ = require('lodash-node');
-var Q = require('q');
+var Room = require('../models/Room');
+var Auth = require('../models/Auth');
+var sendData = require('../shared/utils').sendData;
+var Q    = require('q')
 
 /*
 * GET rooms for discover page
@@ -28,17 +26,10 @@ room.get('/discover', function(req,res) {
 room.get('/:id/members', function(req,res) {
     var authToken = req.get('authorization');
     var rid = req.params.id;
-    auth.validByAuthToken(authToken)
-    .then(function(user) {
-        rc.getMembers(rid)
-        .then(function(users) {
-            sendData(res, users);
-        })
-        .fail(function(err) {
-            sendData(res, null, err);
-        });
-    })
-    .fail(function(err) {
+    var room = new Room({rid: rid});
+    room.getMembers().then(function(members) {
+        sendData(res, members);
+    }).fail(function(err) {
         sendData(res, null, err);
     });
 });
@@ -46,34 +37,18 @@ room.get('/:id/members', function(req,res) {
 /*
 * GET room
 * TODO:
-* Query the DB
-* Validate the user
-* Check if user is within valid range
-* Return new comments if valid auth tokens
 */
 room.get('/:id', function(req, res) {
     var authToken = req.get('authorization');
     var rid = req.params.id;
-
-    /* Auth check */
-    auth.validByAuthToken(authToken).then(function(user) {
-        user.visitRoom(rid);
-        var room = rc.getById(rid);
-        user.getActiveRooms().then(function() {
-            room.then(function(room) {
-                if(user.rooms.indexOf(rid) === -1) {
-                    room.member = false;
-                    room.active = false;
-                    sendData(res, room);
-                    return;
-                }
-                room.member = true;
-                room.active = true;
-                sendData(res, room);
-                return;
-            });
-        }).fail(function(err) { console.log(err); sendData(res, null, err); });
-    }).fail(function(err) { console.log(err); sendData(res, null, err); });
+    var auth = new Auth({authToken: authToken});
+    var room = new Room({rid: rid});
+    room.fetch().then(function() {
+        sendData(res, room.toFrontend());
+    }).fail(function(err) {
+        console.log(err);
+        sendData(res, null, err);
+    });
 });
 
 /*
@@ -83,16 +58,9 @@ room.get('/:id', function(req, res) {
 room.get('/:id/comments', function(req,res) {
     var authToken = req.get('authorization');
     var rid = req.params.id;
-
-    auth.validByAuthToken(authToken)
-    .then(function(user) {
-        rc.getByIdCompact(rid)
-        .then(function(room) {
-            room.getComments()
-            .then(function(comments) {
-                sendData(res, comments);
-            }).fail(function(err) { console.log(err); });
-        }).fail(function(err) { console.log(err); });
+    var room = new Room({rid: rid});
+    room.getComments().then(function(comments) {
+        sendData(res, comments);
     });
 });
 

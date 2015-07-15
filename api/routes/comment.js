@@ -1,10 +1,8 @@
 var express = require('express');
 var comment = express.Router();
-var utils = require('../utils');
-var sendData = utils.sendData;
-var cc = require('../controllers/CommentCtrl');
-var rc = require('../controllers/RoomCtrl');
-var auth = require('../controllers/AuthCtrl');
+var Comment = require('../models/Comment');
+var sendData = require('../shared/utils').sendData;
+var Auth = require('../models/Auth');
 
 /*
 * Create comment
@@ -13,27 +11,19 @@ var auth = require('../controllers/AuthCtrl');
 
 comment.post('/', function(req, res) {
     var authToken = req.get('authorization');
-    var commentData = req.body;
+    var auth = new Auth({authToken: authToken});
+    var comment = new Comment(req.body);
+    auth.validateAuthToken().then(function() {
+        comment.set('author', auth.get('user'));
+        return comment.create();
+    }).then(function() {
+        return comment.fetch();
+    }).then(function() {
+        sendData(res, comment.toJSON());
+    }).fail(function(err) {
+        sendData(res, null, err);
+    });
 
-    auth.validByAuthToken(authToken)
-    .then(function(user) {
-        user.getActiveRooms()
-        .then(function() {
-            if(user.rooms.indexOf(commentData.room) === -1) {
-                err = {msg: 'User not active in this room', code: 401};
-                sendData(res, null, err);
-                return;
-            }
-            commentData.author = user.uid;
-            cc.create(commentData)
-            .then(function(comment) {
-                sendData(res, comment);
-            })
-
-            /* Error handling */
-            .fail(function(err) { sendData(res, null, err); });
-        }).fail(function(err) { sendData(res, null, err); });
-    }).fail(function(err) { sendData(res, null, err); });
 });
 
 /*
@@ -44,12 +34,15 @@ comment.post('/', function(req, res) {
 */
 
 comment.get('/:id', function(req, res) {
+    var authToken = req.get('authorization');
     var cid = req.params.id;
-    cc.getById(cid)
-    .then(function(comment) {
-        sendData(res, comment);
-    })
-    .fail(function(err) {
+    var auth = new Auth({authToken: authToken});
+    var comment = new Comment({cid: cid});
+    auth.validateAuthToken().then(function() {
+        return comment.fetch();
+    }).then(function() {
+        sendData(res, comment.toFrontend());
+    }).fail(function(err) {
         sendData(res, null, err);
     });
 });

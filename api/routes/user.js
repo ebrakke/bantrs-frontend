@@ -1,43 +1,45 @@
 var express = require('express');
 var user = express.Router();
-var utils = require('../utils');
-var uc = require('../controllers/UserCtrl');
-var auth = require('../controllers/AuthCtrl');
-var bcrypt = require('bcryptjs');
-var _ = require('lodash-node');
+var User = require('../models/User');
+var _ = require('underscore');
+var requireAuthentication = require('../shared/middleware').requireAuthentication;
+var parser = require('../shared/middleware').parser;
+var userParserConfig = require('../shared/endpointFormats').user;
 
 /*
 * Create User
 * TODO:
-* Get the actual data from the body
+* Error Handling
 */
 
-user.post('/', function(req, res) {
+user.post('/', requireAuthentication, function(req, res, next) {
 	/* FRONTEND NOTE: Must pass the data in as username, password, email */
 	var userData = req.body;
-	uc.create(userData)
-	.then(function(userAuth) {
-		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null));
-	})
-	.fail(function(err) {
-		res.status(err.code).json(utils.envelope(null, err));
+	var user = new User(userData);
+	user.create().then(function() {
+		res.responseData = {};
+		res.responseData.user = user.toFrontend();
+		res.responseData.authToken = user.get('authToken');
+		next()
+	}).fail(function(err) {
+		next(err);
 	});
 });
 
 /*
 * Authenticate User
 * TODO:
-* Pull the params from the request
+* Error handling
 */
-user.post('/auth', function(req, res) {
+user.post('/auth', function(req, res, next) {
 	/* FRONTEND: pass arguments as username, password */
-	var userData = req.body;
-	auth.validByUserPwd(userData)
-	.then(function(userAuth) {
-		res.json(utils.envelope({user: userAuth.user, bantrsAuth: userAuth.auth}, null));
-	})
-	.fail(function(err) {
-		res.status(err.code).json(utils.envelope(null, err));
+	var Auth = require('../models/Auth');
+	var auth = new Auth(req.body);
+	auth.login().then(function() {
+		res.locals.responseData = auth.toFrontend();
+		next()
+	}).fail(function(err) {
+		next(err);
 	});
 });
 
@@ -51,55 +53,46 @@ user.post('/auth', function(req, res) {
 user.post('/me', function(req, res) {
 	//validate the user
 	var authToken = req.get('authorization');
-	var newInfo = {};
+	var newInfo = req.body();
+	var user = new User({authToken: authToken})
+	user.auth().then(function() {
 
-	newInfo = req.body;
-
-	auth.validByAuthToken(authToken)
-	.then(function(user) {
-		uc.update(user, newInfo)
-		.then(function(auth) {
-			if(auth){
-				res.status(200).json(utils.envelope({user: user, auth: auth}, null));
-			} else {
-				res.status(200).json(utils.envelope(user, null));
-			}
-		})
-		.fail(function(err) {
-			res.json(utils.envelope(null, err));
-		});
 	})
-	.fail(function(err) {
-		res.json(utils.envelope(null, err));
-	});
 });
 
-user.get('/:username/rooms', function(req, res) {
+user.get('/:username/rooms', function(req, res, next) {
 	var username = req.params.username;
-	uc.getRoomObjects(username)
-	.then(function(rooms) {
-		res.json(utils.envelope(rooms, null));
+	var user = new User({username: username});
+	user.fetchByUsername().then(function() {
+		return user.getRooms();
+	}).then(function() {
+		res.locals.modelOrCollection = user.get('rooms');
+		res.locals.parserConfiguration = userParserConfig.getUserRooms;
+		next();
+	}).fail(function(err) {
+		next(err);
 	})
-	.fail(function(err) {
-		res.json(utils.envelope(null, err));
-	});
-});
+}, parser);
 
 /*
 * Get User
 * TODO:
+* Error Handling
 */
 
-user.get('/:username', function(req, res) {
+user.get('/:username', /*requireAuthentication,*/ function(req, res, next) {
 	var username = req.params.username;
-	uc.getByUsername(username)
-	.then(function(user) { 
-		res.json(utils.envelope(user, null));
-	})
-	.fail(function(err) {
-		res.json(utils.envelope(null, err));
+	var user = new User({username: username});
+	user.fetchByUsername().then(function() {
+		return user.getActiveRooms();
+	}).then(function() {
+		res.locals.modelOrCollection = user;
+		res.locals.parserConfiguration = userParserConfig.getUser;
+		next()
+	}).fail(function(err) {
+		next(err);
 	});
-});
+}, parser);
 
 /*
 * Delete User
@@ -110,27 +103,17 @@ user.get('/:username', function(req, res) {
 
 user.delete('/me', function(req, res) {
 	var authToken = req.get('authorization');
-	auth.validByAuthToken(auth)
-	.then(function(user) {
-		uc.delete(user)
-		.then(function() {
-			res.json(utils.envelope({}, null));
-		})
-		.fail(function(err) {
-			res.json(utils.envelope(null, err));
-		});
-	})
-	.fail(function(err) {
-		res.json(utils.envelope(null, err));
+	var auth = new Auth({authToken: authToken});
+	auth.validateAuthToken().then(function() {
+		return auth.get('user').delete()
+	}).then(function() {
+		var data = {msg: 'success!'};
+		sendData(res, data);
+	}).fail(function(err) {
+		sendData(res, null, err);
 	});
 });
 
-/*
-* Get User's Rooms
-* TODO:
-* get rooms from DB
-* return rooms
-*/
 
 
 
