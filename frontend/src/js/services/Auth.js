@@ -29,8 +29,7 @@ app.factory('Auth', function(config, $http, $location, $q, $localStorage, User) 
             'password': password
         }).success(function(response, status) {
             var data = response.data;
-
-            Auth.setToken(data.bantrsAuth);
+            Auth.setToken(data.authToken);
             Auth.setUser(data.user);
 
             deferred.resolve();

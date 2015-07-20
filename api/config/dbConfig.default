@@ -1,0 +1,13 @@
+var env = 'dev';
+
+var dbConfig = function() {};
+
+if (env === 'dev') {
+    dbConfig.username = '';
+    dbConfig.password = '';
+    dbConfig.host = '';
+    dbConfig.type = '';
+    dbConfig.db = '';
+}
+
+module.exports = dbConfig;
