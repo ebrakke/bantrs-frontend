@@ -1,81 +1,54 @@
-var config = require('./config');
-
-
 module.exports = function(grunt) {
-	var npmTasks = 
-		[   'grunt-contrib-jshint',
-			'grunt-contrib-watch',
-			'grunt-express-server',
-			'grunt-open',
-			'grunt-mocha-test'];
-			
-	npmTasks.forEach(function(gruntTask) {
-		grunt.loadNpmTasks(gruntTask);
-	});
 
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			options:{
-				jshintrc: '.jshintrc'
-			},
-			all: ['**/*.js',
-				  '!node_modules/**/*.js',
-				  '!spec/**/*.js',
-				  '!tests/**/*.js']
-		},
-		watch: {
-			files: ['**/*.js',
-					'!node_modules/**/*.js'],
-			jshint: {
-				files: ['**/*.js',
-						'!node_modules/**/*.js',
-						'!spec/**/*.js',
-						'!tests/**/*.js'],
-				options: {
-					jshintrc: '.jshintrc'
-				}
-			},
-			express: {
-				files: ['**/*.js'],
-				tasks: ['express:dev'],
-				options: {
-					spawn: false
-				}
-			}
-		},
-		express: {
-			options: {
-			},
-			dev: {
-				options: {
-					script: './'
-				}
-			}
-		},
-		open: {
-			dev: {
-				path:'http://localhost:3000'
-			}	
-		},
-		mochaTest: {
-			test: {
-				src: ['tests/userRouterTest.js']
-			}
-		}
-	});
+    require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('default', 
-		[ 'jshint', 
-		  'express',
-		  'mochaTest',
-		  'open:dev',
-		  'watch']
-	);
-	grunt.registerTask('dev',
-		[ 'jshint',
-		  'express',
-		  'watch']
-	);
+    grunt.initConfig({
+        // Configure jshint
+        jshint: {
+            all: ['Gruntfile.js', 'src/**/*.js'],
+            test: ['src/**/*.js', 'test/**/*.js']
+        },
 
+        // Configure jscs
+        jscs: {
+            src: 'src/**/*.js',
+            test: 'src/**/*.js'
+        },
+
+        // Configure express server
+        express: {
+            all: {
+                options: {
+                    script: 'src/app.js'
+                }
+            }
+        },
+
+        // Configure watch
+        watch: {
+            files: ['src/**/*.js', 'Gruntfile.js'],
+            tasks: ['jshint', 'jscs', 'express'],
+            options: {
+                spawn: false
+            }
+        },
+
+        //Configure mocha tests
+        mochaTest: {
+            test: {
+                src: ['test/**/*.js']
+            }
+        }
+    });
+    grunt.registerTask('default', [
+        'jshint',
+        'jscs',
+        'express',
+        'watch'
+    ]);
+    grunt.registerTask('test', [
+        'jshint:test',
+        'jscs:test',
+        'mochaTest:test'
+    ]);
 };
