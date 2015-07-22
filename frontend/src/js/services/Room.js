@@ -13,7 +13,7 @@ app.factory('Room', function(config, $q, $http, Comment) {
 
         $http.post(api, {
             title: room.title,
-            topic: room.topic.content,
+            content: room.topic.content,
             lat: room.location.lat,
             lng: room.location.lng,
             radius: room.location.radius

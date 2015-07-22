@@ -31,6 +31,11 @@ room.get('/:id', auth, function(req, res, next) {
 
 room.post('/', auth, function(req, res, next) {
     var room = new Room(req.body);
+    if (isUrl(room.content)) {
+        room.type = 'url';
+    } else {
+        room.type = 'loc';
+    }
     room.author = res.locals.user;
     room.create().then(function() {
         return room.author.joinRoom(room.rid);
@@ -56,5 +61,10 @@ room.post('/:id/join', auth, function(req, res, next) {
         next(ROOM_NOT_FOUND);
     });
 }, format.getRoom, envelope);
+
+var isUrl = function(s) {
+    var urlregex = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
+    return urlregex.test(s);
+};
 
 module.exports = room;
