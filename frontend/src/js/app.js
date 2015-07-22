@@ -5,5 +5,5 @@ var app = angular.module('bantrs', [
     'angularMoment',
     'ngStorage',
     'monospaced.elastic',
-    'angular-gestures'
+    'hmTouchEvents'
 ]);
