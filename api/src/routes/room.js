@@ -44,7 +44,7 @@ room.post('/', auth, function(req, res, next) {
     }).then(function() {
         res.locals.data = room;
         next();
-    }).fail(function() {
+    }).fail(function(err) {
         next(ROOM_CREATION_ERROR);
     });
 }, format.postRoom, envelope);
@@ -61,6 +61,15 @@ room.post('/:id/join', auth, function(req, res, next) {
         next(ROOM_NOT_FOUND);
     });
 }, format.getRoom, envelope);
+
+room.post('/:id/archive', auth, function(req, res, next) {
+    res.locals.user.archiveRoom(req.params.id).then(function() {
+        res.locals.data = 'success';
+        next();
+    }).fail(function() {
+        next({msg: 'Cannot leave room', code: 500});
+    });
+}, envelope);
 
 var isUrl = function(s) {
     var urlregex = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;

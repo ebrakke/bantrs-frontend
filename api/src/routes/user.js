@@ -12,7 +12,7 @@ var LOGIN_ERROR = {msg: 'Invalid credentials', code: 401};
 var CREATE_ERROR = {msg: 'An error occurred while create', code: 500};
 
 /* GET a user's rooms */
-user.get('/:username/rooms', function(req, res, next) {
+user.get('/:username/rooms', auth, function(req, res, next) {
     var user = new User({username: req.params.username});
     user.get().then(function() {
         return user.getRooms();

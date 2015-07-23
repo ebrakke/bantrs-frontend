@@ -104,4 +104,8 @@ User.prototype.joinRoom = function(rid) {
     });
 };
 
+User.prototype.archiveRoom = function(rid) {
+    return this.db.query('UPDATE membership SET active = false WHERE uid = $1 AND rid = $2', [this.uid, rid]);
+};
+
 module.exports = User;

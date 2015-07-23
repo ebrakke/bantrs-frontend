@@ -33,8 +33,8 @@ Room.prototype.get = function(uid) {
 Room.prototype.create = function() {
     var self = this;
     this.rid = createId();
-    var query = 'INSERT INTO rooms VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now()::timestamp) RETURNING createdat AS "createdAt"';
-    var params = [this.rid, this.title, this.content, this.type, this.author.uid, this.lat, this.lng, this.radius];
+    var query = 'INSERT INTO rooms VALUES ($1, $2, $3, $4, $5, $6, $7, now()::timestamp) RETURNING createdat AS "createdAt"';
+    var params = [this.rid, this.title, this.content, this.type, this.author.uid, this.lat, this.lng];
     return this.db.query(query, params).then(function(result) {
         self.createdAt = result[0].createdAt;
         return;

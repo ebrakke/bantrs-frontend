@@ -16,7 +16,6 @@ exports.getUserRooms = function(req, res, next) {
             location: {
                 lat: room.lat,
                 lng: room.lng,
-                radius: room.radius
             },
             author: {
                 uid: room.uid,
@@ -79,8 +78,7 @@ exports.getRoom = function(req, res, next) {
         title: data.title,
         location: {
             lat: data.lat,
-            lng: data.lng,
-            radius: data.radius
+            lng: data.lng
         },
         author: {
             uid: data.uid,
@@ -105,8 +103,7 @@ exports.postRoom = function(req, res, next) {
         title: data.title,
         location: {
             lat: data.lat,
-            lng: data.lng,
-            radius: data.radius
+            lng: data.lng
         },
         author: _.omit(data.author, 'db'),
         topic: {
