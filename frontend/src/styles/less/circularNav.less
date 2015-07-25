@@ -1,0 +1,119 @@
+.circularNav {
+    & * {
+        position: relative;
+    }
+
+    &__wrapper {
+        font-size: 1em;
+        width: 26em;
+        height: 26em;
+        overflow: hidden;
+        position: fixed;
+        z-index: 10;
+        bottom: -13em;
+        left: 50%;
+        margin-left: -13em;
+        pointer-events: none;
+        border-radius: 50%;
+        transform: scale(0.1);
+        transition: all .3s ease;
+
+        &.active {
+            pointer-events: auto;
+            transform: scale(1);
+        }
+    }
+
+    &__overlay {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s ease;
+        z-index: 2;
+
+        &.active {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &__button {
+        outline: none;
+        border: none;
+        background: none;
+        color: @red-lightest;
+        text-align: center;
+        font-size: 2.3em;
+        padding-bottom: 1.4em;
+        height: 3.5em;
+        width: 3.5em;
+        background-color: #fff;
+        position: fixed;
+        left: 50%;
+        margin-left: -1.75em;
+        bottom: -1.75em;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 11;
+
+
+        &:hover {
+            color: @red;
+        }
+
+        &__icon {
+            transition: all .3s ease;
+
+            &.active {
+                transform: rotate(45deg);
+            }
+        }
+    }
+
+    &__item {
+        position: absolute;
+        font-size: 1.5em;
+        width: 10em;
+        height: 10em;
+        transform-origin: 100% 100%;
+        overflow: hidden;
+        left: 50%;
+        top: 50%;
+        margin-top: -1.3em;
+        margin-left: -10em;
+        transition: border .3s ease;
+
+        &__content {
+            display: block;
+            font-size: 1.18em;
+            height: 14.5em;
+            width: 14.5em;
+            position: absolute;
+            bottom: -7.25em;
+            right: -7.25em;
+            border-radius: 50%;
+            text-decoration: none;
+            color: #fff;
+            background-color: @red-light;
+            padding-top: 1.8em;
+            text-align: center;
+            -webkit-backface-visibility: hidden;
+            transition: opacity 0.3s, color 0.3s;
+
+            &:hover {
+                background-color: @red;
+            }
+
+            & > * {
+                font-size: 1.4em;
+            }
+        }
+    }
+}
