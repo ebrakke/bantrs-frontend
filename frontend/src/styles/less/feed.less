@@ -5,29 +5,45 @@
 }
 
 .feed {
-    @itemHeight: 350px * .9;
-    @itemWidth: 200px * .9;
-    @itemMargin: 10px;
+    // @itemHeight: 100%;
+    // @itemWidth: 60vw;
+    // @itemMargin: 2vw;
+    // @itemCoverHeight: 75%;
+
+    @itemRatio: 9 / 16;
+    @itemHeight: 70vh;
+    @itemWidth: @itemRatio * @itemHeight;
+    @maxHeight: pow(@itemRatio, -1) * @itemHeight;
+    @maxWidth: @itemHeight;
+    @minHeight: 300px;
+    @minWidth: @minHeight * @itemRatio;
+    @itemMargin: 2vw;
     @itemCoverHeight: 75%;
 
     position: relative;
     white-space: nowrap;
-    overflow: auto;
-    padding: 0 calc(~"50% - " (@itemWidth / 2) + @itemMargin);
+    overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    position: relative;
-    top: 50%;
-    margin-top: -((@itemHeight / 2) + @itemMargin + (@siteHeaderHeight / 2));
+    height: calc(~"100% - " @siteHeaderHeight);
+    // padding: 0 (50 - (@itemWidth / 2) - @itemMargin);
+    padding: 0 (@itemWidth / 4) - @itemMargin;
 
     &__item {
         display: inline-block;
         position: relative;
         vertical-align: top;
         white-space: normal;
+        background: #fff;
         width: @itemWidth;
         height: @itemHeight;
-        margin: @itemMargin;
-        background: #fff;
+        max-height: unit(@maxHeight, vw);
+        max-width: unit(@maxWidth, vw);
+        min-height: @minHeight;
+        min-width: @minWidth;
+        margin: 0 @itemMargin;
+        top: 50%;
+        transform: translateY(-50%);
 
         &.ng-enter {
             animation: zoomIn .3s;
