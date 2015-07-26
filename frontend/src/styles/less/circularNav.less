@@ -1,8 +1,4 @@
 .circularNav {
-    & * {
-        position: relative;
-    }
-
     &__wrapper {
         font-size: 1em;
         width: 26em;
@@ -69,12 +65,17 @@
         }
 
         &__icon {
+            transform: translateZ(0);   // Hack: Keep element from disappearing when transformed
             transition: all .3s ease;
 
             &.active {
-                transform: rotate(45deg);
+                transform: rotate(45deg) translateZ(0);
             }
         }
+    }
+
+    &__items {
+        position: relative;
     }
 
     &__item {
