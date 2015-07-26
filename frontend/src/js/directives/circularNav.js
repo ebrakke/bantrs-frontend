@@ -29,7 +29,7 @@ app.directive('circularNav', function() {
 
                     var link = angular.element(item.children('.circularNav__item__content')[0]);
                     link.css({
-                        transform: 'skew(' + -skew + 'deg) rotate(' + -angle + 'deg) scale(1)'
+                        transform: 'skew(' + -skew + 'deg) rotate(' + -(90 - (angle / 2)) + 'deg) scale(1)'
                     });
                 }
             };
