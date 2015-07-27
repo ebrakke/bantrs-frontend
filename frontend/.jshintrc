@@ -23,6 +23,8 @@
     "globals": {
         "angular": false,
         "app": true,
-        "L": true
+        "L": true,
+        "FastClick": true,
+        "disableElasticScroll": true
     }
 }
