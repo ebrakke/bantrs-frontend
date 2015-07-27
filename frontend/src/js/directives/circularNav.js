@@ -24,12 +24,14 @@ app.directive('circularNav', function() {
                     var item = items[i].element;
 
                     item.css({
-                        transform: 'rotate(' + rotate + 'deg) skew(' + skew + 'deg)'
+                        transform: 'rotate(' + rotate + 'deg) skew(' + skew + 'deg)',
+                        '-webkit-transform': 'rotate(' + rotate + 'deg) skew(' + skew + 'deg)'
                     });
 
                     var link = angular.element(item.children('.circularNav__item__content')[0]);
                     link.css({
-                        transform: 'skew(' + -skew + 'deg) rotate(' + -(90 - (angle / 2)) + 'deg) scale(1)'
+                        transform: 'skew(' + -skew + 'deg) rotate(' + -(90 - (angle / 2)) + 'deg) scale(1)',
+                        '-webkit-transform': 'skew(' + -skew + 'deg) rotate(' + -(90 - (angle / 2)) + 'deg) scale(1)'
                     });
                 }
             };
