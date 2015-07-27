@@ -7,6 +7,8 @@ var errorHandle = require('./middlewares/error');
 var user = require('./routes/user');
 var comment = require('./routes/comment');
 var room = require('./routes/room');
+var search = require('./routes/search');
+var index = require('./routes/index');
 var app = express();
 
 app.use(logger('dev'));
@@ -18,6 +20,8 @@ app.use(cors());
 app.use('/comment', comment);
 app.use('/user', user);
 app.use('/room', room);
+app.use('/search', search);
+app.use('/', index);
 
 app.use(errorHandle);
 

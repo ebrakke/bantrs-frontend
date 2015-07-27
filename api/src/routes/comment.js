@@ -5,6 +5,7 @@ var format = require('../middlewares/format');
 var auth = require('../middlewares/auth').auth;
 var envelope = require('../middlewares/envelope');
 var validate = require('../middlewares/validate');
+var io = require('socket.io')();
 
 var COMMENT_NOT_FOUND = {msg: 'Comment not found', code: 404};
 var COMMENT_CREATE_ERROR = {msg: 'Comment created unsuccessfully', code: 500};
@@ -22,6 +23,8 @@ comment.get('/:id', auth, function(req, res, next) {
 comment.post('/', auth, validate.comment, function(req, res, next) {
     var comment = new Comment(req.body);
     comment.author = res.locals.user.uid;
+    // var namespace = io.of('/' + comment.room);
+    // namespace.emit('newComment', comment);
     comment.create().then(function() {
         return comment.get();
     }).then(function() {
