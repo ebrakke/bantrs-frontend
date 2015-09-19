@@ -1,7 +1,7 @@
 'use strict';
 
 app.constant('config', {
-    api: 'http://localhost:3000',
+    api: 'http://bantrs-api-dev.elasticbeanstalk.com',
     foursquare: {
         api: 'https://api.foursquare.com/v2',
         id: 'N3ENKW5B5TB1AJHKV0ORBIYQFM2EWRTNT5XIZDF0RYS4QK4O',
