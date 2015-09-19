@@ -1,0 +1,22 @@
+<div class="page landing">
+    <div class="top">
+        <div class="vertically-center">
+            <img src="img/bantrs.png" class="logo" />
+            <form class="top__form" ng-submit="login(username, password)">
+                <input type="text" placeholder="Username" class="input" ng-model="username" />
+                <input type="password" placeholder="Password" class="input" ng-model="password" />
+                <input type="submit" value="Login" class="landing__action button button-size--fullWidth button-color--green" ng-hide="loading" />
+                <span class="landing__action button button-color--green button-size--fullWidth" ng-show="loading">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </span>
+            </form>
+            <p class="top__error" ng-show="error">{{error}}</p>
+        </div>
+    </div>
+    <div class="separator">or</div>
+    <div class="bottom">
+        <div class="vertically-center">
+            <a href="#/signup" class="landing__action button button-size--fullWidth button-size--medium">Sign up</a>
+        </div>
+    </div>
+</div>
