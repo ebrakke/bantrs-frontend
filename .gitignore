@@ -1,4 +1,6 @@
-/bantrs.wiki
+node_modules
+dev
+dist
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
